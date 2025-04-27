@@ -1,8 +1,7 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
-import { MessageCircle, Calendar, Video, User } from "lucide-react";
+import { MessageCircle, Calendar, Video, User, Mic, X } from "lucide-react";
 
 const FeaturesPage = () => {
   return (

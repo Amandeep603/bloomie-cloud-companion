@@ -11,7 +11,7 @@ type Message = {
   timestamp: Date;
 };
 
-const defaultMessages = [
+const defaultMessages: Message[] = [
   {
     id: "1",
     sender: "ai",
