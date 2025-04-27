@@ -1,106 +1,142 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-
-type ColorOption = {
-  name: string;
-  bgClass: string;
-  textClass: string;
-};
-
-const colorOptions: ColorOption[] = [
-  { name: "Purple", bgClass: "bg-bloomie-purple", textClass: "text-white" },
-  { name: "Pink", bgClass: "bg-bloomie-pink", textClass: "text-foreground" },
-  { name: "Yellow", bgClass: "bg-bloomie-yellow", textClass: "text-foreground" },
-  { name: "Green", bgClass: "bg-bloomie-green", textClass: "text-foreground" },
-  { name: "Blue", bgClass: "bg-bloomie-blue", textClass: "text-foreground" },
-];
-
-const faceOptions = ["😊", "😎", "🥰", "😄", "😌"];
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { availableAvatars, updateUserAvatar } from "@/services/avatarService";
+import { Check, Loader } from "lucide-react";
 
 const AvatarCustomizer = () => {
-  const [avatarColor, setAvatarColor] = useState<ColorOption>(colorOptions[0]);
-  const [avatarFace, setAvatarFace] = useState<string>(faceOptions[0]);
-  
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("human");
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const { currentUser, userProfile } = useAuth();
+
+  // Set initial avatar from user profile
+  useEffect(() => {
+    if (userProfile?.avatarUrl) {
+      const matchingAvatar = availableAvatars.find(
+        avatar => avatar.url === userProfile.avatarUrl
+      );
+      if (matchingAvatar) {
+        setSelectedAvatar(matchingAvatar.id);
+        setActiveTab(matchingAvatar.category);
+      }
+    }
+  }, [userProfile]);
+
+  const handleSaveAvatar = async () => {
+    if (!selectedAvatar || !currentUser) return;
+    
+    setIsLoading(true);
+    try {
+      const success = await updateUserAvatar(currentUser.uid, selectedAvatar);
+      
+      if (success) {
+        toast({
+          title: "Avatar updated",
+          description: "Your new avatar has been saved successfully!",
+        });
+      } else {
+        throw new Error("Failed to update avatar");
+      }
+    } catch (error) {
+      console.error("Error saving avatar:", error);
+      toast({
+        title: "Error saving avatar",
+        description: "There was a problem updating your avatar. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Group avatars by category
+  const avatarsByCategory = availableAvatars.reduce((acc, avatar) => {
+    if (!acc[avatar.category]) {
+      acc[avatar.category] = [];
+    }
+    acc[avatar.category].push(avatar);
+    return acc;
+  }, {} as Record<string, typeof availableAvatars>);
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
-      <div className="flex flex-col items-center justify-center">
-        <div className="mb-8 animate-float">
-          <div className="w-40 h-40 md:w-64 md:h-64 bg-white rounded-full flex items-center justify-center shadow-xl">
-            <div className={`w-36 h-36 md:w-56 md:h-56 ${avatarColor.bgClass} rounded-full flex items-center justify-center`}>
-              <div className={`${avatarColor.textClass} text-6xl md:text-8xl font-nunito`}>{avatarFace}</div>
-            </div>
-          </div>
+    <div className="p-6">
+      <div className="text-center mb-10">
+        <div className="flex justify-center mb-4">
+          <Avatar className="h-24 w-24 border-4 border-primary">
+            <AvatarImage 
+              src={selectedAvatar ? availableAvatars.find(a => a.id === selectedAvatar)?.url : undefined} 
+              alt="Your avatar" 
+            />
+            <AvatarFallback className="text-4xl">
+              {userProfile?.displayName?.[0] || "B"}
+            </AvatarFallback>
+          </Avatar>
         </div>
-        <h2 className="text-2xl font-bold mb-2">Your Bloomie</h2>
-        <p className="text-muted-foreground text-center">
-          Customize your AI companion to match your style!
+        <h2 className="text-2xl font-bold mb-1">Choose Your Avatar</h2>
+        <p className="text-muted-foreground">
+          Select an avatar that represents you or your mood today
         </p>
       </div>
-      
-      <div className="space-y-8">
-        <div>
-          <h3 className="font-bold text-xl mb-4">Choose a color</h3>
-          <RadioGroup defaultValue="purple" className="grid grid-cols-5 gap-2">
-            {colorOptions.map((color) => (
-              <div key={color.name} className="flex flex-col items-center space-y-2">
-                <Label
-                  htmlFor={`color-${color.name}`}
-                  className="cursor-pointer flex flex-col items-center"
-                >
-                  <div
-                    className={`w-12 h-12 rounded-full ${color.bgClass} ${
-                      avatarColor.name === color.name
-                        ? "ring-2 ring-primary ring-offset-2"
-                        : ""
-                    }`}
-                    onClick={() => setAvatarColor(color)}
-                  ></div>
-                  <span className="text-xs mt-1">{color.name}</span>
-                </Label>
-                <RadioGroupItem
-                  value={color.name}
-                  id={`color-${color.name}`}
-                  className="sr-only"
-                />
-              </div>
-            ))}
-          </RadioGroup>
-        </div>
+
+      <Tabs defaultValue="human" value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid grid-cols-3 mb-6">
+          <TabsTrigger value="human">People</TabsTrigger>
+          <TabsTrigger value="animal">Animals</TabsTrigger>
+          <TabsTrigger value="fantasy">Fantasy</TabsTrigger>
+        </TabsList>
         
-        <div>
-          <h3 className="font-bold text-xl mb-4">Choose an expression</h3>
-          <RadioGroup defaultValue={faceOptions[0]} className="grid grid-cols-5 gap-2">
-            {faceOptions.map((face) => (
-              <div key={face} className="flex items-center justify-center">
-                <Label
-                  htmlFor={`face-${face}`}
-                  className="cursor-pointer flex flex-col items-center"
+        {Object.entries(avatarsByCategory).map(([category, avatars]) => (
+          <TabsContent key={category} value={category} className="mt-0">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+              {avatars.map(avatar => (
+                <Card 
+                  key={avatar.id}
+                  className={`cursor-pointer transition-all hover:scale-105 ${
+                    selectedAvatar === avatar.id 
+                      ? "ring-2 ring-primary" 
+                      : "hover:shadow-md"
+                  }`}
+                  onClick={() => setSelectedAvatar(avatar.id)}
                 >
-                  <div
-                    className={`w-12 h-12 rounded-full bg-muted flex items-center justify-center text-2xl ${
-                      avatarFace === face
-                        ? "ring-2 ring-primary ring-offset-2"
-                        : ""
-                    }`}
-                    onClick={() => setAvatarFace(face)}
-                  >
-                    {face}
-                  </div>
-                </Label>
-                <RadioGroupItem
-                  value={face}
-                  id={`face-${face}`}
-                  className="sr-only"
-                />
-              </div>
-            ))}
-          </RadioGroup>
-        </div>
-        
-        <Button className="w-full">Save Changes</Button>
+                  <CardContent className="p-4 relative flex flex-col items-center">
+                    {selectedAvatar === avatar.id && (
+                      <div className="absolute top-2 right-2 bg-primary text-white rounded-full p-1">
+                        <Check className="h-3 w-3" />
+                      </div>
+                    )}
+                    <Avatar className="h-16 w-16 mb-2">
+                      <AvatarImage src={avatar.url} alt={avatar.name} />
+                      <AvatarFallback>AVT</AvatarFallback>
+                    </Avatar>
+                    <p className="text-xs text-center font-medium">{avatar.name}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+        ))}
+      </Tabs>
+
+      <div className="mt-10 flex justify-center">
+        <Button 
+          onClick={handleSaveAvatar} 
+          disabled={!selectedAvatar || isLoading}
+          className="px-8"
+        >
+          {isLoading ? (
+            <>
+              <Loader className="mr-2 h-4 w-4 animate-spin" /> 
+              Saving...
+            </>
+          ) : "Save Avatar"}
+        </Button>
       </div>
     </div>
   );

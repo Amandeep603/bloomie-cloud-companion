@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +16,7 @@ export const LoginForm = () => {
   const { toast } = useToast();
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +24,10 @@ export const LoginForm = () => {
 
     try {
       await login(email, password);
-      navigate("/chat");
+      
+      // Redirect to the intended destination or default to chat
+      const destination = location.state?.from || "/chat";
+      navigate(destination);
     } catch (error) {
       // Error is already handled in the login function
       console.error("Login error:", error);

@@ -167,7 +167,8 @@ const VideoCall = () => {
             </p>
             <Button 
               onClick={startCall} 
-              disabled={!jitsiApiReady || !currentUser}
+              disabled={!jitsiApiReady}
+              className="px-8 py-6 text-lg"
             >
               Start Call
             </Button>

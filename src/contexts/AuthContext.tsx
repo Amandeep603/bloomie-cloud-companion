@@ -8,9 +8,10 @@ import {
   onAuthStateChanged,
   updateProfile
 } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
+import { availableAvatars } from "@/services/avatarService";
 
 type UserProfile = {
   displayName: string;
@@ -24,6 +25,7 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, name: string) => Promise<void>;
   logout: () => Promise<void>;
+  updateUserProfile: (updates: Partial<UserProfile>) => Promise<void>;
   loading: boolean;
 };
 
@@ -67,6 +69,39 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return unsubscribe;
   }, []);
 
+  // Update user profile
+  const updateUserProfile = async (updates: Partial<UserProfile>) => {
+    if (!currentUser) {
+      throw new Error("No user is authenticated");
+    }
+    
+    try {
+      const userRef = doc(db, "users", currentUser.uid);
+      await updateDoc(userRef, updates);
+      
+      // Update local state
+      setUserProfile(prev => prev ? { ...prev, ...updates } : null);
+      
+      // If displayName is updated, also update it in Firebase Auth
+      if (updates.displayName) {
+        await updateProfile(currentUser, { displayName: updates.displayName });
+      }
+      
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been updated successfully.",
+      });
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast({
+        title: "Error updating profile",
+        description: "Failed to update your profile. Please try again.",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
   // Login function
   const login = async (email: string, password: string) => {
     try {
@@ -103,15 +138,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Update user profile in Firebase Auth
       await updateProfile(user, { displayName: name });
       
+      // Get a default avatar
+      const defaultAvatar = availableAvatars[0].url;
+      
       // Create user profile in Firestore
       const userProfile = {
         displayName: name,
-        email: user.email,
-        avatarUrl: "", // Default empty avatar URL
+        email: user.email || email,
+        avatarUrl: defaultAvatar,
         createdAt: new Date().toISOString(),
       };
       
       await setDoc(doc(db, "users", user.uid), userProfile);
+      
+      // Update local state
+      setUserProfile(userProfile);
       
       toast({
         title: "Registration successful",
@@ -161,6 +202,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     login,
     register,
     logout,
+    updateUserProfile,
     loading
   };
 

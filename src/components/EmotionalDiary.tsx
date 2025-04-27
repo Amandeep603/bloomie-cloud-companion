@@ -253,7 +253,7 @@ const EmotionalDiary = () => {
                       : "hover:ring-1 hover:ring-primary/50"
                   }`}
                   onClick={() => !isLoading && (isEditing || !currentEntryId) && setSelectedMood(mood.label)}
-                  disabled={isLoading || (!isEditing && currentEntryId)}
+                  disabled={isLoading || (!isEditing && currentEntryId !== null)}
                 >
                   <span className="text-2xl mb-1">{mood.icon}</span>
                   <span className="text-xs font-medium">{mood.label}</span>
@@ -269,7 +269,7 @@ const EmotionalDiary = () => {
               className="min-h-[150px]"
               value={diaryEntry}
               onChange={(e) => setDiaryEntry(e.target.value)}
-              disabled={isLoading || (!isEditing && currentEntryId)}
+              disabled={isLoading || (!isEditing && currentEntryId !== null)}
             />
           </div>
 

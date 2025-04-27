@@ -1,5 +1,5 @@
 
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader } from "lucide-react";
 
@@ -13,6 +13,7 @@ const ProtectedRoute = ({
   redirectTo = "/login"
 }: ProtectedRouteProps) => {
   const { currentUser, loading } = useAuth();
+  const location = useLocation();
   
   if (loading) {
     return (
@@ -24,7 +25,8 @@ const ProtectedRoute = ({
   }
   
   if (!currentUser) {
-    return <Navigate to={redirectTo} />;
+    // Store the current path to redirect back after login
+    return <Navigate to={redirectTo} state={{ from: location.pathname }} />;
   }
   
   return <>{children}</>;
