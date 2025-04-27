@@ -1,30 +1,35 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { Loader } from "lucide-react";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate login process
-    setTimeout(() => {
+    try {
+      await login(email, password);
+      navigate("/chat");
+    } catch (error) {
+      // Error is already handled in the login function
+      console.error("Login error:", error);
+    } finally {
       setIsLoading(false);
-      toast({
-        title: "Coming soon!",
-        description: "Login functionality will be available after connecting to a backend service.",
-      });
-    }, 1500);
+    }
   };
 
   return (
@@ -69,7 +74,12 @@ export const LoginForm = () => {
             className="w-full" 
             disabled={isLoading}
           >
-            {isLoading ? "Logging in..." : "Log in"}
+            {isLoading ? (
+              <>
+                <Loader className="mr-2 h-4 w-4 animate-spin" /> 
+                Logging in...
+              </>
+            ) : "Log in"}
           </Button>
         </form>
       </CardContent>
@@ -91,19 +101,22 @@ export const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate registration process
-    setTimeout(() => {
+    try {
+      await register(email, password, name);
+      navigate("/chat");
+    } catch (error) {
+      // Error is already handled in the register function
+      console.error("Registration error:", error);
+    } finally {
       setIsLoading(false);
-      toast({
-        title: "Coming soon!",
-        description: "Registration functionality will be available after connecting to a backend service.",
-      });
-    }, 1500);
+    }
   };
 
   return (
@@ -143,6 +156,7 @@ export const RegisterForm = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              minLength={8}
             />
             <p className="text-xs text-muted-foreground mt-1">
               Password must be at least 8 characters long
@@ -153,7 +167,12 @@ export const RegisterForm = () => {
             className="w-full" 
             disabled={isLoading}
           >
-            {isLoading ? "Creating account..." : "Create account"}
+            {isLoading ? (
+              <>
+                <Loader className="mr-2 h-4 w-4 animate-spin" /> 
+                Creating account...
+              </>
+            ) : "Create account"}
           </Button>
         </form>
       </CardContent>

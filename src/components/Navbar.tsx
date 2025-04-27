@@ -1,12 +1,43 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "./ThemeToggle";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { currentUser, userProfile, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
+  const getInitials = (name: string | null | undefined) => {
+    if (!name) return "B";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2);
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b">
@@ -24,12 +55,50 @@ const Navbar = () => {
           <Link to="/features" className="font-medium hover:text-primary transition-colors">Features</Link>
           <div className="flex items-center space-x-3">
             <ThemeToggle />
-            <Link to="/login">
-              <Button variant="outline" size="sm">Log in</Button>
-            </Link>
-            <Link to="/register">
-              <Button size="sm">Sign up</Button>
-            </Link>
+            
+            {currentUser ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Avatar>
+                      <AvatarFallback>{getInitials(currentUser.displayName)}</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>
+                    {userProfile?.displayName || currentUser.displayName || currentUser.email}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate("/chat")}>
+                    Chat
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/diary")}>
+                    Diary
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/video")}>
+                    Video Call
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/customize")}>
+                    Customize
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="outline" size="sm">Log in</Button>
+                </Link>
+                <Link to="/register">
+                  <Button size="sm">Sign up</Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
 
@@ -64,14 +133,59 @@ const Navbar = () => {
             >
               Features
             </Link>
-            <div className="pt-2 flex flex-col space-y-3">
-              <Link to="/login" onClick={() => setIsMenuOpen(false)}>
-                <Button variant="outline" className="w-full">Log in</Button>
-              </Link>
-              <Link to="/register" onClick={() => setIsMenuOpen(false)}>
-                <Button className="w-full">Sign up</Button>
-              </Link>
-            </div>
+            
+            {currentUser ? (
+              <>
+                <Link 
+                  to="/chat" 
+                  className="px-4 py-2 rounded-lg hover:bg-muted transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Chat
+                </Link>
+                <Link 
+                  to="/diary" 
+                  className="px-4 py-2 rounded-lg hover:bg-muted transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Diary
+                </Link>
+                <Link 
+                  to="/video" 
+                  className="px-4 py-2 rounded-lg hover:bg-muted transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Video Call
+                </Link>
+                <Link 
+                  to="/customize" 
+                  className="px-4 py-2 rounded-lg hover:bg-muted transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Customize
+                </Link>
+                <Button 
+                  variant="outline" 
+                  className="w-full flex items-center justify-center"
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Log out
+                </Button>
+              </>
+            ) : (
+              <div className="pt-2 flex flex-col space-y-3">
+                <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="outline" className="w-full">Log in</Button>
+                </Link>
+                <Link to="/register" onClick={() => setIsMenuOpen(false)}>
+                  <Button className="w-full">Sign up</Button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}
