@@ -2,58 +2,88 @@
 import { Link } from "react-router-dom";
 
 const Footer = () => {
-  const year = new Date().getFullYear();
-  
   return (
-    <footer className="bg-muted/30 border-t">
-      <div className="container mx-auto py-10 px-4">
+    <footer className="border-t py-8 bg-background">
+      <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="col-span-1 md:col-span-2">
+          <div>
             <Link to="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                <span className="text-sm font-bold text-white">B</span>
+                <span className="text-base font-bold text-white">B</span>
               </div>
-              <span className="font-nunito font-bold text-xl bg-clip-text text-transparent animated-gradient">Bloomie</span>
+              <span className="font-nunito font-bold text-xl bg-clip-text text-transparent animated-gradient">
+                Bloomie
+              </span>
             </Link>
-            <p className="mt-4 text-muted-foreground">
-              Your friendly AI companion designed to help you bloom into your best self through meaningful conversations and emotional support.
+            <p className="mt-4 text-sm text-muted-foreground">
+              Your lovable AI companion for emotional well-being and meaningful conversations.
             </p>
           </div>
-          
           <div>
-            <h3 className="font-bold text-lg mb-4">Features</h3>
+            <h3 className="font-medium mb-4">Product</h3>
             <ul className="space-y-2">
-              <li><Link to="/chat" className="text-muted-foreground hover:text-primary transition-colors">AI Chat</Link></li>
-              <li><Link to="/diary" className="text-muted-foreground hover:text-primary transition-colors">Emotional Diary</Link></li>
-              <li><Link to="/video" className="text-muted-foreground hover:text-primary transition-colors">Video Calls</Link></li>
-              <li><Link to="/customize" className="text-muted-foreground hover:text-primary transition-colors">Customization</Link></li>
+              <li>
+                <Link to="/features" className="text-sm text-muted-foreground hover:text-foreground">
+                  Features
+                </Link>
+              </li>
+              <li>
+                <Link to="/customize" className="text-sm text-muted-foreground hover:text-foreground">
+                  Customize
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
+                  Pricing
+                </a>
+              </li>
             </ul>
           </div>
-          
           <div>
-            <h3 className="font-bold text-lg mb-4">Company</h3>
+            <h3 className="font-medium mb-4">Resources</h3>
             <ul className="space-y-2">
-              <li><Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">About Us</Link></li>
-              <li><Link to="/privacy" className="text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/terms" className="text-muted-foreground hover:text-primary transition-colors">Terms of Service</Link></li>
-              <li><Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">Contact Us</Link></li>
+              <li>
+                <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
+                  Blog
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
+                  Support
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-medium mb-4">Company</h3>
+            <ul className="space-y-2">
+              <li>
+                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
+                  Contact
+                </a>
+              </li>
             </ul>
           </div>
         </div>
-        
-        <div className="border-t mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-muted-foreground text-sm">© {year} Bloomie. All rights reserved.</p>
-          <div className="mt-4 md:mt-0 flex space-x-4">
-            <Link to="#" className="text-muted-foreground hover:text-primary transition-colors">
-              Twitter
-            </Link>
-            <Link to="#" className="text-muted-foreground hover:text-primary transition-colors">
-              Instagram
-            </Link>
-            <Link to="#" className="text-muted-foreground hover:text-primary transition-colors">
-              Facebook
-            </Link>
-          </div>
+        <div className="mt-8 pt-8 border-t text-center">
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} Bloomie. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

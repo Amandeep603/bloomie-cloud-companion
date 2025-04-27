@@ -14,6 +14,7 @@ import Diary from "./pages/Diary";
 import VideoCall from "./pages/VideoCall";
 import Customize from "./pages/Customize";
 import NotFound from "./pages/NotFound";
+import Terms from "./pages/Terms";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
           <Route path="/diary" element={<Diary />} />
           <Route path="/video" element={<VideoCall />} />
           <Route path="/customize" element={<Customize />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
