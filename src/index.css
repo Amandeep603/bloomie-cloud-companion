@@ -1,132 +1,151 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+ 
 @layer base {
   :root {
-    --background: 260 57% 98%;
-    --foreground: 260 20% 20%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 260 20% 20%;
-
+    --card-foreground: 222.2 84% 4.9%;
+ 
     --popover: 0 0% 100%;
-    --popover-foreground: 260 20% 20%;
-
-    --primary: 262 81% 75%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 330 100% 91%;
-    --secondary-foreground: 260 20% 20%;
-
-    --muted: 260 20% 96%;
-    --muted-foreground: 260 10% 50%;
-
-    --accent: 134 56% 91%;
-    --accent-foreground: 260 20% 20%;
-
+    --popover-foreground: 222.2 84% 4.9%;
+ 
+    --primary: 283 68% 58%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+ 
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+ 
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+ 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 260 30% 90%;
-    --input: 260 30% 90%;
-    --ring: 262 81% 75%;
-
-    --radius: 1rem;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 283 68% 58%;
+ 
+    --radius: 0.5rem;
   }
-
+ 
   .dark {
-    --background: 260 25% 11%;
-    --foreground: 260 10% 94%;
-
-    --card: 260 25% 13%;
-    --card-foreground: 260 10% 94%;
-
-    --popover: 260 25% 13%;
-    --popover-foreground: 260 10% 94%;
-
-    --primary: 262 81% 65%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 330 70% 44%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 260 25% 18%;
-    --muted-foreground: 260 10% 70%;
-
-    --accent: 134 30% 31%;
-    --accent-foreground: 0 0% 98%;
-
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+ 
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+ 
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --primary: 283 68% 58%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+ 
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+ 
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+ 
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+ 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 260 25% 25%;
-    --input: 260 25% 25%;
-    --ring: 262 81% 55%;
-
-    --sidebar-background: 240 25% 9%;
-    --sidebar-foreground: 240 10% 85%;
-    --sidebar-primary: 262 81% 65%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 15% 15%;
-    --sidebar-accent-foreground: 240 10% 85%;
-    --sidebar-border: 240 15% 18%;
-    --sidebar-ring: 262 81% 65%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 283 68% 58%;
   }
 }
-
+ 
 @layer base {
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-background text-foreground font-poppins;
+    @apply bg-background text-foreground;
   }
   
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-nunito font-bold;
+  /* Standard animations */
+  .animated-gradient {
+    @apply bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700;
+    background-size: 200% 200%;
+    animation: gradientFlow 8s ease infinite;
   }
 }
 
-@layer utilities {
-  .animated-gradient {
-    @apply bg-gradient-to-r from-bloomie-purple via-bloomie-pink to-bloomie-yellow bg-[length:200%_auto] animate-gradient-x;
-  }
+/* Calendar styling for diary entries */
+.has-diary-entry {
+  @apply relative;
+  position: relative;
+}
+
+.has-diary-entry::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  @apply bg-bloomie-purple;
+}
+
+/* Diary textarea style */
+.diary-textarea {
+  @apply border-none rounded-lg;
+  background-image: linear-gradient(to right, transparent, transparent 40px, #ccc 40px, #ccc 41px, transparent 41px), 
+                    linear-gradient(to bottom, transparent, transparent 1.2em, #ccc 1.2em, #ccc calc(1.2em + 1px), transparent calc(1.2em + 1px));
+  background-size: 100% 1.2em;
+  line-height: 1.2em;
+  font-family: 'Nunito', sans-serif;
+}
+
+.dark .diary-textarea {
+  background-image: linear-gradient(to right, transparent, transparent 40px, #444 40px, #444 41px, transparent 41px), 
+                    linear-gradient(to bottom, transparent, transparent 1.2em, #444 1.2em, #444 calc(1.2em + 1px), transparent calc(1.2em + 1px));
+}
+
+/* Keyframe animations */
+@keyframes gradientFlow {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+
+/* Framer Motion Classes */
+.framer-scale-hover {
+  @apply transition-all duration-300 hover:scale-105;
+}
+
+/* Emoji picker styles */
+.EmojiPickerReact {
+  --epr-bg-color: var(--background);
+  --epr-category-label-bg-color: var(--background);
+  --epr-text-color: var(--foreground);
+  --epr-hover-bg-color: var(--secondary);
+  --epr-search-input-bg-color: var(--muted);
+  --epr-search-input-text-color: var(--foreground);
+  --epr-category-label-text-color: var(--foreground);
+  --epr-skin-tone-picker-menu-color: var(--foreground);
+  --epr-search-border-color: var(--border);
   
-  .animated-gradient-light {
-    @apply bg-gradient-to-r from-bloomie-blue via-bloomie-green to-bloomie-yellow bg-[length:200%_auto] animate-gradient-x;
-  }
-  
-  .text-shadow {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .bubble {
-    @apply rounded-2xl px-4 py-3 shadow-md;
-  }
-  
-  .ai-bubble {
-    @apply bubble bg-primary/10 text-foreground;
-  }
-  
-  .user-bubble {
-    @apply bubble bg-primary text-primary-foreground;
-  }
-  
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  @apply rounded-lg border border-border shadow-lg;
+}
+
+/* Add missing emoji for Safari */
+@supports not (content: "👋") {
+  .emoji-fallback::after {
+    content: "👋";
   }
 }

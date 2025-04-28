@@ -14,92 +14,117 @@ const Hero = () => {
       <div className="absolute bottom-20 -right-10 w-40 h-40 rounded-full bg-bloomie-pink/20 blur-3xl"></div>
       <div className="absolute top-1/3 right-20 w-20 h-20 rounded-full bg-bloomie-yellow/20 blur-2xl"></div>
       
-      {/* Animated Avatar Group */}
+      {/* 3D Animated Avatars Scene */}
       <motion.div 
-        className="relative mb-8"
+        className="relative mb-8 w-full max-w-4xl"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        {/* Main Avatar */}
-        <motion.div 
-          className="w-40 h-40 md:w-56 md:h-56 bg-white rounded-full flex items-center justify-center shadow-xl"
-          animate={{ y: [0, -10, 0] }}
-          transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-        >
+        <div className="relative h-[300px] sm:h-[400px] w-full">
+          {/* Boy Avatar */}
           <motion.div 
-            className="w-36 h-36 md:w-52 md:h-52 bg-primary rounded-full flex items-center justify-center relative overflow-hidden"
+            className="absolute left-10 sm:left-20 lg:left-40 top-0 w-40 h-40 sm:w-60 sm:h-60"
+            initial={{ x: -100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 1, delay: 0.5 }}
             whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.2 }}
           >
-            <div className="text-white text-5xl md:text-6xl font-nunito font-bold">B</div>
-            
-            {/* Face features animated */}
-            <motion.div 
-              className="absolute w-16 h-6 bg-white rounded-full top-[40%]"
-              animate={{ scale: [1, 1.05, 1] }}
-              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            >
-              <div className="flex justify-center space-x-8 mt-1">
-                <motion.div 
-                  className="w-2 h-2 bg-primary rounded-full"
-                  animate={{ scale: [1, 0.8, 1] }}
-                  transition={{ repeat: Infinity, duration: 2.5 }}
-                />
-                <motion.div 
-                  className="w-2 h-2 bg-primary rounded-full"
-                  animate={{ scale: [1, 0.8, 1] }}
-                  transition={{ repeat: Infinity, duration: 2.5, delay: 0.2 }}
-                />
-              </div>
-            </motion.div>
+            <div className="relative w-full h-full">
+              <div className="absolute inset-0 bg-bloomie-green rounded-full opacity-20"></div>
+              <motion.div 
+                className="absolute inset-0 flex items-center justify-center"
+                animate={{ 
+                  y: [0, -10, 0],
+                  rotate: [0, 2, 0]
+                }}
+                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              >
+                <div className="relative w-36 h-36 sm:w-48 sm:h-48">
+                  {/* Boy Character */}
+                  <div className="absolute inset-0 bg-primary rounded-full flex items-center justify-center overflow-hidden">
+                    <span className="text-6xl">👦</span>
+                  </div>
+                  {/* Animated Arms */}
+                  <motion.div 
+                    className="absolute -right-4 top-1/4 w-10 h-3 bg-primary rounded-full origin-left"
+                    animate={{ rotate: [0, 20, 0, 20, 0] }}
+                    transition={{ repeat: Infinity, duration: 2.5 }}
+                  ></motion.div>
+                </div>
+              </motion.div>
+              {/* Speech Bubble */}
+              <motion.div 
+                className="absolute -top-12 -right-12 sm:-right-20 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow-md"
+                initial={{ scale: 0 }}
+                animate={{ scale: [0, 1.1, 1] }}
+                transition={{ delay: 1.5, duration: 0.5 }}
+              >
+                <p className="text-sm whitespace-nowrap">👋 Hello there!</p>
+              </motion.div>
+            </div>
           </motion.div>
-        </motion.div>
-        
-        {/* Decorative Animated Elements */}
-        <motion.div 
-          className="absolute -top-3 -right-3 w-12 h-12 bg-bloomie-yellow rounded-full z-10 flex items-center justify-center"
-          animate={{ 
-            y: [0, -8, 0],
-            rotate: [0, 10, 0]
-          }}
-          transition={{ repeat: Infinity, duration: 3, delay: 0.2 }}
-        >
-          <span className="text-xl">💭</span>
-        </motion.div>
-        
-        <motion.div 
-          className="absolute bottom-0 -left-3 w-14 h-14 bg-bloomie-green rounded-full z-10 flex items-center justify-center"
-          animate={{ 
-            y: [0, 8, 0],
-            rotate: [0, -10, 0]
-          }}
-          transition={{ repeat: Infinity, duration: 3.5 }}
-        >
-          <span className="text-xl">💬</span>
-        </motion.div>
-        
-        <motion.div 
-          className="absolute top-1/2 -right-8 w-16 h-16 bg-bloomie-pink rounded-full z-10 flex items-center justify-center"
-          animate={{ 
-            x: [0, 5, 0],
-            y: [0, -5, 0]
-          }}
-          transition={{ repeat: Infinity, duration: 4 }}
-        >
-          <span className="text-xl">📓</span>
-        </motion.div>
-        
-        <motion.div 
-          className="absolute top-3/4 left-[70%] w-10 h-10 bg-bloomie-purple rounded-full z-10 flex items-center justify-center"
-          animate={{ 
-            scale: [1, 1.1, 1],
-            rotate: [0, 5, 0]
-          }}
-          transition={{ repeat: Infinity, duration: 2.5 }}
-        >
-          <span className="text-lg">🎥</span>
-        </motion.div>
+
+          {/* Girl Avatar */}
+          <motion.div 
+            className="absolute right-10 sm:right-20 lg:right-40 top-0 w-40 h-40 sm:w-60 sm:h-60"
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 1, delay: 0.7 }}
+            whileHover={{ scale: 1.05 }}
+          >
+            <div className="relative w-full h-full">
+              <div className="absolute inset-0 bg-bloomie-pink rounded-full opacity-20"></div>
+              <motion.div 
+                className="absolute inset-0 flex items-center justify-center"
+                animate={{ 
+                  y: [0, -8, 0],
+                  rotate: [0, -2, 0]
+                }}
+                transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 0.5 }}
+              >
+                <div className="relative w-36 h-36 sm:w-48 sm:h-48">
+                  {/* Girl Character */}
+                  <div className="absolute inset-0 bg-bloomie-purple rounded-full flex items-center justify-center overflow-hidden">
+                    <span className="text-6xl">👧</span>
+                  </div>
+                  {/* Animated Arms */}
+                  <motion.div 
+                    className="absolute -left-4 top-1/4 w-10 h-3 bg-bloomie-purple rounded-full origin-right"
+                    animate={{ rotate: [0, -20, 0, -20, 0] }}
+                    transition={{ repeat: Infinity, duration: 2.7 }}
+                  ></motion.div>
+                </div>
+              </motion.div>
+              {/* Speech Bubble */}
+              <motion.div 
+                className="absolute -top-16 -left-12 sm:-left-28 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow-md"
+                initial={{ scale: 0 }}
+                animate={{ scale: [0, 1.1, 1] }}
+                transition={{ delay: 2, duration: 0.5 }}
+              >
+                <p className="text-sm whitespace-nowrap">I'm Bloomie! 🌸</p>
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Connection Line Between Avatars */}
+          <motion.div 
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 sm:w-32 h-1 bg-gradient-to-r from-primary to-bloomie-purple rounded-full"
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ delay: 1.2, duration: 0.8 }}
+          >
+            <motion.div 
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-bloomie-yellow rounded-full"
+              animate={{ 
+                x: [-40, 40, -40],
+                scale: [1, 1.2, 1]
+              }}
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            ></motion.div>
+          </motion.div>
+        </div>
       </motion.div>
       
       {/* Text Content */}

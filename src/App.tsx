@@ -21,22 +21,25 @@ import Terms from "./pages/Terms";
 
 const queryClient = new QueryClient();
 
-// Page transition component
+// Enhanced page transition component
 const PageTransition = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={location.pathname}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.3 }}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <motion.div
+      key={location.pathname}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ 
+        type: "spring", 
+        stiffness: 260, 
+        damping: 20, 
+        duration: 0.3 
+      }}
+    >
+      {children}
+    </motion.div>
   );
 };
 
@@ -46,17 +49,69 @@ const AnimatedRoutes = () => {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Index />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/features" element={<Features />} />
-        <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
-        <Route path="/diary" element={<ProtectedRoute><Diary /></ProtectedRoute>} />
-        <Route path="/video" element={<ProtectedRoute><VideoCall /></ProtectedRoute>} />
-        <Route path="/customize" element={<ProtectedRoute><Customize /></ProtectedRoute>} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="*" element={<NotFound />} />
+        <Route path="/" element={
+          <PageTransition>
+            <Index />
+          </PageTransition>
+        } />
+        <Route path="/login" element={
+          <PageTransition>
+            <Login />
+          </PageTransition>
+        } />
+        <Route path="/register" element={
+          <PageTransition>
+            <Register />
+          </PageTransition>
+        } />
+        <Route path="/about" element={
+          <PageTransition>
+            <About />
+          </PageTransition>
+        } />
+        <Route path="/features" element={
+          <PageTransition>
+            <Features />
+          </PageTransition>
+        } />
+        <Route path="/chat" element={
+          <ProtectedRoute>
+            <PageTransition>
+              <Chat />
+            </PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/diary" element={
+          <ProtectedRoute>
+            <PageTransition>
+              <Diary />
+            </PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/video" element={
+          <ProtectedRoute>
+            <PageTransition>
+              <VideoCall />
+            </PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/customize" element={
+          <ProtectedRoute>
+            <PageTransition>
+              <Customize />
+            </PageTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/terms" element={
+          <PageTransition>
+            <Terms />
+          </PageTransition>
+        } />
+        <Route path="*" element={
+          <PageTransition>
+            <NotFound />
+          </PageTransition>
+        } />
       </Routes>
     </AnimatePresence>
   );

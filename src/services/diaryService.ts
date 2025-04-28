@@ -28,11 +28,34 @@ export type DiaryEntry = {
 // Add a new diary entry
 export const addDiaryEntry = async (userId: string, entry: { mood: string, content: string, date: Date }) => {
   try {
+    // Check for existing entry on this date to avoid duplicates
+    const dateStr = entry.date.toISOString().split('T')[0];
+    const existingQuery = query(
+      collection(db, "diary"),
+      where("userId", "==", userId),
+      where("dateString", "==", dateStr)
+    );
+    
+    const existingSnapshot = await getDocs(existingQuery);
+    
+    if (!existingSnapshot.empty) {
+      // Update the existing entry instead
+      const existingDoc = existingSnapshot.docs[0];
+      await updateDoc(doc(db, "diary", existingDoc.id), {
+        mood: entry.mood,
+        content: entry.content,
+        updatedAt: serverTimestamp()
+      });
+      return existingDoc.id;
+    }
+    
+    // No existing entry, create a new one
     const docRef = await addDoc(collection(db, "diary"), {
       userId,
       mood: entry.mood,
       content: entry.content,
       date: entry.date,
+      dateString: dateStr, // Store date as string for easier querying
       createdAt: serverTimestamp(),
       updatedAt: null
     });
@@ -98,6 +121,41 @@ export const getDiaryEntry = async (entryId: string): Promise<DiaryEntry | null>
   }
 };
 
+// Get a diary entry by date
+export const getDiaryEntryByDate = async (userId: string, date: Date): Promise<DiaryEntry | null> => {
+  try {
+    const dateStr = date.toISOString().split('T')[0];
+    
+    const entryQuery = query(
+      collection(db, "diary"),
+      where("userId", "==", userId),
+      where("dateString", "==", dateStr)
+    );
+    
+    const querySnapshot = await getDocs(entryQuery);
+    
+    if (!querySnapshot.empty) {
+      const doc = querySnapshot.docs[0];
+      const data = doc.data();
+      
+      return {
+        id: doc.id,
+        userId: data.userId,
+        mood: data.mood,
+        content: data.content,
+        date: (data.date as Timestamp).toDate(),
+        createdAt: (data.createdAt as Timestamp).toDate(),
+        updatedAt: data.updatedAt ? (data.updatedAt as Timestamp).toDate() : null
+      };
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Error getting diary entry by date:", error);
+    throw error;
+  }
+};
+
 // Get all diary entries for a user
 export const getDiaryEntries = async (userId: string): Promise<DiaryEntry[]> => {
   try {
@@ -126,6 +184,45 @@ export const getDiaryEntries = async (userId: string): Promise<DiaryEntry[]> => 
     return entries;
   } catch (error) {
     console.error("Error getting diary entries:", error);
+    throw error;
+  }
+};
+
+// Get mood statistics
+export const getMoodStatistics = async (userId: string, startDate: Date, endDate: Date) => {
+  try {
+    const diaryQuery = query(
+      collection(db, "diary"),
+      where("userId", "==", userId),
+      where("date", ">=", startDate),
+      where("date", "<=", endDate),
+      orderBy("date", "asc")
+    );
+    
+    const querySnapshot = await getDocs(diaryQuery);
+    const moodCounts: Record<string, number> = {};
+    const moodTrend: {date: Date, mood: string}[] = [];
+    
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const mood = data.mood;
+      
+      // Count moods
+      moodCounts[mood] = (moodCounts[mood] || 0) + 1;
+      
+      // Track mood trend
+      moodTrend.push({
+        date: (data.date as Timestamp).toDate(),
+        mood: mood
+      });
+    });
+    
+    return {
+      moodCounts,
+      moodTrend
+    };
+  } catch (error) {
+    console.error("Error getting mood statistics:", error);
     throw error;
   }
 };
