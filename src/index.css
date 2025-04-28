@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
  
-    --primary: 283 68% 58%;
+    --primary: 262.1 83.3% 57.8%;
     --primary-foreground: 210 40% 98%;
  
     --secondary: 210 40% 96.1%;
@@ -31,7 +31,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 283 68% 58%;
+    --ring: 221.2 83.2% 53.3%;
  
     --radius: 0.5rem;
   }
@@ -46,7 +46,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
  
-    --primary: 283 68% 58%;
+    --primary: 262.1 83.3% 57.8%;
     --primary-foreground: 222.2 47.4% 11.2%;
  
     --secondary: 217.2 32.6% 17.5%;
@@ -63,89 +63,174 @@
  
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 283 68% 58%;
+    --ring: 224.3 76.5% 48%;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
-  }
-  
-  /* Standard animations */
-  .animated-gradient {
-    @apply bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700;
-    background-size: 200% 200%;
-    animation: gradientFlow 8s ease infinite;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-/* Calendar styling for diary entries */
+/* Custom styles for the emotional diary */
+.react-calendar {
+  width: 100%;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  line-height: 1.125em;
+}
+
+.react-calendar__navigation {
+  display: flex;
+  height: 44px;
+  margin-bottom: 1em;
+}
+
+.react-calendar__navigation button {
+  min-width: 44px;
+  background: none;
+  font-size: 1em;
+  margin: 0;
+  border: 0;
+  border-radius: var(--radius);
+  color: var(--foreground);
+}
+
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+  background-color: hsl(var(--primary) / 0.1);
+}
+
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.75em;
+  margin-bottom: 0.5em;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5em;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none;
+  color: hsl(var(--muted-foreground));
+}
+
+.react-calendar__tile {
+  max-width: 100%;
+  padding: 10px 0;
+  background: none;
+  text-align: center;
+  border-radius: var(--radius);
+  line-height: 16px;
+  font-size: 0.875rem;
+  position: relative;
+  overflow: visible;
+  height: 40px;
+}
+
+.react-calendar__tile:disabled {
+  background-color: transparent;
+  color: hsl(var(--muted-foreground) / 0.5);
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: hsl(var(--primary) / 0.1);
+}
+
+.react-calendar__tile--now {
+  position: relative;
+}
+
+.react-calendar__tile--now:enabled:hover,
+.react-calendar__tile--now:enabled:focus {
+  background-color: hsl(var(--primary) / 0.15);
+}
+
+.react-calendar__tile--active {
+  background-color: hsl(var(--primary) / 0.2);
+  color: hsl(var(--primary));
+  font-weight: 600;
+}
+
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  background-color: hsl(var(--primary) / 0.3);
+}
+
 .has-diary-entry {
-  @apply relative;
   position: relative;
 }
 
 .has-diary-entry::after {
   content: '';
   position: absolute;
-  bottom: 2px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  @apply bg-bloomie-purple;
+  background-color: hsl(var(--primary));
 }
 
-/* Diary textarea style */
-.diary-textarea {
-  @apply border-none rounded-lg;
-  background-image: linear-gradient(to right, transparent, transparent 40px, #ccc 40px, #ccc 41px, transparent 41px), 
-                    linear-gradient(to bottom, transparent, transparent 1.2em, #ccc 1.2em, #ccc calc(1.2em + 1px), transparent calc(1.2em + 1px));
-  background-size: 100% 1.2em;
-  line-height: 1.2em;
-  font-family: 'Nunito', sans-serif;
+/* Enhanced chat bubbles */
+.chat-message-user {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-radius: 18px 18px 4px 18px;
 }
 
-.dark .diary-textarea {
-  background-image: linear-gradient(to right, transparent, transparent 40px, #444 40px, #444 41px, transparent 41px), 
-                    linear-gradient(to bottom, transparent, transparent 1.2em, #444 1.2em, #444 calc(1.2em + 1px), transparent calc(1.2em + 1px));
+.chat-message-ai {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  border-radius: 18px 18px 18px 4px;
 }
 
-/* Keyframe animations */
-@keyframes gradientFlow {
-  0% { background-position: 0% 50% }
-  50% { background-position: 100% 50% }
-  100% { background-position: 0% 50% }
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-/* Framer Motion Classes */
-.framer-scale-hover {
-  @apply transition-all duration-300 hover:scale-105;
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-/* Emoji picker styles */
-.EmojiPickerReact {
-  --epr-bg-color: var(--background);
-  --epr-category-label-bg-color: var(--background);
-  --epr-text-color: var(--foreground);
-  --epr-hover-bg-color: var(--secondary);
-  --epr-search-input-bg-color: var(--muted);
-  --epr-search-input-text-color: var(--foreground);
-  --epr-category-label-text-color: var(--foreground);
-  --epr-skin-tone-picker-menu-color: var(--foreground);
-  --epr-search-border-color: var(--border);
-  
-  @apply rounded-lg border border-border shadow-lg;
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.2);
+  border-radius: 4px;
 }
 
-/* Add missing emoji for Safari */
-@supports not (content: "👋") {
-  .emoji-fallback::after {
-    content: "👋";
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.3);
+}
+
+/* Animations */
+@keyframes typing {
+  0% {
+    opacity: 0.3;
+    transform: translateY(0px);
   }
+  50% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translateY(0px);
+  }
+}
+
+.typing-animation {
+  animation: typing 1s infinite;
 }

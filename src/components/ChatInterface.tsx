@@ -7,6 +7,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { addMessage, getChatHistory, generateBotResponse, ChatMessage } from "@/services/chatService";
 import EmojiPicker from 'emoji-picker-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar } from "@/components/ui/avatar";
+import { useToast } from "@/components/ui/use-toast";
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -17,7 +21,9 @@ const ChatInterface = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { currentUser } = useAuth();
+  const { toast } = useToast();
 
   // Click outside emoji picker handler
   useEffect(() => {
@@ -40,7 +46,7 @@ const ChatInterface = () => {
       
       try {
         setIsLoadingHistory(true);
-        const history = await getChatHistory(currentUser.uid);
+        const history = await getChatHistory(currentUser.uid, 100);
         
         if (history.length === 0) {
           // If no chat history, add a welcome message
@@ -62,17 +68,26 @@ const ChatInterface = () => {
         }
       } catch (error) {
         console.error("Error loading chat history:", error);
+        toast({
+          title: "Error loading chat history",
+          description: "Failed to load your previous conversations. Please try again.",
+          variant: "destructive"
+        });
       } finally {
         setIsLoadingHistory(false);
       }
     };
     
     loadChatHistory();
-  }, [currentUser]);
+  }, [currentUser, toast]);
 
   // Auto scroll to bottom whenever messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
   }, [messages]);
 
   const handleSendMessage = async () => {
@@ -120,6 +135,11 @@ const ChatInterface = () => {
       });
     } catch (error) {
       console.error("Error handling message:", error);
+      toast({
+        title: "Error sending message",
+        description: "Failed to send your message. Please try again.",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -158,63 +178,87 @@ const ChatInterface = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex-grow overflow-y-auto p-4 space-y-4">
-        <AnimatePresence>
-          {messages.map((message) => (
-            <motion.div
-              key={message.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
-            >
-              <div
-                className={`max-w-[80%] md:max-w-[70%] p-3 rounded-2xl shadow-sm ${
-                  message.sender === "user" 
-                    ? "bg-primary text-primary-foreground" 
-                    : "bg-muted"
-                }`}
+      <ScrollArea className="flex-grow p-4 h-[calc(100vh-180px)]">
+        <div className="space-y-4 pb-[60px]" ref={scrollAreaRef}>
+          <AnimatePresence>
+            {messages.map((message) => (
+              <motion.div
+                key={message.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
               >
-                <div className="flex flex-col">
-                  <p className="break-words">{message.text}</p>
-                  <span className={`text-xs ${
+                <div className="flex items-start max-w-[80%] md:max-w-[70%]">
+                  {message.sender === "ai" && (
+                    <Avatar className="h-8 w-8 mr-2 mt-1">
+                      <div className="bg-primary text-primary-foreground rounded-full h-full w-full flex items-center justify-center text-xs font-semibold">
+                        B
+                      </div>
+                    </Avatar>
+                  )}
+                  <Card className={`overflow-hidden ${
                     message.sender === "user" 
-                      ? "opacity-70" 
-                      : "text-muted-foreground"
-                    } text-right mt-1`}
-                  >
-                    {formatTime(message.timestamp)}
-                  </span>
+                      ? "bg-primary" 
+                      : "bg-muted"
+                  }`}>
+                    <CardContent className={`p-3 ${
+                      message.sender === "user" 
+                        ? "text-primary-foreground" 
+                        : ""
+                    }`}>
+                      <div className="flex flex-col">
+                        <p className="break-words whitespace-pre-wrap">{message.text}</p>
+                        <span className={`text-xs ${
+                          message.sender === "user" 
+                            ? "opacity-70" 
+                            : "text-muted-foreground"
+                          } text-right mt-1`}
+                        >
+                          {formatTime(message.timestamp)}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+          
+          {isLoading && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex justify-start"
+            >
+              <div className="flex items-start">
+                <Avatar className="h-8 w-8 mr-2 mt-1">
+                  <div className="bg-primary text-primary-foreground rounded-full h-full w-full flex items-center justify-center text-xs font-semibold">
+                    B
+                  </div>
+                </Avatar>
+                <Card>
+                  <CardContent className="p-3">
+                    <div className="flex space-x-1 items-center">
+                      <span className="text-sm text-muted-foreground">Bloomie is typing</span>
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 rounded-full bg-primary animate-bounce"></div>
+                        <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                        <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0.4s" }}></div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </motion.div>
-          ))}
-        </AnimatePresence>
-        
-        {isLoading && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex justify-start"
-          >
-            <div className="bg-muted p-3 rounded-2xl">
-              <div className="flex space-x-1 items-center">
-                <span className="text-sm text-muted-foreground">Bloomie is thinking</span>
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 rounded-full bg-primary animate-bounce"></div>
-                  <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-                  <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0.4s" }}></div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-        
-        <div ref={messagesEndRef}></div>
-      </div>
+          )}
+          
+          <div ref={messagesEndRef}></div>
+        </div>
+      </ScrollArea>
       
-      <div className="p-4 border-t relative">
+      <div className="p-4 border-t sticky bottom-0 bg-background">
         <div className="flex space-x-2">
           <div className="relative flex-grow flex">
             <Input

@@ -19,6 +19,7 @@ export type DiaryEntry = {
   id: string;
   userId: string;
   mood: string;
+  title: string;
   content: string;
   date: Date;
   createdAt: Date;
@@ -26,7 +27,13 @@ export type DiaryEntry = {
 };
 
 // Add a new diary entry
-export const addDiaryEntry = async (userId: string, entry: { mood: string, content: string, date: Date }) => {
+export const addDiaryEntry = async (userId: string, entry: { 
+  id?: string, 
+  mood: string, 
+  title: string, 
+  content: string, 
+  date: Date 
+}) => {
   try {
     // Check for existing entry on this date to avoid duplicates
     const dateStr = entry.date.toISOString().split('T')[0];
@@ -38,28 +45,41 @@ export const addDiaryEntry = async (userId: string, entry: { mood: string, conte
     
     const existingSnapshot = await getDocs(existingQuery);
     
-    if (!existingSnapshot.empty) {
-      // Update the existing entry instead
+    // If we have an ID, we're updating an existing entry
+    if (entry.id) {
+      await updateDoc(doc(db, "diary", entry.id), {
+        mood: entry.mood,
+        title: entry.title,
+        content: entry.content,
+        updatedAt: serverTimestamp()
+      });
+      return entry.id;
+    } 
+    // If we found an existing entry for this date, update it
+    else if (!existingSnapshot.empty) {
       const existingDoc = existingSnapshot.docs[0];
       await updateDoc(doc(db, "diary", existingDoc.id), {
         mood: entry.mood,
+        title: entry.title,
         content: entry.content,
         updatedAt: serverTimestamp()
       });
       return existingDoc.id;
-    }
-    
+    } 
     // No existing entry, create a new one
-    const docRef = await addDoc(collection(db, "diary"), {
-      userId,
-      mood: entry.mood,
-      content: entry.content,
-      date: entry.date,
-      dateString: dateStr, // Store date as string for easier querying
-      createdAt: serverTimestamp(),
-      updatedAt: null
-    });
-    return docRef.id;
+    else {
+      const docRef = await addDoc(collection(db, "diary"), {
+        userId,
+        mood: entry.mood,
+        title: entry.title,
+        content: entry.content,
+        date: entry.date,
+        dateString: dateStr, // Store date as string for easier querying
+        createdAt: serverTimestamp(),
+        updatedAt: null
+      });
+      return docRef.id;
+    }
   } catch (error) {
     console.error("Error adding diary entry:", error);
     throw error;
@@ -67,7 +87,11 @@ export const addDiaryEntry = async (userId: string, entry: { mood: string, conte
 };
 
 // Update an existing diary entry
-export const updateDiaryEntry = async (entryId: string, updates: { mood?: string, content?: string }) => {
+export const updateDiaryEntry = async (entryId: string, updates: { 
+  mood?: string, 
+  title?: string, 
+  content?: string 
+}) => {
   try {
     const entryRef = doc(db, "diary", entryId);
     
@@ -107,6 +131,7 @@ export const getDiaryEntry = async (entryId: string): Promise<DiaryEntry | null>
         id: docSnap.id,
         userId: data.userId,
         mood: data.mood,
+        title: data.title || "Diary Entry",
         content: data.content,
         date: (data.date as Timestamp).toDate(),
         createdAt: (data.createdAt as Timestamp).toDate(),
@@ -141,7 +166,8 @@ export const getDiaryEntryByDate = async (userId: string, date: Date): Promise<D
       return {
         id: doc.id,
         userId: data.userId,
-        mood: data.mood,
+        mood: data.mood || "😊",
+        title: data.title || "Diary Entry",
         content: data.content,
         date: (data.date as Timestamp).toDate(),
         createdAt: (data.createdAt as Timestamp).toDate(),
@@ -173,7 +199,8 @@ export const getDiaryEntries = async (userId: string): Promise<DiaryEntry[]> => 
       entries.push({
         id: doc.id,
         userId: data.userId,
-        mood: data.mood,
+        mood: data.mood || "😊",
+        title: data.title || "Diary Entry",
         content: data.content,
         date: (data.date as Timestamp).toDate(),
         createdAt: (data.createdAt as Timestamp).toDate(),

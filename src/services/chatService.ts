@@ -37,7 +37,7 @@ export const addMessage = async (userId: string, message: { sender: "user" | "ai
 };
 
 // Get chat history for a user
-export const getChatHistory = async (userId: string, messageLimit = 50): Promise<ChatMessage[]> => {
+export const getChatHistory = async (userId: string, messageLimit = 100): Promise<ChatMessage[]> => {
   try {
     const chatQuery = query(
       collection(db, "chats"),
@@ -193,6 +193,17 @@ export const generateBotResponse = async (message: string): Promise<string> => {
       "I'd love to hear about your taste in entertainment! 🎭 What kind of music or films speak to you?"
     ];
     return mediaResponses[Math.floor(Math.random() * mediaResponses.length)];
+  }
+  
+  // Diary-related questions
+  if (lowerMessage.match(/\b(diary|journal|write|writing|record|log|memories)\b/)) {
+    const diaryResponses = [
+      "Keeping a diary is a wonderful way to process your emotions! 📓 Have you been writing in your digital diary lately?",
+      "I think journaling is so helpful for emotional wellbeing. 🌻 Would you like to talk about what you've been recording in your diary?",
+      "Writing down your thoughts can be really therapeutic. ✨ The digital diary feature is there whenever you need it!",
+      "I love that you're interested in journaling! 📝 Your digital diary entries are private and help you track your emotional journey."
+    ];
+    return diaryResponses[Math.floor(Math.random() * diaryResponses.length)];
   }
   
   // Default responses for when no pattern matches
