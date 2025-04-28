@@ -53,18 +53,18 @@ const EmotionalDiary: React.FC<EmotionalDiaryProps> = ({
     setText(prevText => prevText + emojiData.emoji);
   };
 
-  const dayContent = useCallback(
-    ({ date, ...props }: any) => {
+  // Custom tile content to mark dates with entries
+  const tileClassName = useCallback(
+    ({ date, view }: { date: Date; view: string }) => {
+      // Only mark day tiles
+      if (view !== 'month') return null;
+      
       const formattedDate = format(date, 'yyyy-MM-dd');
       const hasEntry = entries.some(entry =>
         format(new Date(entry.date), 'yyyy-MM-dd') === formattedDate
       );
 
-      return (
-        <div className={hasEntry ? "has-diary-entry" : ""}>
-          {props.day}
-        </div>
-      );
+      return hasEntry ? "has-diary-entry" : null;
     },
     [entries]
   );
@@ -76,8 +76,7 @@ const EmotionalDiary: React.FC<EmotionalDiaryProps> = ({
         onChange={onChange}
         value={date}
         className="w-full max-w-md mx-auto mb-6 rounded-lg shadow-md"
-        tileClassName="flex items-center justify-center p-2"
-        dayContent={dayContent}
+        tileClassName={tileClassName}
       />
       <div className="w-full max-w-md">
         <Textarea
