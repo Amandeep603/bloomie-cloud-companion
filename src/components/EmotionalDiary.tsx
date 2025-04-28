@@ -1,10 +1,11 @@
+
 import React, { useState, useCallback } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { format } from 'date-fns';
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import EmojiPicker from 'emoji-picker-react';
+import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useToast } from "@/components/ui/use-toast"
 import { Smile } from "lucide-react";
@@ -15,11 +16,14 @@ interface DiaryEntry {
 }
 
 interface EmotionalDiaryProps {
-  entries: DiaryEntry[];
-  onSave: (entry: DiaryEntry) => void;
+  entries?: DiaryEntry[];
+  onSave?: (entry: DiaryEntry) => void;
 }
 
-const EmotionalDiary: React.FC<EmotionalDiaryProps> = ({ entries, onSave }) => {
+const EmotionalDiary: React.FC<EmotionalDiaryProps> = ({ 
+  entries = [], 
+  onSave = () => {} 
+}) => {
   const [date, setDate] = useState(new Date());
   const [text, setText] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -50,7 +54,7 @@ const EmotionalDiary: React.FC<EmotionalDiaryProps> = ({ entries, onSave }) => {
   };
 
   const dayContent = useCallback(
-    ({ date, ...props }) => {
+    ({ date, ...props }: any) => {
       const formattedDate = format(date, 'yyyy-MM-dd');
       const hasEntry = entries.some(entry =>
         format(new Date(entry.date), 'yyyy-MM-dd') === formattedDate
@@ -93,7 +97,7 @@ const EmotionalDiary: React.FC<EmotionalDiaryProps> = ({ entries, onSave }) => {
             <PopoverContent className="w-80 p-0" side="bottom" align="start">
               <EmojiPicker
                 onEmojiClick={handleEmojiClick}
-                theme={document.documentElement.classList.contains("dark") ? "dark" : "light"}
+                theme={document.documentElement.classList.contains("dark") ? "dark" as Theme : "light" as Theme}
               />
             </PopoverContent>
           </Popover>
