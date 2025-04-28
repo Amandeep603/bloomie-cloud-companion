@@ -43,88 +43,81 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const AnimatedRoutes = () => {
-  const location = useLocation();
-  
-  return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={
-          <PageTransition>
-            <Index />
-          </PageTransition>
-        } />
-        <Route path="/login" element={
-          <PageTransition>
-            <Login />
-          </PageTransition>
-        } />
-        <Route path="/register" element={
-          <PageTransition>
-            <Register />
-          </PageTransition>
-        } />
-        <Route path="/about" element={
-          <PageTransition>
-            <About />
-          </PageTransition>
-        } />
-        <Route path="/features" element={
-          <PageTransition>
-            <Features />
-          </PageTransition>
-        } />
-        <Route path="/chat" element={
-          <ProtectedRoute>
-            <PageTransition>
-              <Chat />
-            </PageTransition>
-          </ProtectedRoute>
-        } />
-        <Route path="/diary" element={
-          <ProtectedRoute>
-            <PageTransition>
-              <Diary />
-            </PageTransition>
-          </ProtectedRoute>
-        } />
-        <Route path="/video" element={
-          <ProtectedRoute>
-            <PageTransition>
-              <VideoCall />
-            </PageTransition>
-          </ProtectedRoute>
-        } />
-        <Route path="/customize" element={
-          <ProtectedRoute>
-            <PageTransition>
-              <Customize />
-            </PageTransition>
-          </ProtectedRoute>
-        } />
-        <Route path="/terms" element={
-          <PageTransition>
-            <Terms />
-          </PageTransition>
-        } />
-        <Route path="*" element={
-          <PageTransition>
-            <NotFound />
-          </PageTransition>
-        } />
-      </Routes>
-    </AnimatePresence>
-  );
-};
-
+// Move AnimatedRoutes inside the BrowserRouter to ensure proper context
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
         <BrowserRouter>
-          <AnimatedRoutes />
+          <Toaster />
+          <Sonner />
+          <AnimatePresence mode="wait">
+            <Routes>
+              <Route path="/" element={
+                <PageTransition>
+                  <Index />
+                </PageTransition>
+              } />
+              <Route path="/login" element={
+                <PageTransition>
+                  <Login />
+                </PageTransition>
+              } />
+              <Route path="/register" element={
+                <PageTransition>
+                  <Register />
+                </PageTransition>
+              } />
+              <Route path="/about" element={
+                <PageTransition>
+                  <About />
+                </PageTransition>
+              } />
+              <Route path="/features" element={
+                <PageTransition>
+                  <Features />
+                </PageTransition>
+              } />
+              <Route path="/chat" element={
+                <ProtectedRoute>
+                  <PageTransition>
+                    <Chat />
+                  </PageTransition>
+                </ProtectedRoute>
+              } />
+              <Route path="/diary" element={
+                <ProtectedRoute>
+                  <PageTransition>
+                    <Diary />
+                  </PageTransition>
+                </ProtectedRoute>
+              } />
+              <Route path="/video" element={
+                <ProtectedRoute>
+                  <PageTransition>
+                    <VideoCall />
+                  </PageTransition>
+                </ProtectedRoute>
+              } />
+              <Route path="/customize" element={
+                <ProtectedRoute>
+                  <PageTransition>
+                    <Customize />
+                  </PageTransition>
+                </ProtectedRoute>
+              } />
+              <Route path="/terms" element={
+                <PageTransition>
+                  <Terms />
+                </PageTransition>
+              } />
+              <Route path="*" element={
+                <PageTransition>
+                  <NotFound />
+                </PageTransition>
+              } />
+            </Routes>
+          </AnimatePresence>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
