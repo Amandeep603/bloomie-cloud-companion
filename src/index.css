@@ -77,6 +77,20 @@
   }
 }
 
+/* Animations */
+@keyframes animated-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-gradient {
+  background: linear-gradient(45deg, #9b87f5, #7E69AB, #6E59A5, #9b87f5);
+  background-size: 300% 300%;
+  animation: animated-gradient 6s ease infinite;
+  background-clip: text;
+}
+
 /* Custom styles for the emotional diary */
 .react-calendar {
   width: 100%;
@@ -192,8 +206,16 @@
 
 .chat-message-ai {
   background-color: hsl(var(--muted));
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground));
   border-radius: 18px 18px 18px 4px;
+}
+
+/* Diary styles */
+.diary-paper-bg {
+  background-color: hsl(var(--background));
+  background-image: linear-gradient(transparent 0, transparent 95%, hsl(var(--muted)) 100%);
+  background-size: 100% 1.2rem;
+  position: relative;
 }
 
 /* Scrollbar styles */
@@ -234,3 +256,32 @@
 .typing-animation {
   animation: typing 1s infinite;
 }
+
+/* Talking animation */
+@keyframes talking {
+  0% { height: 2px; }
+  50% { height: 8px; }
+  100% { height: 2px; }
+}
+
+.mouth-animation {
+  animation: talking 0.3s infinite;
+}
+
+/* Journal paper style */
+.journal-paper {
+  background-color: hsl(var(--background));
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  background-image: 
+    repeating-linear-gradient(
+      transparent,
+      transparent 31px,
+      hsl(var(--border)) 31px,
+      hsl(var(--border)) 32px
+    );
+  background-position: 0 1.2rem;
+  line-height: 32px;
+  padding-bottom: 8px;
+}
+

@@ -11,6 +11,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -18,6 +25,7 @@ const ChatInterface = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showHistoryDialog, setShowHistoryDialog] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -161,10 +169,63 @@ const ChatInterface = () => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
+    setShowEmojiPicker(false);
   };
 
   const toggleEmojiPicker = () => {
     setShowEmojiPicker(prev => !prev);
+  };
+
+  const formatDate = (date: Date) => {
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    if (date.toDateString() === today.toDateString()) {
+      return "Today";
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return "Yesterday";
+    } else {
+      return date.toLocaleDateString(undefined, { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+  };
+  
+  // Group messages by date
+  const groupMessagesByDate = () => {
+    const groups: { date: string; messages: ChatMessage[] }[] = [];
+    let currentDate = "";
+    let currentMessages: ChatMessage[] = [];
+    
+    messages.forEach(message => {
+      const messageDate = formatDate(message.timestamp);
+      
+      if (messageDate !== currentDate) {
+        if (currentMessages.length > 0) {
+          groups.push({
+            date: currentDate,
+            messages: currentMessages
+          });
+        }
+        currentDate = messageDate;
+        currentMessages = [message];
+      } else {
+        currentMessages.push(message);
+      }
+    });
+    
+    if (currentMessages.length > 0) {
+      groups.push({
+        date: currentDate,
+        messages: currentMessages
+      });
+    }
+    
+    return groups;
   };
 
   if (isLoadingHistory) {
@@ -176,55 +237,127 @@ const ChatInterface = () => {
     );
   }
 
+  const messageGroups = groupMessagesByDate();
+
   return (
     <div className="h-full flex flex-col">
+      <div className="flex items-center justify-between p-4 border-b bg-muted/30">
+        <div className="flex items-center space-x-3">
+          <Avatar className="h-10 w-10">
+            <div className="bg-primary text-primary-foreground rounded-full h-full w-full flex items-center justify-center text-sm font-semibold">
+              B
+            </div>
+          </Avatar>
+          <div>
+            <h3 className="font-semibold">Bloomie</h3>
+            <p className="text-xs text-muted-foreground">Your AI Friend</p>
+          </div>
+        </div>
+        
+        <Dialog open={showHistoryDialog} onOpenChange={setShowHistoryDialog}>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm">View Chat History</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[500px] max-h-[80vh] overflow-auto">
+            <DialogHeader>
+              <DialogTitle>Chat History</DialogTitle>
+            </DialogHeader>
+            <div className="py-4 space-y-4">
+              {messageGroups.map((group, groupIndex) => (
+                <div key={`group-${groupIndex}`}>
+                  <div className="flex justify-center my-2">
+                    <span className="text-xs bg-muted px-2 py-1 rounded-full text-muted-foreground">
+                      {group.date}
+                    </span>
+                  </div>
+                  {group.messages.map(message => (
+                    <div
+                      key={message.id}
+                      className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"} mb-1`}
+                    >
+                      <div className="flex items-start max-w-[80%]">
+                        {message.sender === "ai" && (
+                          <Avatar className="h-8 w-8 mr-2 mt-1">
+                            <div className="bg-primary text-primary-foreground rounded-full h-full w-full flex items-center justify-center text-xs font-semibold">
+                              B
+                            </div>
+                          </Avatar>
+                        )}
+                        <div className={`px-3 py-2 rounded-lg ${
+                          message.sender === "user" 
+                            ? "bg-primary text-primary-foreground rounded-br-none" 
+                            : "bg-muted rounded-bl-none"
+                        }`}>
+                          <p className="break-words whitespace-pre-wrap">{message.text}</p>
+                          <span className={`text-[10px] ${
+                            message.sender === "user" 
+                              ? "text-primary-foreground/70" 
+                              : "text-muted-foreground"
+                          } float-right ml-2 mt-1`}>
+                            {formatTime(message.timestamp)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+      
       <ScrollArea className="flex-grow p-4 h-[calc(100vh-180px)]">
         <div className="space-y-4 pb-[60px]" ref={scrollAreaRef}>
-          <AnimatePresence>
-            {messages.map((message) => (
-              <motion.div
-                key={message.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
-              >
-                <div className="flex items-start max-w-[80%] md:max-w-[70%]">
-                  {message.sender === "ai" && (
-                    <Avatar className="h-8 w-8 mr-2 mt-1">
-                      <div className="bg-primary text-primary-foreground rounded-full h-full w-full flex items-center justify-center text-xs font-semibold">
-                        B
-                      </div>
-                    </Avatar>
-                  )}
-                  <Card className={`overflow-hidden ${
-                    message.sender === "user" 
-                      ? "bg-primary" 
-                      : "bg-muted"
-                  }`}>
-                    <CardContent className={`p-3 ${
-                      message.sender === "user" 
-                        ? "text-primary-foreground" 
-                        : ""
-                    }`}>
-                      <div className="flex flex-col">
-                        <p className="break-words whitespace-pre-wrap">{message.text}</p>
-                        <span className={`text-xs ${
+          {messageGroups.map((group, groupIndex) => (
+            <div key={`group-${groupIndex}`}>
+              <div className="flex justify-center my-2">
+                <span className="text-xs bg-muted px-2 py-1 rounded-full text-muted-foreground">
+                  {group.date}
+                </span>
+              </div>
+              
+              <AnimatePresence>
+                {group.messages.map((message) => (
+                  <motion.div
+                    key={message.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"} mb-1`}
+                  >
+                    <div className="flex items-start max-w-[80%] md:max-w-[70%]">
+                      {message.sender === "ai" && (
+                        <Avatar className="h-8 w-8 mr-2 mt-1">
+                          <div className="bg-primary text-primary-foreground rounded-full h-full w-full flex items-center justify-center text-xs font-semibold">
+                            B
+                          </div>
+                        </Avatar>
+                      )}
+                      <div 
+                        className={`px-3 py-2 rounded-lg ${
                           message.sender === "user" 
-                            ? "opacity-70" 
+                            ? "chat-message-user" 
+                            : "chat-message-ai"
+                        }`}
+                      >
+                        <p className="break-words whitespace-pre-wrap">{message.text}</p>
+                        <span className={`text-[10px] ${
+                          message.sender === "user" 
+                            ? "text-primary-foreground/70" 
                             : "text-muted-foreground"
-                          } text-right mt-1`}
+                          } float-right ml-2 mt-1`}
                         >
                           {formatTime(message.timestamp)}
                         </span>
                       </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          ))}
           
           {isLoading && (
             <motion.div 
@@ -238,14 +371,14 @@ const ChatInterface = () => {
                     B
                   </div>
                 </Avatar>
-                <Card>
-                  <CardContent className="p-3">
+                <Card className="bg-muted border-0">
+                  <CardContent className="p-3 py-2">
                     <div className="flex space-x-1 items-center">
                       <span className="text-sm text-muted-foreground">Bloomie is typing</span>
                       <div className="flex space-x-1">
-                        <div className="w-2 h-2 rounded-full bg-primary animate-bounce"></div>
-                        <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-                        <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0.4s" }}></div>
+                        <div className="w-2 h-2 rounded-full bg-primary typing-animation"></div>
+                        <div className="w-2 h-2 rounded-full bg-primary typing-animation" style={{ animationDelay: "0.2s" }}></div>
+                        <div className="w-2 h-2 rounded-full bg-primary typing-animation" style={{ animationDelay: "0.4s" }}></div>
                       </div>
                     </div>
                   </CardContent>

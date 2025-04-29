@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
+import AnimatedAvatar from "./AnimatedAvatar";
 
 const Hero = () => {
   const { currentUser } = useAuth();
@@ -23,90 +24,20 @@ const Hero = () => {
       >
         <div className="relative h-[300px] sm:h-[400px] w-full">
           {/* Boy Avatar */}
-          <motion.div 
-            className="absolute left-10 sm:left-20 lg:left-40 top-0 w-40 h-40 sm:w-60 sm:h-60"
-            initial={{ x: -100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            whileHover={{ scale: 1.05 }}
-          >
-            <div className="relative w-full h-full">
-              <div className="absolute inset-0 bg-bloomie-green rounded-full opacity-20"></div>
-              <motion.div 
-                className="absolute inset-0 flex items-center justify-center"
-                animate={{ 
-                  y: [0, -10, 0],
-                  rotate: [0, 2, 0]
-                }}
-                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              >
-                <div className="relative w-36 h-36 sm:w-48 sm:h-48">
-                  {/* Boy Character */}
-                  <div className="absolute inset-0 bg-primary rounded-full flex items-center justify-center overflow-hidden">
-                    <span className="text-6xl">👦</span>
-                  </div>
-                  {/* Animated Arms */}
-                  <motion.div 
-                    className="absolute -right-4 top-1/4 w-10 h-3 bg-primary rounded-full origin-left"
-                    animate={{ rotate: [0, 20, 0, 20, 0] }}
-                    transition={{ repeat: Infinity, duration: 2.5 }}
-                  ></motion.div>
-                </div>
-              </motion.div>
-              {/* Speech Bubble */}
-              <motion.div 
-                className="absolute -top-12 -right-12 sm:-right-20 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow-md"
-                initial={{ scale: 0 }}
-                animate={{ scale: [0, 1.1, 1] }}
-                transition={{ delay: 1.5, duration: 0.5 }}
-              >
-                <p className="text-sm whitespace-nowrap">👋 Hello there!</p>
-              </motion.div>
-            </div>
-          </motion.div>
+          <AnimatedAvatar 
+            gender="boy" 
+            position="left" 
+            message="👋 Hello there!" 
+            delay={5}
+          />
 
           {/* Girl Avatar */}
-          <motion.div 
-            className="absolute right-10 sm:right-20 lg:right-40 top-0 w-40 h-40 sm:w-60 sm:h-60"
-            initial={{ x: 100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 1, delay: 0.7 }}
-            whileHover={{ scale: 1.05 }}
-          >
-            <div className="relative w-full h-full">
-              <div className="absolute inset-0 bg-bloomie-pink rounded-full opacity-20"></div>
-              <motion.div 
-                className="absolute inset-0 flex items-center justify-center"
-                animate={{ 
-                  y: [0, -8, 0],
-                  rotate: [0, -2, 0]
-                }}
-                transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 0.5 }}
-              >
-                <div className="relative w-36 h-36 sm:w-48 sm:h-48">
-                  {/* Girl Character */}
-                  <div className="absolute inset-0 bg-bloomie-purple rounded-full flex items-center justify-center overflow-hidden">
-                    <span className="text-6xl">👧</span>
-                  </div>
-                  {/* Animated Arms */}
-                  <motion.div 
-                    className="absolute -left-4 top-1/4 w-10 h-3 bg-bloomie-purple rounded-full origin-right"
-                    animate={{ rotate: [0, -20, 0, -20, 0] }}
-                    transition={{ repeat: Infinity, duration: 2.7 }}
-                  ></motion.div>
-                </div>
-              </motion.div>
-              {/* Speech Bubble */}
-              <motion.div 
-                className="absolute -top-16 -left-12 sm:-left-28 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow-md"
-                initial={{ scale: 0 }}
-                animate={{ scale: [0, 1.1, 1] }}
-                transition={{ delay: 2, duration: 0.5 }}
-              >
-                <p className="text-sm whitespace-nowrap">I'm Bloomie! 🌸</p>
-              </motion.div>
-            </div>
-          </motion.div>
+          <AnimatedAvatar 
+            gender="girl" 
+            position="right" 
+            message="I'm Bloomie! 🌸" 
+            delay={7}
+          />
 
           {/* Connection Line Between Avatars */}
           <motion.div 

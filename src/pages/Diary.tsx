@@ -2,10 +2,12 @@
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import EmotionalDiary from "@/components/EmotionalDiary";
+import MoodTimeline from "@/components/MoodTimeline";
 import { useAuth } from "@/contexts/AuthContext";
 import { getDiaryEntries, addDiaryEntry, deleteDiaryEntry } from "@/services/diaryService";
 import { Loader } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface DiaryEntry {
   id?: string;
@@ -15,8 +17,14 @@ interface DiaryEntry {
   moodEmoji?: string;
 }
 
+interface MoodEntry {
+  date: Date;
+  mood: string;
+}
+
 const Diary = () => {
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
+  const [moodEntries, setMoodEntries] = useState<MoodEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { currentUser } = useAuth();
   const { toast } = useToast();
@@ -38,6 +46,16 @@ const Diary = () => {
           }));
           
           setEntries(formattedEntries);
+          
+          // Extract mood data for timeline
+          const moodData = diaryEntries
+            .map(entry => ({
+              date: entry.date,
+              mood: entry.mood || "😊"
+            }))
+            .sort((a, b) => a.date.getTime() - b.date.getTime());
+            
+          setMoodEntries(moodData);
         } catch (error) {
           console.error("Error fetching diary entries:", error);
           toast({
@@ -58,7 +76,7 @@ const Diary = () => {
     if (currentUser?.uid) {
       try {
         // Convert the entry to the format expected by the service
-        await addDiaryEntry(currentUser.uid, {
+        const savedEntryId = await addDiaryEntry(currentUser.uid, {
           id: entry.id,
           mood: entry.moodEmoji || "😊",
           title: entry.title || "Diary Entry",
@@ -68,14 +86,40 @@ const Diary = () => {
         
         // Update local state with the new entry
         setEntries(prevEntries => {
-          // Replace entry if it exists for this date, otherwise add it
-          const existingEntryIndex = prevEntries.findIndex(e => e.date === entry.date);
+          // Check if we're updating an existing entry
+          const existingEntryIndex = prevEntries.findIndex(e => e.id === entry.id);
           if (existingEntryIndex !== -1) {
             const updatedEntries = [...prevEntries];
             updatedEntries[existingEntryIndex] = entry;
             return updatedEntries;
           } else {
-            return [...prevEntries, entry];
+            // It's a new entry, add with the returned ID
+            const newEntry = {
+              ...entry,
+              id: savedEntryId
+            };
+            return [...prevEntries, newEntry];
+          }
+        });
+        
+        // Update mood timeline
+        setMoodEntries(prev => {
+          const newMoodEntry = {
+            date: new Date(entry.date),
+            mood: entry.moodEmoji || "😊"
+          };
+          
+          // Check if we already have an entry for this date
+          const existingIndex = prev.findIndex(
+            m => m.date.toISOString().split('T')[0] === entry.date
+          );
+          
+          if (existingIndex !== -1) {
+            const updatedMoods = [...prev];
+            updatedMoods[existingIndex] = newMoodEntry;
+            return updatedMoods;
+          } else {
+            return [...prev, newMoodEntry].sort((a, b) => a.date.getTime() - b.date.getTime());
           }
         });
       } catch (error) {
@@ -90,12 +134,23 @@ const Diary = () => {
   };
 
   const handleDeleteEntry = async (entryId: string) => {
-    if (currentUser?.uid) {
+    if (currentUser?.uid && entryId) {
       try {
         await deleteDiaryEntry(entryId);
         
+        // Get the entry date before removing from state
+        const entryToDelete = entries.find(entry => entry.id === entryId);
+        
         // Update local state by removing the deleted entry
         setEntries(prevEntries => prevEntries.filter(entry => entry.id !== entryId));
+        
+        // Also remove from mood timeline if it was the only entry for that date
+        if (entryToDelete) {
+          const entryDate = entryToDelete.date;
+          setMoodEntries(prev => 
+            prev.filter(mood => mood.date.toISOString().split('T')[0] !== entryDate)
+          );
+        }
       } catch (error) {
         console.error("Error deleting diary entry:", error);
         toast({
@@ -123,11 +178,20 @@ const Diary = () => {
               <p className="text-muted-foreground">Loading your diary entries...</p>
             </div>
           ) : (
-            <EmotionalDiary 
-              entries={entries} 
-              onSave={handleSaveEntry} 
-              onDelete={handleDeleteEntry}
-            />
+            <>
+              {/* Mood Timeline */}
+              <Card className="mb-8">
+                <CardContent className="pt-6">
+                  <MoodTimeline moods={moodEntries} />
+                </CardContent>
+              </Card>
+              
+              <EmotionalDiary 
+                entries={entries} 
+                onSave={handleSaveEntry} 
+                onDelete={handleDeleteEntry}
+              />
+            </>
           )}
         </div>
       </main>
