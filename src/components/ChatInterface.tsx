@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -308,16 +307,16 @@ const ChatInterface = () => {
       </div>
       
       <ScrollArea className="flex-grow p-4 h-[calc(100vh-180px)]">
-        <div className="space-y-4 pb-[60px]" ref={scrollAreaRef}>
+        <div className="space-y-6 pb-[60px]" ref={scrollAreaRef}>
           {messageGroups.map((group, groupIndex) => (
-            <div key={`group-${groupIndex}`}>
-              <div className="flex justify-center my-2">
-                <span className="text-xs bg-muted px-2 py-1 rounded-full text-muted-foreground">
+            <div key={`group-${groupIndex}`} className="mb-6">
+              <div className="flex justify-center mb-4">
+                <span className="text-xs bg-muted px-3 py-1.5 rounded-full text-muted-foreground font-medium">
                   {group.date}
                 </span>
               </div>
               
-              <AnimatePresence>
+              <div className="space-y-3">
                 {group.messages.map((message) => (
                   <motion.div
                     key={message.id}
@@ -325,37 +324,40 @@ const ChatInterface = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"} mb-1`}
+                    className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
                   >
                     <div className="flex items-start max-w-[80%] md:max-w-[70%]">
                       {message.sender === "ai" && (
-                        <Avatar className="h-8 w-8 mr-2 mt-1">
-                          <div className="bg-primary text-primary-foreground rounded-full h-full w-full flex items-center justify-center text-xs font-semibold">
-                            B
-                          </div>
-                        </Avatar>
+                        <div className="flex-shrink-0 mr-2 mt-1">
+                          <Avatar className="h-8 w-8">
+                            <div className="bg-primary text-primary-foreground rounded-full h-full w-full flex items-center justify-center text-xs font-semibold">
+                              B
+                            </div>
+                          </Avatar>
+                        </div>
                       )}
                       <div 
-                        className={`px-3 py-2 rounded-lg ${
+                        className={`px-4 py-2.5 rounded-2xl shadow-sm ${
                           message.sender === "user" 
-                            ? "chat-message-user" 
-                            : "chat-message-ai"
+                            ? "bg-primary text-primary-foreground rounded-br-none" 
+                            : "bg-card border border-border/50 rounded-bl-none"
                         }`}
                       >
-                        <p className="break-words whitespace-pre-wrap">{message.text}</p>
-                        <span className={`text-[10px] ${
-                          message.sender === "user" 
-                            ? "text-primary-foreground/70" 
-                            : "text-muted-foreground"
-                          } float-right ml-2 mt-1`}
-                        >
-                          {formatTime(message.timestamp)}
-                        </span>
+                        <p className="break-words whitespace-pre-wrap text-sm">{message.text}</p>
+                        <div className="text-right mt-1">
+                          <span className={`text-[10px] ${
+                            message.sender === "user" 
+                              ? "text-primary-foreground/70" 
+                              : "text-muted-foreground"
+                          }`}>
+                            {formatTime(message.timestamp)}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
                 ))}
-              </AnimatePresence>
+              </div>
             </div>
           ))}
           
@@ -363,7 +365,7 @@ const ChatInterface = () => {
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex justify-start"
+              className="flex justify-start mt-4"
             >
               <div className="flex items-start">
                 <Avatar className="h-8 w-8 mr-2 mt-1">
@@ -371,18 +373,16 @@ const ChatInterface = () => {
                     B
                   </div>
                 </Avatar>
-                <Card className="bg-muted border-0">
-                  <CardContent className="p-3 py-2">
-                    <div className="flex space-x-1 items-center">
-                      <span className="text-sm text-muted-foreground">Bloomie is typing</span>
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 rounded-full bg-primary typing-animation"></div>
-                        <div className="w-2 h-2 rounded-full bg-primary typing-animation" style={{ animationDelay: "0.2s" }}></div>
-                        <div className="w-2 h-2 rounded-full bg-primary typing-animation" style={{ animationDelay: "0.4s" }}></div>
-                      </div>
+                <div className="bg-muted border border-border/50 px-4 py-2 rounded-2xl rounded-bl-none">
+                  <div className="flex space-x-1.5 items-center">
+                    <span className="text-sm text-muted-foreground">Bloomie is typing</span>
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 rounded-full bg-primary typing-animation"></div>
+                      <div className="w-2 h-2 rounded-full bg-primary typing-animation" style={{ animationDelay: "0.2s" }}></div>
+                      <div className="w-2 h-2 rounded-full bg-primary typing-animation" style={{ animationDelay: "0.4s" }}></div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </div>
             </motion.div>
           )}
@@ -392,7 +392,7 @@ const ChatInterface = () => {
       </ScrollArea>
       
       <div className="p-4 border-t sticky bottom-0 bg-background">
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 relative">
           <div className="relative flex-grow flex">
             <Input
               ref={inputRef}
@@ -400,7 +400,7 @@ const ChatInterface = () => {
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Type a message..."
-              className="pr-12 rounded-full"
+              className="pr-12 rounded-full shadow-sm"
               disabled={isLoading}
             />
             <Button
@@ -416,7 +416,7 @@ const ChatInterface = () => {
             {showEmojiPicker && (
               <div 
                 ref={emojiPickerRef}
-                className="absolute right-0 bottom-14 z-50"
+                className="absolute right-0 bottom-14 z-50 shadow-lg"
               >
                 <EmojiPicker onEmojiClick={handleEmojiClick} />
               </div>
@@ -425,7 +425,7 @@ const ChatInterface = () => {
           <Button
             onClick={handleSendMessage}
             size="icon"
-            className="rounded-full"
+            className="rounded-full shadow-sm"
             disabled={!inputText.trim() || isLoading}
           >
             <Send className="h-5 w-5" />

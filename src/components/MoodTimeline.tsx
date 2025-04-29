@@ -22,25 +22,43 @@ const MoodTimeline: React.FC<MoodTimelineProps> = ({ moods }) => {
     );
   }
 
+  // Group moods by month for better organization
+  const groupedByMonth: Record<string, MoodEntry[]> = {};
+  
+  moods.forEach(entry => {
+    const monthYear = format(entry.date, 'MMM yyyy');
+    if (!groupedByMonth[monthYear]) {
+      groupedByMonth[monthYear] = [];
+    }
+    groupedByMonth[monthYear].push(entry);
+  });
+
   return (
     <div className="w-full">
       <h3 className="text-lg font-semibold mb-3">My Mood Timeline</h3>
-      <ScrollArea className="h-28 bg-muted/20 rounded-lg">
-        <div className="flex items-center space-x-4 p-4">
-          {moods.map((entry, index) => (
-            <motion.div 
-              key={index} 
-              className="flex flex-col items-center min-w-[60px] bg-background p-2 rounded-lg shadow-sm"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
-              whileHover={{ scale: 1.05 }}
-            >
-              <div className="text-2xl">{entry.mood}</div>
-              <span className="text-xs text-muted-foreground mt-1">
-                {format(entry.date, 'MMM d')}
-              </span>
-            </motion.div>
+      <ScrollArea className="h-36 bg-gradient-to-r from-muted/10 to-muted/30 rounded-lg">
+        <div className="p-4">
+          {Object.entries(groupedByMonth).map(([month, entries], monthIndex) => (
+            <div key={month} className="mb-4">
+              <div className="text-sm text-muted-foreground mb-2">{month}</div>
+              <div className="flex items-center space-x-3">
+                {entries.map((entry, index) => (
+                  <motion.div 
+                    key={`${monthIndex}-${index}`} 
+                    className="flex flex-col items-center bg-card hover:bg-card/80 p-2 rounded-lg shadow-md border border-border/50 transition-all"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    whileHover={{ scale: 1.1, y: -5 }}
+                  >
+                    <div className="text-2xl mb-1">{entry.mood}</div>
+                    <span className="text-xs font-medium">
+                      {format(entry.date, 'd')}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </ScrollArea>
