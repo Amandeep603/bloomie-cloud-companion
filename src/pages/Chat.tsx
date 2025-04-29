@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import ChatInterface from "@/components/ChatInterface";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { collection, query, where, orderBy, limit, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Loader, MessageSquare } from "lucide-react";
+import { Loader, MessageSquare, Plus } from "lucide-react";
 
 type ConversationPreview = {
   id: string;
@@ -80,11 +79,12 @@ const Chat = () => {
       <Navbar />
       <div className="flex-grow pt-16 flex">
         {/* Sidebar */}
-        <div className="hidden md:block w-64 border-r p-4">
+        <div className="hidden md:block w-64 border-r p-4 bg-gray-50 dark:bg-gray-900">
           <Button 
-            className="w-full mb-4"
+            className="w-full mb-4 gap-2"
             onClick={startNewChat}
           >
+            <Plus size={16} />
             New Chat
           </Button>
           
@@ -99,16 +99,21 @@ const Chat = () => {
               <div className="text-center py-4">
                 <MessageSquare className="h-8 w-8 mx-auto text-muted-foreground opacity-50" />
                 <p className="text-sm text-muted-foreground mt-2">No conversations yet</p>
-                <p className="text-xs text-muted-foreground">Start a new chat to begin talking with Bloomie</p>
+                <p className="text-xs text-muted-foreground mt-1">Start a new chat to begin talking with Bloomie</p>
               </div>
             ) : (
               conversations.map((conversation) => (
                 <div 
                   key={conversation.id}
-                  className="cursor-pointer hover:bg-muted rounded-lg p-2 transition-colors"
+                  className="cursor-pointer hover:bg-muted rounded-lg p-3 transition-colors"
                 >
                   <p className="font-medium truncate">{conversation.title}</p>
                   <p className="text-xs text-muted-foreground truncate">{conversation.lastMessage}</p>
+                  <div className="flex justify-end mt-1">
+                    <span className="text-[10px] text-muted-foreground">
+                      {conversation.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                    </span>
+                  </div>
                 </div>
               ))
             )}
@@ -116,7 +121,7 @@ const Chat = () => {
         </div>
         
         {/* Chat Area */}
-        <div className="flex-grow">
+        <div className="flex-grow bg-gray-50/50 dark:bg-gray-900/50">
           <ChatInterface />
         </div>
       </div>
