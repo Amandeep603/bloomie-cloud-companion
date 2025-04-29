@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import EmotionalDiary from "@/components/EmotionalDiary";
@@ -8,6 +7,7 @@ import { getDiaryEntries, addDiaryEntry, deleteDiaryEntry } from "@/services/dia
 import { Loader } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
+import { motion } from "framer-motion";
 
 interface DiaryEntry {
   id?: string;
@@ -167,10 +167,16 @@ const Diary = () => {
       <Navbar />
       <main className="flex-grow pt-24 pb-16 px-4">
         <div className="container mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Emotional Diary</h1>
-          <p className="text-muted-foreground mb-8 max-w-2xl">
-            Track your moods and feelings over time. Bloomie will help you identify patterns and provide insights to improve your emotional wellbeing.
-          </p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h1 className="text-3xl font-bold mb-6">Emotional Diary</h1>
+            <p className="text-muted-foreground mb-8 max-w-2xl">
+              Track your moods and feelings over time. Bloomie will help you identify patterns and provide insights to improve your emotional wellbeing.
+            </p>
+          </motion.div>
           
           {isLoading ? (
             <div className="h-64 flex flex-col items-center justify-center">
@@ -180,17 +186,29 @@ const Diary = () => {
           ) : (
             <>
               {/* Mood Timeline */}
-              <Card className="mb-8">
-                <CardContent className="pt-6">
-                  <MoodTimeline moods={moodEntries} />
-                </CardContent>
-              </Card>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <Card className="mb-8">
+                  <CardContent className="pt-6">
+                    <MoodTimeline moods={moodEntries} />
+                  </CardContent>
+                </Card>
+              </motion.div>
               
-              <EmotionalDiary 
-                entries={entries} 
-                onSave={handleSaveEntry} 
-                onDelete={handleDeleteEntry}
-              />
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                <EmotionalDiary 
+                  entries={entries} 
+                  onSave={handleSaveEntry} 
+                  onDelete={handleDeleteEntry}
+                />
+              </motion.div>
             </>
           )}
         </div>

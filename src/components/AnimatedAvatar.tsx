@@ -83,7 +83,7 @@ const AnimatedAvatar = ({ gender, position, message, delay = 0 }: AnimatedAvatar
         
         {/* Speech Bubble */}
         <motion.div 
-          className={`absolute -top-12 ${position === "left" ? "-right-12 sm:-right-20" : "-left-12 sm:-left-28"} bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow-md`}
+          className={`absolute -top-12 ${position === "left" ? "-right-12 sm:-right-20" : "-left-12 sm:-left-28"} bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow-md z-10`}
           initial={{ scale: 0 }}
           animate={{ scale: [0, 1.1, 1] }}
           transition={{ delay: delay * 0.2 + 1, duration: 0.5 }}
