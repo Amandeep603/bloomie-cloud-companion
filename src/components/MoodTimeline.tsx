@@ -3,7 +3,7 @@ import React from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from 'date-fns';
 import { motion } from "framer-motion";
-import { Smile, Frown, Angry, Heart, MoonSnooze } from "lucide-react";
+import { Smile, Frown, Angry, Heart, Moon } from "lucide-react";
 
 interface MoodEntry {
   date: Date;
@@ -26,7 +26,7 @@ const getMoodIcon = (mood: string) => {
     case '😍':
       return <Heart className="h-5 w-5 text-pink-500" />;
     case '😴':
-      return <MoonSnooze className="h-5 w-5 text-purple-500" />;
+      return <Moon className="h-5 w-5 text-purple-500" />; // Changed from MoonSnooze to Moon
     default:
       return <Smile className="h-5 w-5 text-green-500" />;
   }
