@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Video, VideoOff, Mic, MicOff, UserPlus, Phone } from "lucide-react";
 import AnimatedAvatar from "@/components/AnimatedAvatar";
 import { useIsMobile } from "@/hooks/use-mobile";
