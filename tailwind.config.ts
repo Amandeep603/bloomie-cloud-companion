@@ -58,6 +58,12 @@ export default {
         "bloomie-pink": "#F7C5CC",
         "bloomie-yellow": "#FFE699",
         "bloomie-green": "#B5E6B3",
+        // Additional mood colors
+        "mood-happy": "#8BDB81", // light green for happy/😊
+        "mood-sad": "#94C5F8",   // light blue for sad/😢
+        "mood-angry": "#FF9C9C", // light red for angry/😡
+        "mood-love": "#FFC0CB",  // pink for love/😍
+        "mood-sleepy": "#D8BFD8", // lavender for sleepy/😴
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -81,12 +87,25 @@ export default {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-5px)" },
         },
+        "pulse-glow": {
+          "0%, 100%": { boxShadow: "0 0 5px rgba(157, 132, 183, 0.2)" },
+          "50%": { boxShadow: "0 0 15px rgba(157, 132, 183, 0.6)" },
+        },
+        "mouth-talk": {
+          "0%": { transform: "scaleY(0.8) scaleX(1)" },
+          "25%": { transform: "scaleY(1.2) scaleX(0.8)" },
+          "50%": { transform: "scaleY(0.9) scaleX(1.1)" },
+          "75%": { transform: "scaleY(1.1) scaleX(0.9)" },
+          "100%": { transform: "scaleY(0.8) scaleX(1)" },
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "float": "float 6s ease-in-out infinite",
         "bounce-small": "bounce-small 3s ease-in-out infinite",
+        "pulse-glow": "pulse-glow 3s ease-in-out infinite",
+        "mouth-talk": "mouth-talk 0.6s ease-in-out infinite"
       },
       fontFamily: {
         nunito: ["Nunito", "sans-serif"],

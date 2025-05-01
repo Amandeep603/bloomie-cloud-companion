@@ -59,13 +59,16 @@ const AnimatedAvatar = ({ gender, position, message, delay = 0 }: AnimatedAvatar
             >
               <span className="text-6xl">{gender === "boy" ? "👦" : "👧"}</span>
               
-              {/* Mouth animation */}
+              {/* Mouth animation - Enhanced for more natural movement */}
               {speaking && (
                 <motion.div 
                   className="absolute bottom-12 w-8 h-2 bg-black rounded-full"
-                  initial={{ scaleY: 0.5 }}
-                  animate={{ scaleY: [0.5, 1, 0.5] }}
-                  transition={{ repeat: Infinity, duration: 0.3 }}
+                  initial={{ scaleY: 0.5, scaleX: 0.8 }}
+                  animate={{ 
+                    scaleY: [0.5, 1.2, 0.5, 0.8, 0.5],
+                    scaleX: [0.8, 1, 0.9, 1, 0.8]
+                  }}
+                  transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }}
                 />
               )}
             </div>
@@ -81,14 +84,21 @@ const AnimatedAvatar = ({ gender, position, message, delay = 0 }: AnimatedAvatar
           </div>
         </motion.div>
         
-        {/* Speech Bubble */}
+        {/* Speech Bubble - Enhanced with better styling */}
         <motion.div 
-          className={`absolute -top-12 ${position === "left" ? "-right-12 sm:-right-20" : "-left-12 sm:-left-28"} bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow-md z-10`}
-          initial={{ scale: 0 }}
-          animate={{ scale: [0, 1.1, 1] }}
-          transition={{ delay: delay * 0.2 + 1, duration: 0.5 }}
+          className={`absolute -top-16 ${position === "left" ? "-right-16 sm:-right-28" : "-left-16 sm:-left-32"} 
+            bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow-md z-10
+            border border-gray-100 dark:border-gray-700`}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: [0, 1.1, 1], opacity: 1 }}
+          transition={{ delay: delay * 0.2 + 0.5, duration: 0.5 }}
         >
-          <p className="text-sm whitespace-nowrap">{message}</p>
+          <p className="text-sm whitespace-normal max-w-[180px] font-nunito">{message}</p>
+          <div 
+            className={`absolute -bottom-2 ${position === "left" ? "right-4" : "left-4"} 
+              w-4 h-4 bg-white dark:bg-gray-800 rotate-45 border-b border-r 
+              border-gray-100 dark:border-gray-700`}
+          />
         </motion.div>
       </div>
     </motion.div>

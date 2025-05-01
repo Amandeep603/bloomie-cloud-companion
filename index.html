@@ -3,29 +3,85 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bloomie - Your AI Friend</title>
-    <meta name="description" content="Bloomie is your friendly AI companion designed to chat, support your emotional wellbeing, and grow with you." />
-    <meta name="author" content="Bloomie" />
-
-    <meta property="og:title" content="Bloomie - Your AI Friend" />
-    <meta property="og:description" content="Meet Bloomie, your friendly AI companion!" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@bloomie_ai" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-    
+    <meta name="description" content="Bloomie is your AI friend that chats with you, tracks your emotions, and helps you bloom into your best self." />
+    <!-- Preconnect to Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Load Nunito font -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Add custom styles for the calendar integration -->
+    <style>
+      /* Custom styling for calendar dates with diary entries */
+      .has-diary-entry {
+        position: relative;
+        font-weight: 600 !important;
+        background-color: rgba(157, 132, 183, 0.15) !important;
+      }
+      
+      /* Animated gradient for text */
+      .animated-gradient {
+        background: linear-gradient(90deg, #9D84B7, #8FBFE0, #B5E6B3, #F7C5CC, #9D84B7);
+        background-size: 300% 100%;
+        animation: gradient-animation 8s ease infinite;
+      }
+      
+      @keyframes gradient-animation {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      /* Better styling for react-calendar */
+      .react-calendar {
+        width: 100% !important;
+        border: none !important;
+        border-radius: 0.5rem;
+        background-color: transparent !important;
+        font-family: 'Nunito', sans-serif;
+      }
+      
+      .react-calendar__tile {
+        border-radius: 0.25rem;
+        aspect-ratio: 1/1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      
+      .react-calendar__month-view__days__day--weekend {
+        color: #f87171;
+      }
+      
+      .react-calendar__tile--now {
+        background-color: rgba(79, 70, 229, 0.1) !important;
+        font-weight: bold;
+      }
+      
+      .react-calendar__tile--active {
+        background-color: rgba(79, 70, 229, 0.8) !important;
+        color: white;
+      }
+      
+      .react-calendar__navigation button {
+        border-radius: 0.25rem;
+      }
+      
+      .react-calendar__navigation button:disabled {
+        background-color: transparent !important;
+      }
+      
+      /* Disable focus ring for better aesthetics */
+      .react-calendar button:focus {
+        outline: none;
+      }
+    </style>
   </head>
-
   <body>
     <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
