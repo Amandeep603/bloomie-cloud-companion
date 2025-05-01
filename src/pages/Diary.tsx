@@ -9,6 +9,7 @@ import { Loader } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
+import Footer from "@/components/Footer";
 
 interface DiaryEntry {
   id?: string;
@@ -167,11 +168,12 @@ const Diary = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow pt-16 pb-16 px-4 bg-gradient-to-br from-indigo-50/30 to-blue-50/30 dark:from-slate-900/30 dark:to-slate-800/30">
-        <div className="container mx-auto">
+        <div className="container mx-auto max-w-5xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
+            className="w-full md:w-[90%] lg:w-[80%] mx-auto"
           >
             {isLoading ? (
               <div className="h-64 flex flex-col items-center justify-center">
@@ -179,15 +181,22 @@ const Diary = () => {
                 <p className="text-muted-foreground font-nunito">Loading your diary entries...</p>
               </div>
             ) : (
-              <EmotionalDiaryNew
-                entries={entries} 
-                onSave={handleSaveEntry} 
-                onDelete={handleDeleteEntry}
-              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <EmotionalDiaryNew
+                  entries={entries} 
+                  onSave={handleSaveEntry} 
+                  onDelete={handleDeleteEntry}
+                />
+              </motion.div>
             )}
           </motion.div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

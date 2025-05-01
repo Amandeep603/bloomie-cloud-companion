@@ -77,25 +77,10 @@ const AnimatedAvatar = ({ gender, position, speaking = false }: AnimatedAvatarPr
               <div className="w-2 h-2 bg-black rounded-full"></div>
             </motion.div>
             
-            {/* Enhanced mouth animation for more natural movement */}
-            {speaking ? (
-              <motion.div 
-                className="absolute bottom-12 w-8 h-4 bg-black rounded-full overflow-hidden"
-                animate={{ 
-                  scaleY: [0.5, 1.2, 0.5, 0.8, 0.5],
-                  scaleX: [0.8, 0.6, 0.8, 0.7, 0.8]
-                }}
-                transition={{ repeat: Infinity, duration: 0.5, ease: "easeInOut" }}
-              >
-                <div className="w-full h-2/3 bg-red-400 absolute bottom-0 rounded-full"></div>
-              </motion.div>
-            ) : (
-              <motion.div 
-                className="absolute bottom-12 w-6 h-1.5 bg-black rounded-full"
-                animate={{ width: [6, 8, 6] }}
-                transition={{ repeat: Infinity, repeatDelay: 2, duration: 0.2 }}
-              />
-            )}
+            {/* Static smile instead of animated mouth */}
+            <div 
+              className="absolute bottom-12 w-6 h-1.5 bg-black rounded-full"
+            />
           </motion.div>
           
           {/* Enhanced Animated Arms with more dynamic movement */}

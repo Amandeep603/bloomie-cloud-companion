@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,7 @@ const Hero = () => {
   const [conversationIndex, setConversationIndex] = useState(0);
   const isMobile = useIsMobile();
   
-  // Avatar conversation dialogue with timed display
+  // Avatar conversation dialogue with improved timing
   const conversation = [
     { speaker: "girl", message: "Hey, have you met Bloomie yet?" },
     { speaker: "boy", message: "Yes! Bloomie's like a virtual best friend." },
@@ -24,78 +23,85 @@ const Hero = () => {
 
   // Control the conversation flow with timing
   useEffect(() => {
+    // Reset function for conversation
+    const resetConversation = () => {
+      setActiveSpeaker(-1);
+      setTimeout(() => {
+        setConversationIndex(0);
+      }, 1000);
+    };
+
+    // Show next message function
     const showNextMessage = () => {
       if (conversationIndex < conversation.length) {
         setActiveSpeaker(conversationIndex);
         
+        // Longer delay between messages for better readability
         setTimeout(() => {
           setConversationIndex(conversationIndex + 1);
-        }, 3500); // Time before moving to next message
+        }, 4000); // Increased time between messages
       } else {
-        // Reset conversation after a pause
+        // Reset conversation after a longer pause
         setTimeout(() => {
-          setActiveSpeaker(-1);
-          setTimeout(() => {
-            setConversationIndex(0);
-          }, 500);
-        }, 2000);
+          resetConversation();
+        }, 3000);
       }
     };
     
     showNextMessage();
-  }, [conversationIndex]);
+  }, [conversationIndex, conversation.length]);
 
   return (
     <div className="min-h-[90vh] flex flex-col items-center justify-center py-20 px-4 relative overflow-hidden">
-      {/* Background Decorative Elements */}
+      {/* Enhanced Background Decorative Elements with Animation */}
       <motion.div 
-        className="absolute top-20 -left-10 w-40 h-40 rounded-full bg-bloomie-purple/20 blur-3xl"
+        className="absolute top-20 -left-10 w-60 h-60 rounded-full bg-gradient-to-r from-bloomie-purple/20 to-bloomie-pink/20 blur-3xl"
+        animate={{ 
+          scale: [1, 1.2, 1],
+          opacity: [0.4, 0.7, 0.4]
+        }}
+        transition={{ duration: 10, repeat: Infinity }}
+      />
+      <motion.div 
+        className="absolute bottom-20 -right-10 w-60 h-60 rounded-full bg-gradient-to-l from-bloomie-green/20 to-bloomie-yellow/20 blur-3xl"
+        animate={{ 
+          scale: [1, 1.3, 1],
+          opacity: [0.3, 0.6, 0.3]
+        }}
+        transition={{ duration: 12, repeat: Infinity }}
+      />
+      <motion.div 
+        className="absolute top-1/3 right-20 w-40 h-40 rounded-full bg-gradient-to-b from-bloomie-yellow/15 to-bloomie-pink/15 blur-2xl"
         animate={{ 
           scale: [1, 1.2, 1],
           opacity: [0.5, 0.8, 0.5]
         }}
         transition={{ duration: 8, repeat: Infinity }}
       />
-      <motion.div 
-        className="absolute bottom-20 -right-10 w-40 h-40 rounded-full bg-bloomie-pink/20 blur-3xl"
-        animate={{ 
-          scale: [1, 1.3, 1],
-          opacity: [0.5, 0.7, 0.5]
-        }}
-        transition={{ duration: 10, repeat: Infinity }}
-      />
-      <motion.div 
-        className="absolute top-1/3 right-20 w-20 h-20 rounded-full bg-bloomie-yellow/20 blur-2xl"
-        animate={{ 
-          scale: [1, 1.1, 1],
-          opacity: [0.6, 0.9, 0.6]
-        }}
-        transition={{ duration: 6, repeat: Infinity }}
-      />
       
-      {/* 3D Animated Avatars Scene */}
+      {/* 3D Animated Avatars Scene with improved spacing */}
       <motion.div 
-        className="relative mb-12 w-full max-w-4xl h-[400px] sm:h-[500px]"
+        className="relative mb-12 w-full max-w-5xl h-[400px] sm:h-[500px]"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
         {/* Avatar Container with better spacing and responsive layout */}
-        <div className={`${isMobile ? 'flex flex-col items-center justify-around h-full' : 'relative'}`}>
+        <div className={`${isMobile ? 'flex flex-col items-center gap-32' : 'relative'}`}>
           {/* Girl Avatar - Left Side */}
           <motion.div 
             className={`${isMobile 
-              ? 'mb-24' // Vertical spacing on mobile
-              : 'absolute left-10 sm:left-20 lg:left-40 top-0'} 
-              w-40 h-40 sm:w-60 sm:h-60`}
+              ? '' // No extra margin needed in stacked layout
+              : 'absolute left-10 sm:left-20 lg:left-60 xl:left-80 top-0'} 
+              w-40 h-40 sm:w-56 sm:h-56`}
           >
-            {/* Soft container for avatar */}
+            {/* Soft container for avatar - improved glow */}
             <motion.div 
-              className="absolute inset-0 rounded-full bg-gradient-to-br from-bloomie-purple/10 to-bloomie-pink/10 -z-10"
+              className="absolute inset-0 rounded-full bg-gradient-to-br from-bloomie-purple/15 to-bloomie-pink/15 -z-10"
               animate={{ 
-                boxShadow: ["0 0 0px rgba(157, 132, 183, 0.3)", "0 0 20px rgba(157, 132, 183, 0.5)", "0 0 0px rgba(157, 132, 183, 0.3)"]
+                boxShadow: ["0 0 0px rgba(157, 132, 183, 0.2)", "0 0 30px rgba(157, 132, 183, 0.4)", "0 0 0px rgba(157, 132, 183, 0.2)"]
               }}
-              transition={{ duration: 3, repeat: Infinity }}
+              transition={{ duration: 4, repeat: Infinity }}
             />
             
             <AnimatedAvatar 
@@ -108,17 +114,17 @@ const Hero = () => {
           {/* Boy Avatar - Right Side */}
           <motion.div 
             className={`${isMobile 
-              ? '' // No extra spacing needed for bottom avatar
-              : 'absolute right-10 sm:right-20 lg:right-40 top-0'} 
-              w-40 h-40 sm:w-60 sm:h-60`}
+              ? '' // Stacked layout on mobile
+              : 'absolute right-10 sm:right-20 lg:right-60 xl:right-80 top-0'} 
+              w-40 h-40 sm:w-56 sm:h-56`}
           >
-            {/* Soft container for avatar */}
+            {/* Soft container for avatar - improved glow */}
             <motion.div 
-              className="absolute inset-0 rounded-full bg-gradient-to-br from-bloomie-green/10 to-bloomie-yellow/10 -z-10"
+              className="absolute inset-0 rounded-full bg-gradient-to-br from-bloomie-green/15 to-bloomie-yellow/15 -z-10"
               animate={{ 
-                boxShadow: ["0 0 0px rgba(181, 230, 179, 0.3)", "0 0 20px rgba(181, 230, 179, 0.5)", "0 0 0px rgba(181, 230, 179, 0.3)"]
+                boxShadow: ["0 0 0px rgba(181, 230, 179, 0.2)", "0 0 30px rgba(181, 230, 179, 0.4)", "0 0 0px rgba(181, 230, 179, 0.2)"]
               }}
-              transition={{ duration: 3, delay: 1, repeat: Infinity }}
+              transition={{ duration: 4, delay: 2, repeat: Infinity }}
             />
             
             <AnimatedAvatar 
@@ -129,39 +135,46 @@ const Hero = () => {
           </motion.div>
         </div>
         
-        {/* Speech Bubble - Improved Animation and Styling */}
+        {/* Speech Bubble - Improved cloud-style design and animation */}
         <AnimatePresence mode="wait">
           {activeSpeaker !== -1 && (
             <motion.div
               key={`speech-${activeSpeaker}`}
               className={`absolute ${isMobile 
-                ? 'top-[45%] left-1/2 transform -translate-x-1/2 max-w-[280px]' 
-                : `top-32 sm:top-40 ${
+                ? 'top-[40%] left-1/2 transform -translate-x-1/2 max-w-[280px]' 
+                : `top-36 sm:top-40 ${
                   conversation[activeSpeaker]?.speaker === "girl" 
-                    ? "left-[80px] sm:left-[160px]" 
-                    : "right-[80px] sm:right-[160px]"
-                } max-w-[200px] sm:max-w-[280px]`}`}
+                    ? "left-[80px] sm:left-[200px] lg:left-[240px]" 
+                    : "right-[80px] sm:right-[200px] lg:right-[240px]"
+                } max-w-[220px] sm:max-w-[320px]`}`}
               initial={{ opacity: 0, y: 10, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.8 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.5 }}
             >
-              <div className="bg-white/90 dark:bg-gray-800/90 p-4 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 backdrop-blur-sm relative">
+              <div className={`
+                ${conversation[activeSpeaker]?.speaker === "girl" 
+                  ? "bg-gradient-to-br from-bloomie-purple/10 to-bloomie-pink/10 border-bloomie-purple/20" 
+                  : "bg-gradient-to-br from-bloomie-green/10 to-bloomie-yellow/10 border-bloomie-green/20"
+                } 
+                p-5 rounded-2xl shadow-lg border backdrop-blur-sm relative
+              `}>
+                {/* Improved typing animation */}
                 <motion.p 
                   className="text-sm sm:text-base font-nunito"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2, duration: 0.3 }}
+                  transition={{ delay: 0.3, duration: 0.4 }}
                 >
                   {conversation[activeSpeaker]?.message}
                 </motion.p>
                 
-                {/* Typing animation dots */}
+                {/* Enhanced typing animation dots */}
                 <motion.div 
                   className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 flex gap-1"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 0] }}
+                  transition={{ duration: 1.5, repeat: 2, repeatType: "reverse" }}
                 >
                   {[0, 1, 2].map((i) => (
                     <motion.div
@@ -184,10 +197,15 @@ const Hero = () => {
                   ))}
                 </motion.div>
                 
-                {/* Speech bubble tail */}
+                {/* Improved cloud-style tail */}
                 <div 
-                  className={`absolute -bottom-2 w-4 h-4 bg-white/90 dark:bg-gray-800/90 rotate-45 border-b border-r border-gray-100 dark:border-gray-700 ${
-                    isMobile ? "left-1/2 -translate-x-1/2" : conversation[activeSpeaker]?.speaker === "girl" ? "left-5" : "right-5"
+                  className={`absolute -bottom-3 w-6 h-6 transform rotate-45 ${
+                    conversation[activeSpeaker]?.speaker === "girl" 
+                      ? "bg-gradient-to-br from-bloomie-purple/10 to-bloomie-pink/10 border-b border-r border-bloomie-purple/20" 
+                      : "bg-gradient-to-br from-bloomie-green/10 to-bloomie-yellow/10 border-b border-r border-bloomie-green/20"
+                  } ${
+                    isMobile ? "left-1/2 -translate-x-1/2" : 
+                    conversation[activeSpeaker]?.speaker === "girl" ? "left-8" : "right-8"
                   }`}
                 ></div>
               </div>
@@ -195,21 +213,21 @@ const Hero = () => {
           )}
         </AnimatePresence>
         
-        {/* Connection Line Between Avatars - Hide on Mobile */}
+        {/* Connection Line Between Avatars - Hide on Mobile, improved animation */}
         {!isMobile && (
           <motion.div 
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 sm:w-40 md:w-60 h-1 bg-gradient-to-r from-primary/40 to-bloomie-purple/40 rounded-full"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 sm:w-40 md:w-80 h-1 bg-gradient-to-r from-bloomie-purple/30 via-primary/30 to-bloomie-green/30 rounded-full"
             initial={{ scaleX: 0, opacity: 0 }}
             animate={{ scaleX: 1, opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.8 }}
           >
             <motion.div 
-              className="absolute top-1/2 left-0 transform -translate-y-1/2 w-3 h-3 bg-bloomie-yellow rounded-full"
+              className="absolute top-1/2 left-0 transform -translate-y-1/2 w-3 h-3 bg-bloomie-yellow rounded-full shadow-md shadow-bloomie-yellow/50"
               animate={{ 
                 x: ['0%', '100%', '0%'],
-                scale: [1, 1.2, 1]
+                scale: [1, 1.4, 1]
               }}
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
             ></motion.div>
           </motion.div>
         )}

@@ -11,7 +11,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <motion.main 
-        className="flex-grow pt-16"
+        className="flex-grow"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
