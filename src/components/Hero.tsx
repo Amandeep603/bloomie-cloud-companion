@@ -1,116 +1,146 @@
 
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import AnimatedAvatar from "./AnimatedAvatar";
 
 const Hero = () => {
   const { currentUser } = useAuth();
+  const [activeSpeaker, setActiveSpeaker] = useState<number>(-1);
+  const [conversationIndex, setConversationIndex] = useState(0);
   
-  // Avatar conversation dialogue
-  const boyMessages = [
-    "Yes! Bloomie's like a virtual best friend.",
-    "She even lets me write a daily diary — it tracks my mood!",
+  // Avatar conversation dialogue with timed display
+  const conversation = [
+    { speaker: "girl", message: "Hey, have you met Bloomie yet?" },
+    { speaker: "boy", message: "Yes! Bloomie's like a virtual best friend." },
+    { speaker: "girl", message: "I chat with her every day. She remembers how I feel and helps me grow!" },
+    { speaker: "boy", message: "She even lets me write a daily diary — it tracks my mood!" },
+    { speaker: "girl", message: "So cool! I feel like I'm never alone when Bloomie's around." }
   ];
-  
-  const girlMessages = [
-    "Hey, have you met Bloomie yet?",
-    "I chat with her every day. She remembers how I feel and helps me grow!",
-    "So cool! I feel like I'm never alone when Bloomie's around."
-  ];
+
+  // Control the conversation flow with timing
+  useEffect(() => {
+    const showNextMessage = () => {
+      if (conversationIndex < conversation.length) {
+        setActiveSpeaker(conversationIndex);
+        
+        setTimeout(() => {
+          setConversationIndex(conversationIndex + 1);
+        }, 3500); // Time before moving to next message
+      } else {
+        // Reset conversation after a pause
+        setTimeout(() => {
+          setActiveSpeaker(-1);
+          setTimeout(() => {
+            setConversationIndex(0);
+          }, 500);
+        }, 2000);
+      }
+    };
+    
+    showNextMessage();
+  }, [conversationIndex]);
 
   return (
     <div className="min-h-[90vh] flex flex-col items-center justify-center py-20 px-4 relative overflow-hidden">
       {/* Background Decorative Elements */}
-      <div className="absolute top-20 -left-10 w-40 h-40 rounded-full bg-bloomie-purple/20 blur-3xl"></div>
-      <div className="absolute bottom-20 -right-10 w-40 h-40 rounded-full bg-bloomie-pink/20 blur-3xl"></div>
-      <div className="absolute top-1/3 right-20 w-20 h-20 rounded-full bg-bloomie-yellow/20 blur-2xl"></div>
+      <motion.div 
+        className="absolute top-20 -left-10 w-40 h-40 rounded-full bg-bloomie-purple/20 blur-3xl"
+        animate={{ 
+          scale: [1, 1.2, 1],
+          opacity: [0.5, 0.8, 0.5]
+        }}
+        transition={{ duration: 8, repeat: Infinity }}
+      />
+      <motion.div 
+        className="absolute bottom-20 -right-10 w-40 h-40 rounded-full bg-bloomie-pink/20 blur-3xl"
+        animate={{ 
+          scale: [1, 1.3, 1],
+          opacity: [0.5, 0.7, 0.5]
+        }}
+        transition={{ duration: 10, repeat: Infinity }}
+      />
+      <motion.div 
+        className="absolute top-1/3 right-20 w-20 h-20 rounded-full bg-bloomie-yellow/20 blur-2xl"
+        animate={{ 
+          scale: [1, 1.1, 1],
+          opacity: [0.6, 0.9, 0.6]
+        }}
+        transition={{ duration: 6, repeat: Infinity }}
+      />
       
       {/* 3D Animated Avatars Scene */}
       <motion.div 
-        className="relative mb-12 w-full max-w-4xl"
+        className="relative mb-12 w-full max-w-4xl h-[400px] sm:h-[500px]"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <div className="relative h-[300px] sm:h-[400px] w-full">
-          {/* Girl Avatar - First Speaker */}
+        {/* Girl Avatar - Left Side */}
+        <div className="absolute left-10 sm:left-20 lg:left-40 top-0 w-40 h-40 sm:w-60 sm:h-60">
           <AnimatedAvatar 
             gender="girl" 
             position="left" 
-            message={girlMessages[0]} 
-            delay={1}
+            speaking={activeSpeaker !== -1 && conversation[activeSpeaker]?.speaker === "girl"}
           />
+        </div>
 
-          {/* Boy Avatar - Second Speaker */}
+        {/* Boy Avatar - Right Side */}
+        <div className="absolute right-10 sm:right-20 lg:right-40 top-0 w-40 h-40 sm:w-60 sm:h-60">
           <AnimatedAvatar 
             gender="boy" 
-            position="right" 
-            message={boyMessages[0]} 
-            delay={4}
+            position="right"
+            speaking={activeSpeaker !== -1 && conversation[activeSpeaker]?.speaker === "boy"}
           />
-          
-          {/* Add a delay and then show the next messages */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0, 1, 1, 0] }}
-            transition={{ delay: 8, duration: 8 }}
-            className="absolute inset-0"
-          >
-            <AnimatedAvatar 
-              gender="girl" 
-              position="left" 
-              message={girlMessages[1]} 
-              delay={1}
-            />
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0, 1, 1, 0] }}
-            transition={{ delay: 12, duration: 8 }}
-            className="absolute inset-0"
-          >
-            <AnimatedAvatar 
-              gender="boy" 
-              position="right" 
-              message={boyMessages[1]} 
-              delay={1}
-            />
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0, 1, 1, 0] }}
-            transition={{ delay: 16, duration: 8 }}
-            className="absolute inset-0"
-          >
-            <AnimatedAvatar 
-              gender="girl" 
-              position="left" 
-              message={girlMessages[2]} 
-              delay={1}
-            />
-          </motion.div>
-
-          {/* Connection Line Between Avatars */}
-          <motion.div 
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 sm:w-32 h-1 bg-gradient-to-r from-primary to-bloomie-purple rounded-full"
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-          >
-            <motion.div 
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-bloomie-yellow rounded-full"
-              animate={{ 
-                x: [-40, 40, -40],
-                scale: [1, 1.2, 1]
-              }}
-              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            ></motion.div>
-          </motion.div>
         </div>
+        
+        {/* Speech Bubble - Animated */}
+        <AnimatePresence>
+          {activeSpeaker !== -1 && (
+            <motion.div
+              key={`speech-${activeSpeaker}`}
+              className={`absolute top-32 sm:top-40 ${
+                conversation[activeSpeaker]?.speaker === "girl" 
+                  ? "left-[80px] sm:left-[160px]" 
+                  : "right-[80px] sm:right-[160px]"
+              } max-w-[200px] sm:max-w-[280px]`}
+              initial={{ opacity: 0, y: 10, scale: 0.8 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.8 }}
+              transition={{ duration: 0.4 }}
+            >
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
+                <p className="text-sm sm:text-base font-nunito">
+                  {conversation[activeSpeaker]?.message}
+                </p>
+                <div 
+                  className={`absolute -bottom-2 w-4 h-4 bg-white dark:bg-gray-800 rotate-45 border-b border-r border-gray-100 dark:border-gray-700 ${
+                    conversation[activeSpeaker]?.speaker === "girl" ? "left-5" : "right-5"
+                  }`}
+                ></div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        {/* Connection Line Between Avatars */}
+        <motion.div 
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 sm:w-40 md:w-60 h-1 bg-gradient-to-r from-primary/40 to-bloomie-purple/40 rounded-full"
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={{ scaleX: 1, opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.8 }}
+        >
+          <motion.div 
+            className="absolute top-1/2 left-0 transform -translate-y-1/2 w-3 h-3 bg-bloomie-yellow rounded-full"
+            animate={{ 
+              x: ['0%', '100%', '0%'],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+          ></motion.div>
+        </motion.div>
       </motion.div>
       
       {/* Text Content */}

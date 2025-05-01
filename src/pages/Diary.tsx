@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
-import EmotionalDiary from "@/components/EmotionalDiary";
+import EmotionalDiaryNew from "@/components/EmotionalDiaryNew";
 import MoodTimeline from "@/components/MoodTimeline";
 import { useAuth } from "@/contexts/AuthContext";
 import { getDiaryEntries, addDiaryEntry, deleteDiaryEntry } from "@/services/diaryService";
@@ -166,53 +166,26 @@ const Diary = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-grow pt-24 pb-16 px-4 bg-gradient-to-b from-indigo-50/30 to-blue-50/30 dark:from-slate-900/30 dark:to-slate-800/30">
+      <main className="flex-grow pt-16 pb-16 px-4 bg-gradient-to-br from-indigo-50/30 to-blue-50/30 dark:from-slate-900/30 dark:to-slate-800/30">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-center"
           >
-            <h1 className="text-3xl font-bold mb-3 font-nunito bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-500 dark:from-indigo-400 dark:to-blue-300">Emotional Diary</h1>
-            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto font-nunito">
-              Track your moods and feelings over time. Bloomie will help you identify patterns and provide insights to improve your emotional wellbeing.
-            </p>
+            {isLoading ? (
+              <div className="h-64 flex flex-col items-center justify-center">
+                <Loader className="h-8 w-8 animate-spin text-primary mb-4" />
+                <p className="text-muted-foreground font-nunito">Loading your diary entries...</p>
+              </div>
+            ) : (
+              <EmotionalDiaryNew
+                entries={entries} 
+                onSave={handleSaveEntry} 
+                onDelete={handleDeleteEntry}
+              />
+            )}
           </motion.div>
-          
-          {isLoading ? (
-            <div className="h-64 flex flex-col items-center justify-center">
-              <Loader className="h-8 w-8 animate-spin text-primary mb-4" />
-              <p className="text-muted-foreground">Loading your diary entries...</p>
-            </div>
-          ) : (
-            <>
-              {/* Mood Timeline */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <Card className="mb-8 overflow-hidden border-indigo-100 dark:border-indigo-900/30 shadow-md">
-                  <CardContent className="p-6">
-                    <MoodTimeline moods={moodEntries} />
-                  </CardContent>
-                </Card>
-              </motion.div>
-              
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-              >
-                <EmotionalDiary 
-                  entries={entries} 
-                  onSave={handleSaveEntry} 
-                  onDelete={handleDeleteEntry}
-                />
-              </motion.div>
-            </>
-          )}
         </div>
       </main>
     </div>

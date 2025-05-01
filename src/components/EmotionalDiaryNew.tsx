@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -13,12 +14,24 @@ import {
   DialogDescription
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/components/ui/use-toast";
-import { Calendar as CalendarIcon, Trash2, Edit, Loader2 } from "lucide-react";
+import { 
+  Smile, 
+  Frown, 
+  Angry, 
+  Heart, 
+  Moon, 
+  Calendar as CalendarIcon, 
+  Trash2, 
+  Edit, 
+  Loader2,
+  Save 
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface DiaryEntry {
   id?: string;
@@ -34,6 +47,14 @@ interface EmotionalDiaryNewProps {
   onDelete?: (entryId: string) => void;
 }
 
+const MOOD_EMOJIS = [
+  { emoji: '😊', label: 'Happy', color: 'bg-mood-happy' },
+  { emoji: '😢', label: 'Sad', color: 'bg-mood-sad' },
+  { emoji: '😡', label: 'Angry', color: 'bg-mood-angry' },
+  { emoji: '😍', label: 'Love', color: 'bg-mood-love' },
+  { emoji: '😴', label: 'Sleepy', color: 'bg-mood-sleepy' }
+];
+
 const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({ 
   entries = [], 
   onSave = () => {},
@@ -43,26 +64,28 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
   const [text, setText] = useState('');
   const [title, setTitle] = useState('');
   const [moodEmoji, setMoodEmoji] = useState('😊');
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(true);
   const [currentEntryId, setCurrentEntryId] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  // Available moods
-  const moodOptions = ['😊', '😢', '😡', '😍', '😴'];
+  const titleInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     // Focus textarea when edit mode is activated
-    if (isEditMode && textareaRef.current) {
-      textareaRef.current.focus();
+    if (isEditMode && titleInputRef.current) {
+      titleInputRef.current.focus();
     }
   }, [isEditMode]);
 
-  const onChange = (selectedDate: Date) => {
+  const handleDateChange = (selectedDate: Date) => {
     setDate(selectedDate);
+    setIsCalendarOpen(false);
     loadEntryForDate(selectedDate);
   };
 
@@ -75,12 +98,11 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
       setTitle(existingEntry.title || '');
       setMoodEmoji(existingEntry.moodEmoji || '😊');
       setCurrentEntryId(existingEntry.id || null);
-      setIsDialogOpen(true);
       setIsEditMode(false);
+      setIsDialogOpen(true);
     } else {
       resetForm();
       setIsEditMode(true);
-      setIsDialogOpen(true);
     }
   };
 
@@ -89,63 +111,95 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
     setTitle('');
     setMoodEmoji('😊');
     setCurrentEntryId(null);
-    setIsEditMode(false);
+    setIsEditMode(true);
   };
 
-  const handleSave = () => {
-    const formattedDate = format(date, 'yyyy-MM-dd');
-    
-    onSave({ 
-      id: currentEntryId || undefined,
-      date: formattedDate, 
-      text,
-      title: title || 'Diary Entry',
-      moodEmoji
-    });
-    
-    toast({
-      title: "Diary entry saved!",
-      description: "Your thoughts have been recorded.",
-    });
-    
-    setIsDialogOpen(false);
-    setIsEditMode(false);
+  const handleNewEntry = () => {
+    setDate(new Date());
+    resetForm();
   };
 
-  const handleDelete = () => {
-    if (currentEntryId) {
-      setIsDeleting(true);
-      onDelete(currentEntryId);
+  const handleSave = async () => {
+    if (!title.trim() || !text.trim()) {
+      toast({
+        title: "Missing information",
+        description: "Please provide both a title and your diary entry.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSaving(true);
+    
+    try {
+      const formattedDate = format(date, 'yyyy-MM-dd');
       
-      setTimeout(() => {
-        setIsDeleting(false);
-        setIsDialogOpen(false);
-        toast({
-          title: "Entry deleted",
-          description: "Your diary entry has been removed.",
-        });
-      }, 500);
+      await onSave({ 
+        id: currentEntryId || undefined,
+        date: formattedDate, 
+        text,
+        title,
+        moodEmoji
+      });
+      
+      toast({
+        title: "Diary entry saved!",
+        description: "Your thoughts have been recorded.",
+      });
+      
+      setIsEditMode(false);
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error("Error saving diary entry:", error);
+      toast({
+        title: "Failed to save",
+        description: "There was an error saving your diary entry.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSaving(false);
     }
   };
 
-  // Color mapping for mood emojis
-  const getMoodColor = (mood: string) => {
-    switch (mood) {
-      case '😊': return 'bg-mood-happy/20 border-mood-happy/30';
-      case '😢': return 'bg-mood-sad/20 border-mood-sad/30';
-      case '😡': return 'bg-mood-angry/20 border-mood-angry/30';
-      case '😍': return 'bg-mood-love/20 border-mood-love/30';
-      case '😴': return 'bg-mood-sleepy/20 border-mood-sleepy/30';
-      default: return 'bg-blue-100/20 border-blue-100/30';
+  const handleDelete = async () => {
+    if (!currentEntryId) return;
+    
+    setIsDeleting(true);
+    
+    try {
+      await onDelete(currentEntryId);
+      
+      toast({
+        title: "Entry deleted",
+        description: "Your diary entry has been removed.",
+      });
+      
+      setIsDialogOpen(false);
+      resetForm();
+    } catch (error) {
+      console.error("Error deleting diary entry:", error);
+      toast({
+        title: "Failed to delete",
+        description: "There was an error deleting your diary entry.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsDeleting(false);
     }
+  };
+
+  const handleEmojiClick = (emojiData: { emoji: string }) => {
+    setText(prevText => prevText + emojiData.emoji);
+    setShowEmojiPicker(false);
+  };
+
+  const handleMoodSelect = (emoji: string) => {
+    setMoodEmoji(emoji);
   };
 
   // Custom tile content to mark dates with entries
   const tileClassName = useCallback(
-    ({ date, view }: { date: Date; view: string }) => {
-      // Only mark day tiles
-      if (view !== 'month') return null;
-      
+    ({ date }: { date: Date }) => {
       const formattedDate = format(date, 'yyyy-MM-dd');
       const hasEntry = entries.some(entry =>
         format(new Date(entry.date), 'yyyy-MM-dd') === formattedDate
@@ -156,211 +210,383 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
     [entries]
   );
 
-  const isToday = (date: Date) => {
-    const today = new Date();
-    return date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear();
-  };
-
   const tileContent = useCallback(
-    ({ date, view }: { date: Date; view: string }) => {
-      if (view !== 'month') return null;
-      
+    ({ date }: { date: Date }) => {
       const formattedDate = format(date, 'yyyy-MM-dd');
       const entry = entries.find(entry => 
         format(new Date(entry.date), 'yyyy-MM-dd') === formattedDate
       );
       
-      return (
-        <div className="relative w-full h-full flex items-center justify-center">
-          {isToday(date) && (
-            <div className="absolute inset-0 bg-primary/10 rounded-full" />
-          )}
-          {entry?.moodEmoji && (
-            <div className="absolute -bottom-1 -right-1 text-xs">
-              {entry.moodEmoji}
-            </div>
-          )}
-        </div>
-      );
+      if (entry?.moodEmoji) {
+        return <div className="absolute -bottom-1 right-0">{entry.moodEmoji}</div>;
+      }
+      return null;
     },
     [entries]
   );
 
+  const isToday = (someDate: Date) => {
+    const today = new Date();
+    return someDate.getDate() === today.getDate() &&
+      someDate.getMonth() === today.getMonth() &&
+      someDate.getFullYear() === today.getFullYear();
+  };
+
+  const renderMoodIcon = (mood: string) => {
+    switch (mood) {
+      case '😊': return <Smile className="h-5 w-5 text-mood-happy" />;
+      case '😢': return <Frown className="h-5 w-5 text-mood-sad" />;
+      case '😡': return <Angry className="h-5 w-5 text-mood-angry" />;
+      case '😍': return <Heart className="h-5 w-5 text-mood-love" />;
+      case '😴': return <Moon className="h-5 w-5 text-mood-sleepy" />;
+      default: return <Smile className="h-5 w-5 text-mood-happy" />;
+    }
+  };
+
   return (
-    <div className="flex flex-col items-center p-4">
-      <Card className="w-full max-w-3xl border-indigo-100 dark:border-indigo-900/30 shadow-md overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-indigo-50/70 to-blue-50/70 dark:from-indigo-950/20 dark:to-blue-950/20 pb-4 text-center">
-          <h2 className="text-xl font-bold font-nunito">Emotional Diary</h2>
-          <p className="text-sm text-muted-foreground font-nunito">Track your mood daily. Bloomie will help you reflect and grow.</p>
-        </CardHeader>
-        <CardContent className="p-6">
-          <div className="flex justify-center space-x-3 mb-6">
-            {moodOptions.map((mood) => (
-              <motion.button
-                key={mood}
-                className={`relative rounded-full p-3 text-2xl shadow-sm border ${
-                  moodEmoji === mood 
-                    ? `${getMoodColor(mood)} ring-2 ring-offset-2 ring-blue-400/50` 
-                    : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700'
-                } hover:scale-110 transition-all`}
-                onClick={() => {
-                  setMoodEmoji(mood);
-                  if (isEditMode) {
-                    // If already in edit mode with dialog open, just update the mood
-                    return;
-                  }
-                  // Otherwise, start a new entry with this mood
-                  resetForm();
-                  setMoodEmoji(mood);
-                  setDate(new Date());
-                  setIsEditMode(true);
-                  setIsDialogOpen(true);
-                }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
+    <div className="max-w-3xl mx-auto p-4">
+      <div className="text-center mb-8">
+        <motion.h1 
+          className="text-3xl font-bold font-nunito bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-500 dark:from-indigo-400 dark:to-blue-300"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Emotional Diary
+        </motion.h1>
+        <motion.p 
+          className="text-muted-foreground mt-2 font-nunito"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          Track how you feel. Bloomie is here to listen.
+        </motion.p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <motion.div 
+          className="order-2 md:order-1"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <Card className="shadow-md border-indigo-100/50 dark:border-indigo-900/30 overflow-hidden bg-gradient-to-br from-white to-blue-50/20 dark:from-slate-900 dark:to-indigo-950/20">
+            <CardHeader className="pb-0">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-semibold font-nunito">New Entry</h3>
+                <div className="flex items-center">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex gap-2 items-center"
+                    onClick={() => setIsCalendarOpen(true)}
+                  >
+                    <CalendarIcon className="h-4 w-4" />
+                    <span>
+                      {isToday(date) ? "Today" : format(date, "MMM d")}
+                    </span>
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-muted-foreground">How are you feeling today?</label>
+                  <div className="flex justify-between gap-2">
+                    {MOOD_EMOJIS.map(({ emoji, label, color }) => (
+                      <motion.button
+                        key={emoji}
+                        className={`flex flex-1 flex-col items-center justify-center p-3 rounded-xl transition-all ${
+                          moodEmoji === emoji 
+                            ? `${color} shadow-md ring-2 ring-primary/30` 
+                            : 'bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-800'
+                        }`}
+                        onClick={() => handleMoodSelect(emoji)}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <span className="text-2xl mb-1">{emoji}</span>
+                        <span className="text-xs font-medium">{label}</span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2 text-muted-foreground">Title</label>
+                    <Input
+                      ref={titleInputRef}
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      placeholder="What would you like to call today?"
+                      className="border-indigo-100 dark:border-indigo-900/30 bg-white dark:bg-slate-900/80"
+                    />
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="block text-sm font-medium text-muted-foreground">Your thoughts</label>
+                      <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
+                        <PopoverTrigger asChild>
+                          <Button variant="ghost" size="sm" className="h-8 px-2">
+                            <Smile className="h-4 w-4 mr-1" />
+                            <span className="text-xs">Add Emoji</span>
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0" align="end">
+                          <EmojiPicker
+                            onEmojiClick={handleEmojiClick}
+                            theme={document.documentElement.classList.contains("dark") ? Theme.DARK : Theme.LIGHT}
+                            width="100%"
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                    <Textarea
+                      ref={textareaRef}
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                      placeholder="Write your thoughts here..."
+                      className="min-h-[200px] border-indigo-100 dark:border-indigo-900/30 bg-white dark:bg-slate-900/80"
+                      style={{
+                        backgroundImage: "repeating-linear-gradient(transparent, transparent 31px, #e5e7eb 31px, #e5e7eb 32px)",
+                        lineHeight: "32px",
+                        paddingTop: "8px"
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="pt-2 flex justify-between">
+              <Button variant="outline" onClick={resetForm}>Clear</Button>
+              <Button 
+                onClick={handleSave} 
+                disabled={!title.trim() || !text.trim() || isSaving}
+                className="gap-2"
               >
-                {mood}
-              </motion.button>
-            ))}
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card className="border-gray-100 dark:border-slate-800 shadow-sm">
-              <CardContent className="p-3">
+                {isSaving ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="h-4 w-4" />
+                )}
+                Save Entry
+              </Button>
+            </CardFooter>
+          </Card>
+        </motion.div>
+
+        <motion.div 
+          className="order-1 md:order-2"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <Card className="shadow-md border-indigo-100/50 dark:border-indigo-900/30 overflow-hidden">
+            <CardHeader className="pb-2">
+              <h3 className="text-xl font-semibold font-nunito">My Diary Calendar</h3>
+              <p className="text-sm text-muted-foreground">Click on dates to view past entries</p>
+            </CardHeader>
+            <CardContent>
+              <div className="diary-calendar-wrapper">
                 <Calendar
-                  onChange={onChange}
+                  onChange={handleDateChange}
                   value={date}
-                  className="w-full mx-auto rounded-lg shadow-sm font-nunito"
                   tileClassName={tileClassName}
                   tileContent={tileContent}
-                  nextLabel="→"
-                  prevLabel="←"
+                  className="rounded-lg shadow-sm border-0"
                   next2Label={null}
                   prev2Label={null}
                 />
-              </CardContent>
-            </Card>
-            
-            <div className="flex flex-col space-y-4">
-              <Card className="border-gray-100 dark:border-slate-800 shadow-sm h-full">
-                <CardHeader className="py-3">
-                  <h3 className="text-md font-semibold font-nunito">Start a new entry</h3>
+              </div>
+            </CardContent>
+          </Card>
+
+          {entries.length > 0 && (
+            <motion.div
+              className="mt-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
+              <Card className="shadow-md border-indigo-100/50 dark:border-indigo-900/30 overflow-hidden">
+                <CardHeader className="pb-2">
+                  <h3 className="text-xl font-semibold font-nunito">Recent Mood Timeline</h3>
                 </CardHeader>
-                <CardContent className="p-4">
-                  <div className="flex flex-col space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Today's Date:</span>
-                      <Badge variant="outline" className="font-nunito">
-                        {format(new Date(), 'MMMM d, yyyy')}
-                      </Badge>
+                <CardContent>
+                  {entries.length > 0 ? (
+                    <div className="p-2">
+                      <motion.div
+                        className="flex flex-wrap gap-3 justify-center"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ staggerChildren: 0.1 }}
+                      >
+                        {entries.slice(0, 7).map((entry, index) => (
+                          <motion.div
+                            key={entry.id || index}
+                            className="flex flex-col items-center cursor-pointer"
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ duration: 0.3, delay: index * 0.1 }}
+                            whileHover={{ scale: 1.1 }}
+                            onClick={() => {
+                              setDate(new Date(entry.date));
+                              loadEntryForDate(new Date(entry.date));
+                            }}
+                          >
+                            <div className="text-2xl mb-1">{entry.moodEmoji}</div>
+                            <div className="text-xs text-gray-500">
+                              {format(new Date(entry.date), "MMM d")}
+                            </div>
+                          </motion.div>
+                        ))}
+                      </motion.div>
                     </div>
-                    <p className="text-sm text-muted-foreground font-nunito">
-                      Select a mood above or click the button below to start today's diary entry.
+                  ) : (
+                    <p className="text-center py-4 text-muted-foreground">
+                      No entries yet. Start logging your mood!
                     </p>
-                    <Button 
-                      className="w-full mt-4 font-nunito"
-                      onClick={() => {
-                        resetForm();
-                        setDate(new Date());
-                        setIsEditMode(true);
-                        setIsDialogOpen(true);
-                      }}
-                    >
-                      <CalendarIcon className="h-4 w-4 mr-2" />
-                      Write Today's Entry
-                    </Button>
-                  </div>
+                  )}
                 </CardContent>
               </Card>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-      
+            </motion.div>
+          )}
+        </motion.div>
+      </div>
+
+      <AnimatePresence>
+        {isCalendarOpen && (
+          <Dialog open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+            <DialogContent className="sm:max-w-md max-h-[90vh] overflow-auto">
+              <DialogHeader>
+                <DialogTitle>Select Date</DialogTitle>
+                <DialogDescription>
+                  Choose a date to view or create an entry
+                </DialogDescription>
+              </DialogHeader>
+              <div className="py-4">
+                <Calendar
+                  onChange={handleDateChange as any}
+                  value={date}
+                  tileClassName={tileClassName}
+                  tileContent={tileContent}
+                  className="mx-auto rounded-lg"
+                />
+              </div>
+              <DialogFooter>
+                <Button onClick={() => setIsCalendarOpen(false)}>Cancel</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+      </AnimatePresence>
+
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-lg bg-white dark:bg-slate-900">
+        <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 font-nunito">
-              {isEditMode ? "Create/Edit Entry" : "View Diary Entry"} 
-              <Badge variant="outline" className="ml-2 font-nunito">
+            <DialogTitle className="flex items-center gap-2">
+              <span>{title || "Diary Entry"}</span>
+              <Badge variant="outline">
                 {format(date, 'MMMM d, yyyy')}
               </Badge>
             </DialogTitle>
-            <DialogDescription className="font-nunito">
-              {isEditMode 
-                ? "Record your thoughts and feelings for this day." 
-                : "This is your diary entry for the selected date."}
-            </DialogDescription>
           </DialogHeader>
-          
-          <div className="space-y-4 py-4">
-            {/* Mood Selection in Dialog */}
-            {isEditMode && (
-              <div className="flex justify-center space-x-3 mb-2">
-                {moodOptions.map((mood) => (
-                  <motion.button
-                    key={mood}
-                    className={`relative rounded-full p-2 text-xl shadow-sm border ${
-                      moodEmoji === mood 
-                        ? `${getMoodColor(mood)} ring-2 ring-offset-1 ring-blue-400/50` 
-                        : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700'
-                    } hover:scale-110 transition-all`}
-                    onClick={() => setMoodEmoji(mood)}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    {mood}
-                  </motion.button>
-                ))}
+          <div className="py-4 space-y-4">
+            <div className="flex justify-center items-center">
+              <div className={`text-4xl p-4 rounded-full flex items-center justify-center ${
+                moodEmoji === '😊' ? 'bg-mood-happy/20' :
+                moodEmoji === '😢' ? 'bg-mood-sad/20' :
+                moodEmoji === '😡' ? 'bg-mood-angry/20' :
+                moodEmoji === '😍' ? 'bg-mood-love/20' :
+                'bg-mood-sleepy/20'
+              }`}>
+                {moodEmoji}
               </div>
-            )}
+            </div>
             
-            {/* Title input */}
             {isEditMode ? (
-              <Input
-                placeholder="Entry title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full font-nunito"
-              />
-            ) : (
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold font-nunito">{title || "Diary Entry"}</h3>
-                <div className="text-2xl">{moodEmoji}</div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Title</label>
+                  <Input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Entry title"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Mood</label>
+                  <div className="flex justify-between gap-2">
+                    {MOOD_EMOJIS.map(({ emoji, label }) => (
+                      <button
+                        key={emoji}
+                        className={`flex flex-col items-center p-2 rounded-lg transition-all ${
+                          moodEmoji === emoji 
+                            ? 'bg-primary/10 font-semibold' 
+                            : 'hover:bg-primary/5'
+                        }`}
+                        onClick={() => handleMoodSelect(emoji)}
+                      >
+                        <span className="text-xl">{emoji}</span>
+                        <span className="text-xs mt-1">{label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="block text-sm font-medium">Entry</label>
+                    <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          <Smile className="h-4 w-4 mr-2" />
+                          Add Emoji
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-full p-0" align="end">
+                        <EmojiPicker
+                          onEmojiClick={handleEmojiClick}
+                          theme={document.documentElement.classList.contains("dark") ? Theme.DARK : Theme.LIGHT}
+                          width="100%"
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <Textarea
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    placeholder="Write your thoughts here..."
+                    className="min-h-[150px]"
+                  />
+                </div>
               </div>
-            )}
-            
-            {/* Entry content */}
-            {isEditMode ? (
-              <div>
-                <Textarea
-                  ref={textareaRef}
-                  placeholder="Write your thoughts here..."
-                  className="diary-textarea h-48 resize-none font-nunito"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                />
-              </div>
             ) : (
-              <div className={`${getMoodColor(moodEmoji)} p-4 rounded-md whitespace-pre-wrap min-h-[150px] font-nunito`}>
-                {text || (
-                  <span className="text-muted-foreground italic">
-                    No content for this entry.
-                  </span>
-                )}
+              <div className="bg-muted/30 p-6 rounded-lg whitespace-pre-wrap min-h-[150px] border border-muted">
+                {text || <span className="text-muted-foreground italic">No content for this entry</span>}
               </div>
             )}
           </div>
-          
           <DialogFooter className="flex justify-between sm:justify-between">
             {isEditMode ? (
               <>
-                <Button variant="ghost" onClick={() => setIsDialogOpen(false)} className="font-nunito">
+                <Button variant="ghost" onClick={() => setIsDialogOpen(false)}>
                   Cancel
                 </Button>
-                <Button onClick={handleSave} disabled={!text.trim()} className="font-nunito">Save Entry</Button>
+                <Button 
+                  onClick={handleSave} 
+                  disabled={!title.trim() || !text.trim() || isSaving}
+                >
+                  {isSaving ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Save className="h-4 w-4 mr-2" />
+                  )}
+                  Save Changes
+                </Button>
               </>
             ) : (
               <>
@@ -370,7 +596,6 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
                       variant="destructive" 
                       onClick={handleDelete}
                       disabled={isDeleting}
-                      className="font-nunito"
                     >
                       {isDeleting ? (
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -382,10 +607,10 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
                   )}
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="ghost" onClick={() => setIsDialogOpen(false)} className="font-nunito">
+                  <Button variant="ghost" onClick={() => setIsDialogOpen(false)}>
                     Close
                   </Button>
-                  <Button onClick={() => setIsEditMode(true)} className="font-nunito">
+                  <Button onClick={() => setIsEditMode(true)}>
                     <Edit className="h-4 w-4 mr-2" />
                     Edit
                   </Button>

@@ -97,6 +97,13 @@ export default {
           "50%": { transform: "scaleY(0.9) scaleX(1.1)" },
           "75%": { transform: "scaleY(1.1) scaleX(0.9)" },
           "100%": { transform: "scaleY(0.8) scaleX(1)" },
+        },
+        "typing": {
+          "0%": { width: "0%" },
+          "100%": { width: "100%" }
+        },
+        "blink": {
+          "50%": { borderColor: "transparent" }
         }
       },
       animation: {
@@ -105,7 +112,9 @@ export default {
         "float": "float 6s ease-in-out infinite",
         "bounce-small": "bounce-small 3s ease-in-out infinite",
         "pulse-glow": "pulse-glow 3s ease-in-out infinite",
-        "mouth-talk": "mouth-talk 0.6s ease-in-out infinite"
+        "mouth-talk": "mouth-talk 0.6s ease-in-out infinite",
+        "typing": "typing 3.5s steps(40, end)",
+        "blink": "blink .75s step-end infinite",
       },
       fontFamily: {
         nunito: ["Nunito", "sans-serif"],
