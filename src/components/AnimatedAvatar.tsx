@@ -17,16 +17,28 @@ const AnimatedAvatar = ({ gender, position, speaking = false }: AnimatedAvatarPr
       transition={{ duration: 1 }}
       whileHover={{ scale: 1.05 }}
     >
-      {/* Background Glow Effect */}
+      {/* Enhanced Background Glow Effect */}
       <motion.div 
-        className={`absolute inset-0 rounded-full opacity-20 ${
+        className={`absolute inset-0 rounded-full opacity-30 ${
           gender === "boy" ? "bg-bloomie-green" : "bg-bloomie-pink"
         }`}
         animate={{ 
-          scale: speaking ? [1, 1.15, 1] : [1, 1.05, 1],
-          opacity: speaking ? [0.2, 0.4, 0.2] : [0.2, 0.25, 0.2]
+          scale: speaking ? [1, 1.2, 1] : [1, 1.05, 1],
+          opacity: speaking ? [0.2, 0.5, 0.2] : [0.2, 0.3, 0.2]
         }}
         transition={{ repeat: Infinity, duration: speaking ? 1 : 2 }}
+      />
+      
+      {/* Soft Outer Glow */}
+      <motion.div 
+        className={`absolute inset-0 rounded-full blur-md opacity-20 ${
+          gender === "boy" ? "bg-bloomie-green" : "bg-bloomie-pink"
+        }`}
+        animate={{ 
+          scale: [1.1, 1.2, 1.1],
+          opacity: [0.1, 0.2, 0.1]
+        }}
+        transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
       />
       
       <motion.div 
@@ -51,7 +63,7 @@ const AnimatedAvatar = ({ gender, position, speaking = false }: AnimatedAvatarPr
           >
             <span className="text-6xl">{gender === "boy" ? "👦" : "👧"}</span>
             
-            {/* Eyes - Blinking Animation */}
+            {/* Enhanced Eyes - Blinking Animation with random timing */}
             <motion.div 
               className="absolute top-12 left-1/2 transform -translate-x-1/2 flex gap-5"
               animate={{ scaleY: [1, 0.1, 1] }}
@@ -65,7 +77,7 @@ const AnimatedAvatar = ({ gender, position, speaking = false }: AnimatedAvatarPr
               <div className="w-2 h-2 bg-black rounded-full"></div>
             </motion.div>
             
-            {/* Mouth animation - Enhanced for more natural movement */}
+            {/* Enhanced mouth animation for more natural movement */}
             {speaking ? (
               <motion.div 
                 className="absolute bottom-12 w-8 h-4 bg-black rounded-full overflow-hidden"
@@ -86,7 +98,7 @@ const AnimatedAvatar = ({ gender, position, speaking = false }: AnimatedAvatarPr
             )}
           </motion.div>
           
-          {/* Animated Arms */}
+          {/* Enhanced Animated Arms with more dynamic movement */}
           <motion.div 
             className={`absolute ${position === "left" ? "-right-4" : "-left-4"} top-1/4 w-10 h-3 rounded-full origin-${position === "left" ? "left" : "right"} ${
               gender === "boy" ? "bg-primary" : "bg-bloomie-purple"
