@@ -44,7 +44,10 @@ const AnimatedAvatar = ({ gender, position, speaking = false }: AnimatedAvatarPr
               gender === "boy" ? "bg-primary" : "bg-bloomie-purple"
             }`}
             animate={{ scale: speaking ? [1, 1.03, 1] : 1 }}
-            transition={{ repeat: speaking ? Infinity : false, duration: 0.5 }}
+            transition={{ 
+              repeat: speaking ? Infinity : undefined, 
+              duration: 0.5 
+            }}
           >
             <span className="text-6xl">{gender === "boy" ? "👦" : "👧"}</span>
             
