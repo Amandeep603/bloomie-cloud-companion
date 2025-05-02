@@ -1,8 +1,6 @@
-
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import EmotionalDiaryNew from "@/components/EmotionalDiaryNew";
-import MoodTimeline from "@/components/MoodTimeline";
 import { useAuth } from "@/contexts/AuthContext";
 import { getDiaryEntries, addDiaryEntry, deleteDiaryEntry } from "@/services/diaryService";
 import { Loader } from "lucide-react";
