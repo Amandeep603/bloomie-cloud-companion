@@ -7,7 +7,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { getDiaryEntries, addDiaryEntry, deleteDiaryEntry } from "@/services/diaryService";
 import { Loader } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import Footer from "@/components/Footer";
 
@@ -173,7 +172,7 @@ const Diary = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="w-full md:w-[80%] lg:w-[70%] mx-auto" // Adjust responsive width
+            className="w-full md:w-[80%] lg:w-[85%] xl:w-[90%] mx-auto" // Wider layout
           >
             {isLoading ? (
               <div className="h-64 flex flex-col items-center justify-center">

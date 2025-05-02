@@ -1,5 +1,4 @@
 
-import { Link } from "react-router-dom";
 import { Heart } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -23,14 +22,14 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center mb-6">
           {/* Logo and tagline */}
           <div className="mb-4 md:mb-0 text-center md:text-left">
-            <Link to="/" className="flex items-center justify-center md:justify-start space-x-2 mb-2">
+            <div className="flex items-center justify-center md:justify-start space-x-2 mb-2">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-bloomie-purple to-primary flex items-center justify-center">
                 <span className="text-sm font-bold text-white">B</span>
               </div>
               <span className="font-nunito font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-bloomie-purple via-primary to-bloomie-pink">
                 Bloomie
               </span>
-            </Link>
+            </div>
             <p className="text-sm text-muted-foreground max-w-xs font-nunito">
               Thanks for spending time with Bloomie <span className="text-pink-400">💖</span>
             </p>
@@ -42,12 +41,12 @@ const Footer = () => {
             <ul className="flex flex-wrap gap-x-4 gap-y-1 justify-center md:justify-start">
               {quickLinks.map((link, index) => (
                 <li key={index}>
-                  <Link 
-                    to={link.path} 
+                  <a 
+                    href={link.path} 
                     className="text-xs text-muted-foreground hover:text-foreground transition-colors font-nunito hover:underline"
                   >
                     {link.name}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>

@@ -50,18 +50,18 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
 
   return (
     <motion.div 
-      className="relative mb-3 w-full max-w-5xl h-[400px] sm:h-[500px]" // Reduced margin-bottom to bring closer to text
+      className="relative mb-2 w-full max-w-5xl h-[400px] sm:h-[500px]" // Further reduced margin-bottom 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
     >
       {/* Avatar Container with improved spacing */}
-      <div className={`${isMobile ? 'flex flex-col items-center gap-16' : 'relative'}`}> {/* Reduced gap on mobile */}
+      <div className={`${isMobile ? 'flex flex-col items-center gap-12' : 'relative'}`}> {/* Further reduced gap on mobile */}
         {/* Girl Avatar - Left Side */}
         <motion.div 
           className={`${isMobile 
             ? '' // No extra margin needed in stacked layout
-            : 'absolute left-10 sm:left-16 lg:left-36 xl:left-52 top-0'} 
+            : 'absolute left-6 sm:left-12 lg:left-32 xl:left-48 top-0'} 
             w-40 h-40 sm:w-56 sm:h-56`}
         >
           {/* Soft container for avatar - improved glow */}
@@ -84,7 +84,7 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
         <motion.div 
           className={`${isMobile 
             ? '' // Stacked layout on mobile
-            : 'absolute right-10 sm:right-16 lg:right-36 xl:right-52 top-0'} 
+            : 'absolute right-6 sm:right-12 lg:right-32 xl:right-48 top-0'} 
             w-40 h-40 sm:w-56 sm:h-56`}
         >
           {/* Soft container for avatar - improved glow */}
