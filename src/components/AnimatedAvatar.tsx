@@ -77,10 +77,8 @@ const AnimatedAvatar = ({ gender, position, speaking = false }: AnimatedAvatarPr
               <div className="w-2 h-2 bg-black rounded-full"></div>
             </motion.div>
             
-            {/* Static smile instead of animated mouth */}
-            <div 
-              className="absolute bottom-12 w-6 h-1.5 bg-black rounded-full"
-            />
+            {/* Static smile instead of animated mouth - removing mouth movement */}
+            <div className="absolute bottom-12 w-6 h-1.5 bg-black rounded-full" />
           </motion.div>
           
           {/* Enhanced Animated Arms with more dynamic movement */}
@@ -89,13 +87,11 @@ const AnimatedAvatar = ({ gender, position, speaking = false }: AnimatedAvatarPr
               gender === "boy" ? "bg-primary" : "bg-bloomie-purple"
             }`}
             animate={{ 
-              rotate: speaking 
-                ? position === "left" ? [0, 15, -5, 10, 0] : [0, -15, 5, -10, 0] 
-                : position === "left" ? [0, 10, 0] : [0, -10, 0]
+              rotate: position === "left" ? [0, 10, 0] : [0, -10, 0]
             }}
             transition={{ 
               repeat: Infinity, 
-              duration: speaking ? 2 : 3,
+              duration: 3,
               ease: "easeInOut"
             }}
           />

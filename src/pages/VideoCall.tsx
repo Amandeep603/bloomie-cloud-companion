@@ -103,20 +103,20 @@ const VideoCallPage = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <motion.main 
-        className="flex-grow pt-24 pb-16 px-4"
+        className="flex-grow pt-16 pb-16 px-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="container mx-auto">
+        <div className="container mx-auto max-w-6xl"> {/* Added max-width for better centering */}
           <h1 className="text-3xl font-bold mb-3 font-nunito">Video Call with Bloomie</h1>
           <p className="text-muted-foreground mb-8 max-w-2xl font-nunito">
             Connect face-to-face with your AI friend through our animated avatar video call technology.
           </p>
 
-          <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-7 gap-6'} max-w-7xl mx-auto`}>
+          <div className={`grid ${isMobile ? 'grid-cols-1 gap-6' : 'grid-cols-7 gap-6'} mx-auto`}>
             {/* Main video area - wider on desktop */}
-            <div className={`${isMobile ? 'order-2 mb-6' : 'col-span-5'}`}>
+            <div className={`${isMobile ? 'order-2' : 'col-span-5'}`}>
               {!isCallStarted ? (
                 <StartCallCard roomId={roomId} startCall={startCall} />
               ) : (
@@ -134,7 +134,7 @@ const VideoCallPage = () => {
             </div>
             
             {/* Side panel - narrower on desktop, full width below on mobile */}
-            <div className={`${isMobile ? 'order-1 mb-4' : 'col-span-2'}`}>
+            <div className={`${isMobile ? 'order-1 mb-2' : 'col-span-2'}`}>
               <BloomieCorner 
                 isCallStarted={isCallStarted}
                 currentPrompt={currentPrompt}

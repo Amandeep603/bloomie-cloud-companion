@@ -9,11 +9,11 @@ import FloatingMessages from "./hero/FloatingMessages";
 const Hero = () => {
   // Avatar conversation dialogue with improved timing
   const conversation = [
-    { speaker: "girl", message: "Hey, have you met Bloomie yet?" },
-    { speaker: "boy", message: "Yes! Bloomie's like a virtual best friend." },
-    { speaker: "girl", message: "I chat with her every day. She remembers how I feel and helps me grow!" },
-    { speaker: "boy", message: "She even lets me write a daily diary — it tracks my mood!" },
-    { speaker: "girl", message: "So cool! I feel like I'm never alone when Bloomie's around." }
+    { speaker: "girl" as const, message: "Hey, have you met Bloomie yet?" },
+    { speaker: "boy" as const, message: "Yes! Bloomie's like a virtual best friend." },
+    { speaker: "girl" as const, message: "I chat with her every day. She remembers how I feel and helps me grow!" },
+    { speaker: "boy" as const, message: "She even lets me write a daily diary — it tracks my mood!" },
+    { speaker: "girl" as const, message: "So cool! I feel like I'm never alone when Bloomie's around." }
   ];
 
   return (
