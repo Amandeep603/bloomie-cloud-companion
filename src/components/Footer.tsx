@@ -1,17 +1,11 @@
 
 import { Link } from "react-router-dom";
-import { Github, Linkedin, Instagram } from "lucide-react";
+import { Heart } from "lucide-react";
 import { motion } from "framer-motion";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   
-  const socialLinks = [
-    { icon: <Github className="h-5 w-5" />, url: "https://github.com/", label: "GitHub" },
-    { icon: <Linkedin className="h-5 w-5" />, url: "https://linkedin.com/", label: "LinkedIn" },
-    { icon: <Instagram className="h-5 w-5" />, url: "https://instagram.com/", label: "Instagram" }
-  ];
-
   const quickLinks = [
     { name: "Home", path: "/" },
     { name: "Chat", path: "/chat" },
@@ -22,8 +16,8 @@ const Footer = () => {
 
   return (
     <footer className="relative border-t py-8 overflow-hidden">
-      {/* Soft gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background to-bloomie-purple/5 -z-10"></div>
+      {/* Soft gradient background with pastel tones */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background to-pink-50/20 dark:to-pink-900/10 -z-10"></div>
       
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -38,7 +32,7 @@ const Footer = () => {
               </span>
             </Link>
             <p className="text-sm text-muted-foreground max-w-xs font-nunito">
-              Built with <span className="text-red-400">💖</span> to be your virtual friend.
+              Thanks for spending time with Bloomie <span className="text-pink-400">💖</span>
             </p>
           </div>
           
@@ -59,30 +53,28 @@ const Footer = () => {
             </ul>
           </div>
           
-          {/* Social icons */}
-          <div>
-            <div className="flex items-center justify-center md:justify-start space-x-3">
-              {socialLinks.map((link, index) => (
-                <motion.a 
-                  key={index}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-background border border-border hover:border-primary hover:text-primary transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  aria-label={link.label}
-                >
-                  {link.icon}
-                </motion.a>
-              ))}
+          {/* Friendly message with heart animation */}
+          <motion.div 
+            className="flex items-center space-x-2"
+            initial={{ scale: 0.95 }}
+            animate={{ scale: 1 }}
+            transition={{ 
+              duration: 2, 
+              repeat: Infinity, 
+              repeatType: "reverse",
+              ease: "easeInOut" 
+            }}
+          >
+            <div className="flex items-center justify-center">
+              <Heart className="h-5 w-5 text-pink-400 fill-pink-200" />
             </div>
-          </div>
+            <p className="text-sm text-muted-foreground italic font-nunito">Here to listen</p>
+          </motion.div>
         </div>
         
         <div className="pt-4 border-t border-border/40 text-center">
           <p className="text-xs text-muted-foreground font-nunito">
-            © {currentYear} Bloomie. All rights reserved.
+            © {currentYear} Bloomie. Your virtual friend.
           </p>
         </div>
       </div>

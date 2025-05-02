@@ -27,7 +27,8 @@ import {
   Trash2, 
   Edit, 
   Loader2,
-  Save 
+  Save,
+  MessageSquare
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -244,7 +245,7 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
+    <div className="max-w-4xl mx-auto p-4">
       <div className="text-center mb-8">
         <motion.h1 
           className="text-3xl font-bold font-nunito bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-500 dark:from-indigo-400 dark:to-blue-300"
@@ -266,7 +267,7 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
 
       <div className="grid md:grid-cols-2 gap-6">
         <motion.div 
-          className="order-2 md:order-1"
+          className="order-2 md:order-1 md:w-full"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -290,8 +291,19 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="pt-4">
-              <div className="space-y-6">
+            <CardContent className="pt-4 relative">
+              {/* Bloomie's encouraging message */}
+              <motion.div 
+                className="absolute -top-1 right-0 flex items-center gap-2 bg-pink-50/80 dark:bg-pink-950/20 rounded-lg p-2 text-xs italic text-muted-foreground"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-bloomie-purple to-bloomie-pink flex items-center justify-center text-white text-xs">B</div>
+                <p>I'm here for you. What's on your mind today?</p>
+              </motion.div>
+              
+              <div className="space-y-6 mt-6">
                 <div>
                   <label className="block text-sm font-medium mb-2 text-muted-foreground">How are you feeling today?</label>
                   <div className="flex justify-between gap-2">
@@ -312,6 +324,7 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
                       </motion.button>
                     ))}
                   </div>
+                  <p className="text-xs text-center text-muted-foreground mt-2 italic">Today's mood is important. Be honest 💖</p>
                 </div>
 
                 <div className="space-y-4">
@@ -322,7 +335,7 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       placeholder="What would you like to call today?"
-                      className="border-indigo-100 dark:border-indigo-900/30 bg-white dark:bg-slate-900/80"
+                      className="border-indigo-100 dark:border-indigo-900/30 bg-white dark:bg-slate-900/80 rounded-lg"
                     />
                   </div>
                   
@@ -345,18 +358,33 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
                         </PopoverContent>
                       </Popover>
                     </div>
-                    <Textarea
-                      ref={textareaRef}
-                      value={text}
-                      onChange={(e) => setText(e.target.value)}
-                      placeholder="Write your thoughts here..."
-                      className="min-h-[200px] border-indigo-100 dark:border-indigo-900/30 bg-white dark:bg-slate-900/80"
-                      style={{
-                        backgroundImage: "repeating-linear-gradient(transparent, transparent 31px, #e5e7eb 31px, #e5e7eb 32px)",
-                        lineHeight: "32px",
-                        paddingTop: "8px"
-                      }}
-                    />
+                    
+                    {/* Enhanced journal-style text area */}
+                    <div className="relative">
+                      <Textarea
+                        ref={textareaRef}
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        placeholder="Write your thoughts here..."
+                        className="min-h-[200px] border-indigo-100 dark:border-indigo-900/30 bg-white dark:bg-slate-900/80 rounded-lg journal-paper"
+                        style={{
+                          backgroundImage: "repeating-linear-gradient(transparent, transparent 31px, #e5e7eb 31px, #e5e7eb 32px)",
+                          lineHeight: "32px",
+                          paddingTop: "8px",
+                          boxShadow: "inset 0 2px 4px rgba(0,0,0,0.06)"
+                        }}
+                      />
+                      
+                      {/* Focus animation indicator */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 h-0.5 bg-primary/40 w-0 transition-all duration-300 rounded" 
+                        style={{ width: text ? '90%' : '0' }} />
+                      
+                      {/* Encouraging microcopy */}
+                      <p className="text-xs text-center text-muted-foreground mt-2 italic flex items-center justify-center gap-1">
+                        <MessageSquare className="h-3 w-3" /> 
+                        No pressure. Just write what you feel 💬
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -385,7 +413,7 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <Card className="shadow-md border-indigo-100/50 dark:border-indigo-900/30 overflow-hidden">
+          <Card className="shadow-md border-indigo-100/50 dark:border-indigo-900/30 overflow-hidden bg-gradient-to-br from-white to-pink-50/10 dark:from-slate-900 dark:to-pink-950/10">
             <CardHeader className="pb-2">
               <h3 className="text-xl font-semibold font-nunito">My Diary Calendar</h3>
               <p className="text-sm text-muted-foreground">Click on dates to view past entries</p>
@@ -412,7 +440,7 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.6 }}
             >
-              <Card className="shadow-md border-indigo-100/50 dark:border-indigo-900/30 overflow-hidden">
+              <Card className="shadow-md border-indigo-100/50 dark:border-indigo-900/30 overflow-hidden bg-gradient-to-br from-white to-purple-50/10 dark:from-slate-900 dark:to-purple-950/10">
                 <CardHeader className="pb-2">
                   <h3 className="text-xl font-semibold font-nunito">Recent Mood Timeline</h3>
                 </CardHeader>
