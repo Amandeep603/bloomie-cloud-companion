@@ -17,7 +17,7 @@ const Hero = () => {
   ];
 
   return (
-    <div className="min-h-[90vh] flex flex-col items-center justify-center py-20 px-4 relative overflow-hidden">
+    <div className="min-h-[90vh] flex flex-col items-center justify-center py-16 px-4 relative overflow-hidden">
       {/* Background elements */}
       <BackgroundElements />
       
