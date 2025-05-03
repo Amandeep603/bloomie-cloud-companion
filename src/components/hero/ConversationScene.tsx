@@ -56,10 +56,10 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
   const currentMessage = conversation[currentMessageIndex % conversation.length];
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto">
-      <div className="flex justify-center items-end px-8 md:px-16 lg:px-24 pt-8">
-        <div className="w-[38%] md:w-[35%] flex flex-col items-center gap-6">
-          <div className="h-32 md:h-40 w-32 md:w-40">
+    <div className="relative w-full max-w-4xl mx-auto mt-6 mb-8">
+      <div className="flex justify-center items-end px-8 md:px-12 lg:px-20 pt-8">
+        <div className="w-[35%] md:w-[35%] flex flex-col items-center gap-8">
+          <div className="h-36 md:h-44 w-36 md:w-44">
             <AnimatedAvatar 
               gender="girl" 
               speaking={showMessage && currentMessage?.speaker === "girl"}
@@ -78,13 +78,13 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
           </AnimatePresence>
         </div>
 
-        {/* Connection line between avatars */}
-        <div className="w-[24%] md:w-[30%] px-6 flex justify-center">
+        {/* Connection line between avatars with increased width */}
+        <div className="w-[30%] md:w-[30%] px-8 flex justify-center">
           <ConnectionLine />
         </div>
         
-        <div className="w-[38%] md:w-[35%] flex flex-col items-center gap-6">
-          <div className="h-32 md:h-40 w-32 md:w-40">
+        <div className="w-[35%] md:w-[35%] flex flex-col items-center gap-8">
+          <div className="h-36 md:h-44 w-36 md:w-44">
             <AnimatedAvatar 
               gender="boy" 
               speaking={showMessage && currentMessage?.speaker === "boy"}
