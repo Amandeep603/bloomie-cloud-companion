@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SpeechBubble from "./SpeechBubble";
 import ConnectionLine from "./ConnectionLine";
+import AnimatedAvatar from "./AnimatedAvatar";
 
 // Define the conversation props type
 type Speaker = "girl" | "boy";
@@ -32,8 +33,8 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
         setShowMessage(false);
         setTimeout(() => {
           setCurrentMessageIndex((prev) => prev + 1);
-        }, 500);
-      }, 4000); // Longer display time for each message
+        }, 800); // Longer transition between messages
+      }, 4500); // Longer display time for each message
       
       return () => {
         clearTimeout(showTimer);
@@ -55,20 +56,15 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
   const currentMessage = conversation[currentMessageIndex % conversation.length];
 
   return (
-    <div className="relative w-full max-w-3xl mx-auto">
-      <div className="flex justify-center items-end px-8 md:px-16 pt-8">
-        <div className="w-[38%] md:w-[35%] flex flex-col items-center gap-4">
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <img
-              src="/avatar-girl.webp"
-              alt="Girl Avatar"
-              className="h-24 md:h-32 aspect-square object-cover rounded-full bg-gradient-to-br from-pink-200 to-violet-200 p-1 shadow-xl"
+    <div className="relative w-full max-w-4xl mx-auto">
+      <div className="flex justify-center items-end px-8 md:px-16 lg:px-24 pt-8">
+        <div className="w-[38%] md:w-[35%] flex flex-col items-center gap-6">
+          <div className="h-32 md:h-40 w-32 md:w-40">
+            <AnimatedAvatar 
+              gender="girl" 
+              speaking={showMessage && currentMessage?.speaker === "girl"}
             />
-          </motion.div>
+          </div>
           
           {/* Girl's speech bubble */}
           <AnimatePresence mode="wait">
@@ -76,7 +72,6 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
               <SpeechBubble 
                 message={currentMessage.message} 
                 speaker="girl" 
-                position="top" 
                 key={`girl-${currentMessageIndex}`}
               />
             )}
@@ -84,22 +79,17 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
         </div>
 
         {/* Connection line between avatars */}
-        <div className="w-[24%] md:w-[30%] px-4 flex justify-center">
+        <div className="w-[24%] md:w-[30%] px-6 flex justify-center">
           <ConnectionLine />
         </div>
         
-        <div className="w-[38%] md:w-[35%] flex flex-col items-center gap-4">
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <img
-              src="/avatar-boy.webp"
-              alt="Boy Avatar"
-              className="h-24 md:h-32 aspect-square object-cover rounded-full bg-gradient-to-br from-blue-200 to-indigo-200 p-1 shadow-xl"
+        <div className="w-[38%] md:w-[35%] flex flex-col items-center gap-6">
+          <div className="h-32 md:h-40 w-32 md:w-40">
+            <AnimatedAvatar 
+              gender="boy" 
+              speaking={showMessage && currentMessage?.speaker === "boy"}
             />
-          </motion.div>
+          </div>
           
           {/* Boy's speech bubble */}
           <AnimatePresence mode="wait">
@@ -107,7 +97,6 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
               <SpeechBubble 
                 message={currentMessage.message} 
                 speaker="boy" 
-                position="top" 
                 key={`boy-${currentMessageIndex}`}
               />
             )}

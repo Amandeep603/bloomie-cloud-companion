@@ -28,10 +28,10 @@ const Footer = () => {
               <Heart className="h-6 w-6 text-pink-400 fill-pink-200 mr-2" />
             </div>
             <p className="text-center text-muted-foreground font-nunito max-w-md">
-              Thank you for spending time with Bloomie 💖
+              Thanks for spending time with Bloomie 💬 Your emotional companion.
             </p>
             <p className="text-sm text-muted-foreground/70 font-nunito italic">
-              Bloomie is always here for you
+              We're always here for you
             </p>
           </motion.div>
         </div>

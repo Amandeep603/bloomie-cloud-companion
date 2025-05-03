@@ -7,40 +7,70 @@ interface SpeechBubbleProps {
   speaker: "girl" | "boy";
   isMobile?: boolean;
   position?: string;
-  children?: React.ReactNode; // Add support for children prop
+  children?: React.ReactNode;
 }
 
 const SpeechBubble = ({ message, speaker, isMobile, position, children }: SpeechBubbleProps) => {
   // Use children if provided, otherwise use message
   const content = children || message;
   
+  // Enhanced animation variants
+  const bubbleVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: speaker === "girl" ? -20 : 20, 
+      x: speaker === "girl" ? -10 : 10,
+      scale: 0.8 
+    },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      x: 0,
+      scale: 1,
+      transition: { 
+        type: "spring", 
+        stiffness: 300, 
+        damping: 20,
+        duration: 0.4 
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      y: speaker === "girl" ? 20 : -20,
+      scale: 0.8,
+      transition: { duration: 0.3 } 
+    }
+  };
+
   return (
     <motion.div
       className={`absolute ${isMobile 
         ? 'top-[40%] left-1/2 transform -translate-x-1/2 max-w-[280px]' 
         : `top-36 sm:top-40 ${
           speaker === "girl" 
-            ? "left-[80px] sm:left-[200px] lg:left-[240px]" 
-            : "right-[80px] sm:right-[200px] lg:right-[240px]"
-        } max-w-[220px] sm:max-w-[320px]`}`}
-      initial={{ opacity: 0, y: 10, scale: 0.8 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -10, scale: 0.8 }}
-      transition={{ duration: 0.5 }}
+            ? "left-[80px] sm:left-[180px] lg:left-[220px]" 
+            : "right-[80px] sm:right-[180px] lg:right-[220px]"
+        } max-w-[220px] sm:max-w-[280px]`}`}
+      variants={bubbleVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
     >
       <div className={`
         ${speaker === "girl" 
-          ? "bg-gradient-to-br from-bloomie-purple/10 to-bloomie-pink/10 border-bloomie-purple/20" 
-          : "bg-gradient-to-br from-bloomie-green/10 to-bloomie-yellow/10 border-bloomie-green/20"
+          ? "bg-gradient-to-br from-bloomie-purple/15 to-bloomie-pink/15 border-bloomie-purple/20" 
+          : "bg-gradient-to-br from-bloomie-green/15 to-bloomie-yellow/15 border-bloomie-green/20"
         } 
         p-5 rounded-2xl shadow-lg border backdrop-blur-sm relative
       `}>
-        {/* Improved typing animation */}
+        {/* Message content with improved typing animation */}
         <motion.p 
           className="text-sm sm:text-base font-nunito"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.4 }}
+          animate={{ 
+            opacity: 1,
+            transition: { delay: 0.2, duration: 0.3 }
+          }}
         >
           {content}
         </motion.p>
