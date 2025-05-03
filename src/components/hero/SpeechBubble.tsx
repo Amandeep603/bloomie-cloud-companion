@@ -5,10 +5,15 @@ import { motion } from "framer-motion";
 interface SpeechBubbleProps {
   message: string;
   speaker: "girl" | "boy";
-  isMobile: boolean;
+  isMobile?: boolean;
+  position?: string;
+  children?: React.ReactNode; // Add support for children prop
 }
 
-const SpeechBubble = ({ message, speaker, isMobile }: SpeechBubbleProps) => {
+const SpeechBubble = ({ message, speaker, isMobile, position, children }: SpeechBubbleProps) => {
+  // Use children if provided, otherwise use message
+  const content = children || message;
+  
   return (
     <motion.div
       className={`absolute ${isMobile 
@@ -37,7 +42,7 @@ const SpeechBubble = ({ message, speaker, isMobile }: SpeechBubbleProps) => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.4 }}
         >
-          {message}
+          {content}
         </motion.p>
         
         {/* Enhanced typing animation dots */}

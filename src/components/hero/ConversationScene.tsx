@@ -73,9 +73,12 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
           {/* Girl's speech bubble */}
           <AnimatePresence mode="wait">
             {showMessage && currentMessage?.speaker === "girl" && (
-              <SpeechBubble position="top" key={`girl-${currentMessageIndex}`}>
-                {currentMessage.message}
-              </SpeechBubble>
+              <SpeechBubble 
+                message={currentMessage.message} 
+                speaker="girl" 
+                position="top" 
+                key={`girl-${currentMessageIndex}`}
+              />
             )}
           </AnimatePresence>
         </div>
@@ -101,9 +104,12 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
           {/* Boy's speech bubble */}
           <AnimatePresence mode="wait">
             {showMessage && currentMessage?.speaker === "boy" && (
-              <SpeechBubble position="top" key={`boy-${currentMessageIndex}`}>
-                {currentMessage.message}
-              </SpeechBubble>
+              <SpeechBubble 
+                message={currentMessage.message} 
+                speaker="boy" 
+                position="top" 
+                key={`boy-${currentMessageIndex}`}
+              />
             )}
           </AnimatePresence>
         </div>
