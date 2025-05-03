@@ -56,10 +56,10 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
   const currentMessage = conversation[currentMessageIndex % conversation.length];
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto mt-6 mb-12">
+    <div className="relative w-full max-w-4xl mx-auto mt-10 mb-16">
       <div className="flex justify-center items-end px-8 md:px-12 lg:px-20 pt-8">
         <div className="w-[38%] md:w-[38%] flex flex-col items-center gap-8">
-          <div className="h-40 md:h-48 w-40 md:w-48">
+          <div className="h-44 md:h-52 w-44 md:w-52">
             <AnimatedAvatar 
               gender="girl" 
               speaking={showMessage && currentMessage?.speaker === "girl"}
@@ -79,12 +79,12 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
         </div>
 
         {/* Connection line between avatars with increased width */}
-        <div className="w-[24%] md:w-[24%] px-8 flex justify-center">
+        <div className="w-[30%] md:w-[30%] px-8 flex justify-center">
           <ConnectionLine />
         </div>
         
         <div className="w-[38%] md:w-[38%] flex flex-col items-center gap-8">
-          <div className="h-40 md:h-48 w-40 md:w-48">
+          <div className="h-44 md:h-52 w-44 md:w-52">
             <AnimatedAvatar 
               gender="boy" 
               speaking={showMessage && currentMessage?.speaker === "boy"}

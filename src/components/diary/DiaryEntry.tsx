@@ -56,9 +56,15 @@ const DiaryEntry: React.FC<DiaryEntryProps> = ({
 
   return (
     <div className="space-y-6">
-      <p className="text-sm text-center text-muted-foreground italic mb-4 font-nunito">
-        How are you feeling today? Bloomie is listening.
-      </p>
+      {/* Bloomie's encouraging message - now centered and properly spaced */}
+      <div className="flex flex-col items-center text-center space-y-2 mb-4">
+        <p className="text-sm text-muted-foreground italic font-nunito">
+          How are you feeling today? Bloomie is listening.
+        </p>
+        <p className="text-sm text-pink-500/80 dark:text-pink-400/70 italic font-nunito">
+          I'm here for you. What's on your mind today?
+        </p>
+      </div>
       
       <div>
         <label className="block text-sm font-medium mb-2 text-muted-foreground">How are you feeling today?</label>

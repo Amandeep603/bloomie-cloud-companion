@@ -209,17 +209,6 @@ const EmotionalDiaryContent: React.FC<EmotionalDiaryNewProps> = ({
               </div>
             </CardHeader>
             <CardContent className="pt-4 relative">
-              {/* Bloomie's encouraging message */}
-              <motion.div 
-                className="absolute -top-1 right-0 flex items-center gap-2 bg-pink-50/80 dark:bg-pink-950/20 rounded-lg p-2 text-xs italic text-muted-foreground"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-bloomie-purple to-bloomie-pink flex items-center justify-center text-white text-xs">B</div>
-                <p>I'm here for you. What's on your mind today?</p>
-              </motion.div>
-              
               <DiaryEntry 
                 title={title}
                 text={text}
