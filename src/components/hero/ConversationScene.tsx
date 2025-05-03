@@ -1,123 +1,114 @@
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import AnimatedAvatar from "../AnimatedAvatar";
 import SpeechBubble from "./SpeechBubble";
 import ConnectionLine from "./ConnectionLine";
-import { useIsMobile } from "@/hooks/use-mobile";
+
+// Define the conversation props type
+type Speaker = "girl" | "boy";
+type ConversationItem = {
+  speaker: Speaker;
+  message: string;
+};
 
 interface ConversationSceneProps {
-  conversation: {
-    speaker: "girl" | "boy";
-    message: string;
-  }[];
+  conversation: ConversationItem[];
 }
 
 const ConversationScene = ({ conversation }: ConversationSceneProps) => {
-  const [activeSpeaker, setActiveSpeaker] = useState<number>(-1);
-  const [conversationIndex, setConversationIndex] = useState(0);
-  const isMobile = useIsMobile();
-  
-  // Control the conversation flow with timing
-  useEffect(() => {
-    // Reset function for conversation
-    const resetConversation = () => {
-      setActiveSpeaker(-1);
-      setTimeout(() => {
-        setConversationIndex(0);
-      }, 1000);
-    };
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+  const [showMessage, setShowMessage] = useState(false);
 
-    // Show next message function
-    const showNextMessage = () => {
-      if (conversationIndex < conversation.length) {
-        setActiveSpeaker(conversationIndex);
-        
-        // Longer delay between messages for better readability
+  // Control the message display timing
+  useEffect(() => {
+    if (currentMessageIndex < conversation.length) {
+      // Show message with a slight delay
+      const showTimer = setTimeout(() => {
+        setShowMessage(true);
+      }, 500);
+      
+      // Move to next message
+      const nextTimer = setTimeout(() => {
+        setShowMessage(false);
         setTimeout(() => {
-          setConversationIndex(conversationIndex + 1);
-        }, 4000); // Increased time between messages
-      } else {
-        // Reset conversation after a longer pause
+          setCurrentMessageIndex((prev) => prev + 1);
+        }, 500);
+      }, 4000); // Longer display time for each message
+      
+      return () => {
+        clearTimeout(showTimer);
+        clearTimeout(nextTimer);
+      };
+    } else {
+      // Reset conversation after completing
+      const resetTimer = setTimeout(() => {
+        setShowMessage(false);
         setTimeout(() => {
-          resetConversation();
-        }, 3000);
-      }
-    };
-    
-    showNextMessage();
-  }, [conversationIndex, conversation.length]);
+          setCurrentMessageIndex(0);
+        }, 500);
+      }, 2000);
+      
+      return () => clearTimeout(resetTimer);
+    }
+  }, [currentMessageIndex, conversation.length]);
+
+  const currentMessage = conversation[currentMessageIndex % conversation.length];
 
   return (
-    <motion.div 
-      className="relative mb-2 w-full max-w-5xl h-[400px] sm:h-[500px]" // Further reduced margin-bottom 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-    >
-      {/* Avatar Container with improved spacing */}
-      <div className={`${isMobile ? 'flex flex-col items-center gap-12' : 'relative'}`}> {/* Further reduced gap on mobile */}
-        {/* Girl Avatar - Left Side */}
-        <motion.div 
-          className={`${isMobile 
-            ? '' // No extra margin needed in stacked layout
-            : 'absolute left-6 sm:left-12 lg:left-32 xl:left-48 top-0'} 
-            w-40 h-40 sm:w-56 sm:h-56`}
-        >
-          {/* Soft container for avatar - improved glow */}
-          <motion.div 
-            className="absolute inset-0 rounded-full bg-gradient-to-br from-bloomie-purple/15 to-bloomie-pink/15 -z-10"
-            animate={{ 
-              boxShadow: ["0 0 0px rgba(157, 132, 183, 0.2)", "0 0 30px rgba(157, 132, 183, 0.4)", "0 0 0px rgba(157, 132, 183, 0.2)"]
-            }}
-            transition={{ duration: 4, repeat: Infinity }}
-          />
+    <div className="relative w-full max-w-3xl mx-auto">
+      <div className="flex justify-center items-end px-8 md:px-16 pt-8">
+        <div className="w-[38%] md:w-[35%] flex flex-col items-center gap-4">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <img
+              src="/avatar-girl.webp"
+              alt="Girl Avatar"
+              className="h-24 md:h-32 aspect-square object-cover rounded-full bg-gradient-to-br from-pink-200 to-violet-200 p-1 shadow-xl"
+            />
+          </motion.div>
           
-          <AnimatedAvatar 
-            gender="girl" 
-            position="left" 
-            speaking={activeSpeaker !== -1 && conversation[activeSpeaker]?.speaker === "girl"}
-          />
-        </motion.div>
+          {/* Girl's speech bubble */}
+          <AnimatePresence mode="wait">
+            {showMessage && currentMessage?.speaker === "girl" && (
+              <SpeechBubble position="top" key={`girl-${currentMessageIndex}`}>
+                {currentMessage.message}
+              </SpeechBubble>
+            )}
+          </AnimatePresence>
+        </div>
 
-        {/* Boy Avatar - Right Side */}
-        <motion.div 
-          className={`${isMobile 
-            ? '' // Stacked layout on mobile
-            : 'absolute right-6 sm:right-12 lg:right-32 xl:right-48 top-0'} 
-            w-40 h-40 sm:w-56 sm:h-56`}
-        >
-          {/* Soft container for avatar - improved glow */}
-          <motion.div 
-            className="absolute inset-0 rounded-full bg-gradient-to-br from-bloomie-green/15 to-bloomie-yellow/15 -z-10"
-            animate={{ 
-              boxShadow: ["0 0 0px rgba(181, 230, 179, 0.2)", "0 0 30px rgba(181, 230, 179, 0.4)", "0 0 0px rgba(181, 230, 179, 0.2)"]
-            }}
-            transition={{ duration: 4, delay: 2, repeat: Infinity }}
-          />
+        {/* Connection line between avatars */}
+        <div className="w-[24%] md:w-[30%] px-4 flex justify-center">
+          <ConnectionLine />
+        </div>
+        
+        <div className="w-[38%] md:w-[35%] flex flex-col items-center gap-4">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <img
+              src="/avatar-boy.webp"
+              alt="Boy Avatar"
+              className="h-24 md:h-32 aspect-square object-cover rounded-full bg-gradient-to-br from-blue-200 to-indigo-200 p-1 shadow-xl"
+            />
+          </motion.div>
           
-          <AnimatedAvatar 
-            gender="boy" 
-            position="right"
-            speaking={activeSpeaker !== -1 && conversation[activeSpeaker]?.speaker === "boy"}
-          />
-        </motion.div>
+          {/* Boy's speech bubble */}
+          <AnimatePresence mode="wait">
+            {showMessage && currentMessage?.speaker === "boy" && (
+              <SpeechBubble position="top" key={`boy-${currentMessageIndex}`}>
+                {currentMessage.message}
+              </SpeechBubble>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
-      
-      {/* Speech Bubble - Improved cloud-style design and animation */}
-      <AnimatePresence mode="wait">
-        {activeSpeaker !== -1 && (
-          <SpeechBubble 
-            message={conversation[activeSpeaker].message}
-            speaker={conversation[activeSpeaker].speaker}
-            isMobile={isMobile}
-          />
-        )}
-      </AnimatePresence>
-      
-      {/* Connection Line Between Avatars - Hide on Mobile */}
-      {!isMobile && <ConnectionLine />}
-    </motion.div>
+    </div>
   );
 };
 

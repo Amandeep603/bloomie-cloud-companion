@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useCallback } from 'react';
 import { format } from 'date-fns';
 import { Button } from "@/components/ui/button";
@@ -145,7 +146,7 @@ const EmotionalDiaryContent: React.FC<EmotionalDiaryNewProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-6xl mx-auto p-4">
       <div className="text-center mb-8">
         <motion.h1 
           className="text-3xl font-bold font-nunito bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-500 dark:from-indigo-400 dark:to-blue-300"
@@ -165,10 +166,26 @@ const EmotionalDiaryContent: React.FC<EmotionalDiaryNewProps> = ({
         </motion.p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      {/* Main diary layout - side by side on desktop, stacked on mobile */}
+      <div className="grid md:grid-cols-10 gap-6">
+        {/* Calendar section - 40% width on desktop */}
         <motion.div 
-          className="order-2 md:order-1 md:w-full"
+          className="md:col-span-4 order-2 md:order-1"
           initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <DiaryCalendar 
+            entries={entries} 
+            date={date} 
+            onDateChange={handleDateChange} 
+          />
+        </motion.div>
+
+        {/* Entry section - 60% width on desktop */}
+        <motion.div 
+          className="md:col-span-6 order-1 md:order-2"
+          initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
@@ -218,12 +235,6 @@ const EmotionalDiaryContent: React.FC<EmotionalDiaryNewProps> = ({
             </CardContent>
           </Card>
         </motion.div>
-
-        <DiaryCalendar 
-          entries={entries} 
-          date={date} 
-          onDateChange={handleDateChange} 
-        />
 
         {entries.length > 0 && (
           <MoodTimeline 

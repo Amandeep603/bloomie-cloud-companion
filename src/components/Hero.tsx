@@ -17,14 +17,16 @@ const Hero = () => {
   ];
 
   return (
-    <div className="min-h-[90vh] flex flex-col items-center justify-center py-12 px-4 relative overflow-hidden">
+    <div className="min-h-[85vh] flex flex-col items-center justify-center py-8 px-4 relative overflow-hidden">
       {/* Background elements */}
       <BackgroundElements />
       
-      {/* 3D Animated Avatars Scene */}
-      <ConversationScene conversation={conversation} />
+      {/* Add more horizontal spacing between avatars and reduce vertical spacing to text */}
+      <div className="mb-4 w-full">
+        <ConversationScene conversation={conversation} />
+      </div>
       
-      {/* Hero content (text and buttons) */}
+      {/* Hero content (text and buttons) with reduced vertical spacing */}
       <HeroContent />
       
       {/* Floating messages */}

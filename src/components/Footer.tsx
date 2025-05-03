@@ -5,56 +5,16 @@ import { motion } from "framer-motion";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   
-  const quickLinks = [
-    { name: "Home", path: "/" },
-    { name: "Chat", path: "/chat" },
-    { name: "Diary", path: "/diary" },
-    { name: "Video Call", path: "/video" },
-    { name: "About", path: "/about" }
-  ];
-
   return (
-    <footer className="relative border-t py-8 overflow-hidden">
+    <footer className="relative border-t pt-8 pb-6 overflow-hidden">
       {/* Soft gradient background with pastel tones */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background to-pink-50/20 dark:to-pink-900/10 -z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-background to-pink-50/30 dark:to-pink-900/10 -z-10"></div>
       
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-          {/* Logo and tagline */}
-          <div className="mb-4 md:mb-0 text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start space-x-2 mb-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-bloomie-purple to-primary flex items-center justify-center">
-                <span className="text-sm font-bold text-white">B</span>
-              </div>
-              <span className="font-nunito font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-bloomie-purple via-primary to-bloomie-pink">
-                Bloomie
-              </span>
-            </div>
-            <p className="text-sm text-muted-foreground max-w-xs font-nunito">
-              Thanks for spending time with Bloomie <span className="text-pink-400">💖</span>
-            </p>
-          </div>
-          
-          {/* Quick Links */}
-          <div className="mb-4 md:mb-0">
-            <h3 className="text-sm font-medium mb-2 text-center md:text-left font-nunito">Quick Links</h3>
-            <ul className="flex flex-wrap gap-x-4 gap-y-1 justify-center md:justify-start">
-              {quickLinks.map((link, index) => (
-                <li key={index}>
-                  <a 
-                    href={link.path} 
-                    className="text-xs text-muted-foreground hover:text-foreground transition-colors font-nunito hover:underline"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          
-          {/* Friendly message with heart animation */}
+        <div className="flex flex-col items-center justify-center text-center mb-6">
+          {/* Centered message with heart animation */}
           <motion.div 
-            className="flex items-center space-x-2"
+            className="flex flex-col items-center space-y-3"
             initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
             transition={{ 
@@ -64,10 +24,15 @@ const Footer = () => {
               ease: "easeInOut" 
             }}
           >
-            <div className="flex items-center justify-center">
-              <Heart className="h-5 w-5 text-pink-400 fill-pink-200" />
+            <div className="flex items-center justify-center mb-2">
+              <Heart className="h-6 w-6 text-pink-400 fill-pink-200 mr-2" />
             </div>
-            <p className="text-sm text-muted-foreground italic font-nunito">Here to listen</p>
+            <p className="text-center text-muted-foreground font-nunito max-w-md">
+              Thank you for spending time with Bloomie 💖
+            </p>
+            <p className="text-sm text-muted-foreground/70 font-nunito italic">
+              Bloomie is always here for you
+            </p>
           </motion.div>
         </div>
         

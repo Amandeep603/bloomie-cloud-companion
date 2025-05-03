@@ -55,10 +55,14 @@ const DiaryEntry: React.FC<DiaryEntryProps> = ({
   };
 
   return (
-    <div className="space-y-6 mt-6">
+    <div className="space-y-6">
+      <p className="text-sm text-center text-muted-foreground italic mb-4 font-nunito">
+        How are you feeling today? Bloomie is listening.
+      </p>
+      
       <div>
         <label className="block text-sm font-medium mb-2 text-muted-foreground">How are you feeling today?</label>
-        <div className="flex justify-between gap-2">
+        <div className="flex justify-between gap-2 mb-4">
           {MOOD_EMOJIS.map(({ emoji, label, color }) => (
             <button
               key={emoji}
@@ -74,7 +78,6 @@ const DiaryEntry: React.FC<DiaryEntryProps> = ({
             </button>
           ))}
         </div>
-        <p className="text-xs text-center text-muted-foreground mt-2 italic">Today's mood is important. Be honest 💖</p>
       </div>
 
       <div className="space-y-4">
@@ -85,7 +88,7 @@ const DiaryEntry: React.FC<DiaryEntryProps> = ({
             value={title}
             onChange={(e) => onTitleChange(e.target.value)}
             placeholder="What would you like to call today?"
-            className="border-indigo-100 dark:border-indigo-900/30 bg-white dark:bg-slate-900/80 rounded-lg"
+            className="border-indigo-100 dark:border-indigo-900/30 bg-white dark:bg-slate-900/80 rounded-lg shadow-sm"
           />
         </div>
         
@@ -109,31 +112,18 @@ const DiaryEntry: React.FC<DiaryEntryProps> = ({
             </Popover>
           </div>
           
-          {/* Enhanced journal-style text area */}
+          {/* Enhanced soft card-style writing area */}
           <div className="relative">
             <Textarea
               ref={textareaRef}
               value={text}
               onChange={(e) => onTextChange(e.target.value)}
-              placeholder="Write your thoughts here..."
-              className="min-h-[200px] border-indigo-100 dark:border-indigo-900/30 bg-white dark:bg-slate-900/80 rounded-lg journal-paper"
+              placeholder="Write how you feel today..."
+              className="min-h-[200px] bg-white dark:bg-slate-900/80 rounded-lg shadow-md border-indigo-100/50 dark:border-indigo-900/20 p-4 font-nunito transition-all hover:shadow-lg focus:shadow-lg"
               style={{
-                backgroundImage: "repeating-linear-gradient(transparent, transparent 31px, #e5e7eb 31px, #e5e7eb 32px)",
-                lineHeight: "32px",
-                paddingTop: "8px",
-                boxShadow: "inset 0 2px 4px rgba(0,0,0,0.06)"
+                boxShadow: "0 3px 8px rgba(0,0,0,0.05)"
               }}
             />
-            
-            {/* Focus animation indicator */}
-            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 h-0.5 bg-primary/40 w-0 transition-all duration-300 rounded" 
-              style={{ width: text ? '90%' : '0' }} />
-            
-            {/* Encouraging microcopy */}
-            <p className="text-xs text-center text-muted-foreground mt-2 italic flex items-center justify-center gap-1">
-              <Smile className="h-3 w-3" /> 
-              No pressure. Just write what you feel 💬
-            </p>
           </div>
         </div>
       </div>
