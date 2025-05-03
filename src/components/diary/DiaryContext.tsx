@@ -23,7 +23,7 @@ interface DiaryContextType {
   isSaving: boolean;
   isDeleting: boolean;
   setDate: (date: Date) => void;
-  setText: (text: string) => void;
+  setText: (text: string | ((prevText: string) => string)) => void; // Update to accept function
   setTitle: (title: string) => void;
   setMoodEmoji: (emoji: string) => void;
   setIsEditMode: (mode: boolean) => void;

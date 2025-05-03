@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useCallback } from 'react';
 import { format } from 'date-fns';
 import { Button } from "@/components/ui/button";
@@ -26,15 +25,15 @@ interface DiaryEntry {
 
 interface EmotionalDiaryNewProps {
   entries?: DiaryEntry[];
-  onSave?: (entry: DiaryEntry) => void;
-  onDelete?: (entryId: string) => void;
+  onSave?: (entry: DiaryEntry) => Promise<void>; // Change to Promise<void>
+  onDelete?: (entryId: string) => Promise<void>; // Change to Promise<void>
 }
 
 // Main component that wraps everything in the DiaryProvider
 const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({ 
   entries = [], 
-  onSave = () => {},
-  onDelete = () => {}
+  onSave = async () => {}, // Add async to make it return a Promise
+  onDelete = async () => {} // Add async to make it return a Promise
 }) => {
   return (
     <DiaryProvider>
@@ -50,8 +49,8 @@ const EmotionalDiaryNew: React.FC<EmotionalDiaryNewProps> = ({
 // Content component that uses the DiaryContext
 const EmotionalDiaryContent: React.FC<EmotionalDiaryNewProps> = ({ 
   entries = [], 
-  onSave = () => {},
-  onDelete = () => {}
+  onSave = async () => {}, // Add async to make it return a Promise
+  onDelete = async () => {} // Add async to make it return a Promise
 }) => {
   const {
     date,
@@ -102,7 +101,7 @@ const EmotionalDiaryContent: React.FC<EmotionalDiaryNewProps> = ({
   };
 
   const handleEmojiClick = (emojiData: { emoji: string }) => {
-    setText(prevText => prevText + emojiData.emoji);
+    setText((prevText) => prevText + emojiData.emoji); // Fix by using functional update
     setShowEmojiPicker(false);
   };
 
