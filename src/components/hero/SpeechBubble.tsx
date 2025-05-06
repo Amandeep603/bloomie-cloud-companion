@@ -58,8 +58,8 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
     >
       <div className={`
         ${speaker === "girl" 
-          ? "bg-gradient-to-br from-bloomie-purple/15 to-bloomie-pink/15 border-bloomie-purple/20" 
-          : "bg-gradient-to-br from-bloomie-green/15 to-bloomie-yellow/15 border-bloomie-green/20"
+          ? "bg-gradient-to-br from-purple-100 to-purple-200 border-purple-300 text-purple-900" 
+          : "bg-gradient-to-br from-blue-100 to-blue-200 border-blue-300 text-blue-900"
         } 
         p-5 rounded-2xl shadow-lg border backdrop-blur-sm relative
       `}>
@@ -87,8 +87,8 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
               key={i}
               className={`w-2 h-2 rounded-full ${
                 speaker === "girl" 
-                  ? "bg-bloomie-purple" 
-                  : "bg-bloomie-green"
+                  ? "bg-purple-500" 
+                  : "bg-blue-500"
               }`}
               animate={{ 
                 y: [0, -5, 0],
@@ -107,8 +107,8 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
         <div 
           className={`absolute -bottom-3 w-6 h-6 transform rotate-45 ${
             speaker === "girl" 
-              ? "bg-gradient-to-br from-bloomie-purple/10 to-bloomie-pink/10 border-b border-r border-bloomie-purple/20" 
-              : "bg-gradient-to-br from-bloomie-green/10 to-bloomie-yellow/10 border-b border-r border-bloomie-green/20"
+              ? "bg-gradient-to-br from-purple-100 to-purple-200 border-b border-r border-purple-300" 
+              : "bg-gradient-to-br from-blue-100 to-blue-200 border-b border-r border-blue-300"
           } ${
             isMobile ? "left-1/2 -translate-x-1/2" : 
             speaker === "girl" ? "left-8" : "right-8"

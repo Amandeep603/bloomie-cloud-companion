@@ -5,12 +5,19 @@ import { motion } from "framer-motion";
 interface ThreeDProps {
   avatarUrl?: string;
   className?: string;
+  autoRotate?: boolean;
+  initialRotation?: number;
 }
 
-const ThreeDAvatar = ({ avatarUrl, className = "" }: ThreeDProps) => {
+const ThreeDAvatar = ({ 
+  avatarUrl, 
+  className = "",
+  autoRotate = true,
+  initialRotation = 0
+}: ThreeDProps) => {
   const avatarRef = useRef<HTMLDivElement>(null);
-  const [isRotating, setIsRotating] = useState(true);
-  const [rotation, setRotation] = useState(0);
+  const [isRotating, setIsRotating] = useState(autoRotate);
+  const [rotation, setRotation] = useState(initialRotation);
   const [zoom, setZoom] = useState(100);
   
   useEffect(() => {
@@ -57,7 +64,7 @@ const ThreeDAvatar = ({ avatarUrl, className = "" }: ThreeDProps) => {
           <img 
             src={avatarUrl || "/ai-avatar-face.png"} 
             alt="3D AI Avatar" 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
             onError={(e) => {
               // Fallback for missing image
               const target = e.target as HTMLImageElement;

@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -45,23 +46,49 @@ const FeaturesPage = () => {
               </div>
               <Card className="overflow-hidden">
                 <CardContent className="p-0">
-                  <div className="bg-muted p-4 border-b">
-                    <div className="flex items-center space-x-2 mb-3">
-                      <div className="w-8 h-8 bg-primary rounded-full"></div>
-                      <div className="font-medium">Bloomie</div>
+                  <div className="bg-gradient-to-r from-violet-500/90 to-indigo-500/90 p-3 border-b flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-full bg-white/20 overflow-hidden flex items-center justify-center">
+                      <img src="/ai-avatar-face.png" alt="Bloomie" className="w-full h-full object-cover" />
                     </div>
-                    <div className="ai-bubble">
-                      How are you feeling today? I'm here to listen.
-                    </div>
+                    <div className="font-semibold text-white">Bloomie</div>
                   </div>
-                  <div className="p-4">
-                    <div className="mb-3 flex justify-end">
-                      <div className="user-bubble">
-                        I'm feeling a bit overwhelmed with work today.
+                  <div className="bg-gradient-to-b from-violet-50/30 to-indigo-50/30 dark:from-slate-900/30 dark:to-slate-800/30 p-4">
+                    <div className="flex mb-3">
+                      <div className="w-8 h-8 rounded-full bg-primary/20 flex-shrink-0 mr-2 overflow-hidden flex items-center justify-center">
+                        <img src="/ai-avatar-face.png" alt="Bloomie" className="w-full h-full object-cover" />
+                      </div>
+                      <div className="bg-white dark:bg-gray-800 p-3 rounded-lg rounded-tl-none shadow-sm max-w-[85%]">
+                        <p className="text-sm">Hey there! How are you feeling today? 😊</p>
+                        <span className="text-[10px] text-muted-foreground float-right">2:30 PM</span>
                       </div>
                     </div>
-                    <div className="ai-bubble">
-                      I understand that feeling. Let's break down what's causing the overwhelm and find some strategies to help you manage it.
+                    
+                    <div className="flex justify-end mb-3">
+                      <div className="bg-primary/90 text-white p-3 rounded-lg rounded-br-none shadow-sm max-w-[85%]">
+                        <p className="text-sm">Kinda stressed 😕</p>
+                        <span className="text-[10px] text-white/70 float-right">2:31 PM</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex mb-3">
+                      <div className="w-8 h-8 rounded-full bg-primary/20 flex-shrink-0 mr-2 overflow-hidden flex items-center justify-center">
+                        <img src="/ai-avatar-face.png" alt="Bloomie" className="w-full h-full object-cover" />
+                      </div>
+                      <div className="bg-white dark:bg-gray-800 p-3 rounded-lg rounded-tl-none shadow-sm max-w-[85%]">
+                        <p className="text-sm">Aww, I'm here for you 💛 Let's talk it out. What's on your mind today?</p>
+                        <span className="text-[10px] text-muted-foreground float-right">2:31 PM</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0 mr-2 text-primary/50">
+                        <div className="flex space-x-1.5">
+                          <div className="w-2 h-2 rounded-full bg-primary animate-bounce"></div>
+                          <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                          <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0.4s" }}></div>
+                        </div>
+                      </div>
+                      <div className="text-xs text-muted-foreground">Bloomie is typing...</div>
                     </div>
                   </div>
                 </CardContent>
@@ -186,10 +213,13 @@ const FeaturesPage = () => {
                   viewport={{ once: true }}
                 >
                   <div className="relative w-64 h-64 rounded-2xl overflow-hidden shadow-xl border-4 border-white dark:border-gray-800">
-                    {/* Enhanced 3D avatar with realistic look */}
-                    <ThreeDAvatar avatarUrl="/ai-avatar-face.png" />
+                    {/* Enhanced 3D avatar with uploaded images */}
+                    <ThreeDAvatar avatarUrl="/lovable-uploads/3f128cd2-2af7-4a4d-94de-a9a510d03e3b.png" />
                   </div>
                 </motion.div>
+                <div className="text-center mt-4 text-lg font-medium">
+                  Create your own 3D digital friend
+                </div>
               </div>
               <div className="order-1 md:order-2">
                 <div className="bg-primary/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4">
