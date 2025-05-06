@@ -1,5 +1,5 @@
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 interface ThreeDProps {
@@ -9,26 +9,36 @@ interface ThreeDProps {
 
 const ThreeDAvatar = ({ avatarUrl, className = "" }: ThreeDProps) => {
   const avatarRef = useRef<HTMLDivElement>(null);
+  const [isRotating, setIsRotating] = useState(true);
+  const [rotation, setRotation] = useState(0);
+  const [zoom, setZoom] = useState(100);
   
   useEffect(() => {
-    // This is a placeholder for future Avaturn API integration
-    // In a real implementation, we would initialize the 3D viewer here
+    if (!isRotating) return;
+    
+    // Create a more natural rotation animation
     const timer = setInterval(() => {
-      if (avatarRef.current) {
-        // Simulate rotation effect
-        const currentRotation = avatarRef.current.style.transform || 'rotateY(0deg)';
-        const currentAngle = parseInt(currentRotation.replace(/[^0-9]/g, '') || '0');
-        const newAngle = (currentAngle + 1) % 360;
-        avatarRef.current.style.transform = `rotateY(${newAngle}deg)`;
-      }
-    }, 50);
+      setRotation(prev => (prev + 0.5) % 360);
+    }, 30);
     
     return () => clearInterval(timer);
-  }, []);
+  }, [isRotating]);
+
+  const handleToggleRotation = () => {
+    setIsRotating(prev => !prev);
+  };
+  
+  const handleZoomIn = () => {
+    setZoom(prev => Math.min(prev + 10, 150));
+  };
+  
+  const handleZoomOut = () => {
+    setZoom(prev => Math.max(prev - 10, 80));
+  };
 
   return (
     <motion.div 
-      className={`relative w-full h-full rounded-full overflow-hidden ${className}`}
+      className={`relative w-full h-full rounded-2xl overflow-hidden ${className}`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -38,10 +48,12 @@ const ThreeDAvatar = ({ avatarUrl, className = "" }: ThreeDProps) => {
         className="w-full h-full"
         style={{ 
           transformStyle: 'preserve-3d',
-          perspective: '1000px'
+          perspective: '1000px',
+          transform: `rotateY(${rotation}deg)`,
+          scale: `${zoom}%`
         }}
       >
-        <div className="w-full h-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/40 dark:to-purple-900/40 flex items-center justify-center">
+        <div className="w-full h-full bg-gradient-to-br from-violet-100/80 to-indigo-100/80 dark:from-indigo-900/40 dark:to-violet-900/40 flex items-center justify-center">
           <img 
             src={avatarUrl || "/ai-avatar-face.png"} 
             alt="3D AI Avatar" 
@@ -54,14 +66,34 @@ const ThreeDAvatar = ({ avatarUrl, className = "" }: ThreeDProps) => {
           />
         </div>
       </div>
-      {/* 3D controls placeholder */}
-      <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-2 text-xs font-medium opacity-0 hover:opacity-100 transition-opacity">
-        <button className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm px-2 py-1 rounded-full">
-          Rotate
+      
+      {/* Improved 3D controls */}
+      <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-2 text-xs font-medium opacity-70 hover:opacity-100 transition-opacity">
+        <button 
+          className={`bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1 ${isRotating ? 'text-primary' : ''}`}
+          onClick={handleToggleRotation}
+        >
+          {isRotating ? 'Pause' : 'Rotate'}
         </button>
-        <button className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm px-2 py-1 rounded-full">
-          Zoom
+        <button 
+          className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm px-3 py-1 rounded-full"
+          onClick={handleZoomIn}
+        >
+          Zoom In
         </button>
+        <button 
+          className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm px-3 py-1 rounded-full"
+          onClick={handleZoomOut}
+        >
+          Zoom Out
+        </button>
+      </div>
+      
+      {/* Avatar Name Label */}
+      <div className="absolute top-2 left-0 right-0 flex justify-center">
+        <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium">
+          Your 3D Avatar
+        </div>
       </div>
     </motion.div>
   );

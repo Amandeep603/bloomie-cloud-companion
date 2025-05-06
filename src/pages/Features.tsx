@@ -1,9 +1,9 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { MessageCircle, Calendar, Video, User, Mic, X } from "lucide-react";
 import ThreeDAvatar from "@/components/features/ThreeDAvatar";
+import { motion } from "framer-motion";
 
 const FeaturesPage = () => {
   return (
@@ -175,37 +175,47 @@ const FeaturesPage = () => {
               </Card>
             </div>
             
-            {/* Avatar Customization Feature - UPDATED with 3D avatar */}
+            {/* Avatar Customization Feature - UPDATED with enhanced 3D avatar */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div className="order-2 md:order-1">
-                <div className="flex items-center justify-center">
-                  <div className="relative w-56 h-56 rounded-full overflow-hidden shadow-xl border-4 border-white">
-                    {/* Replace static avatar with 3D avatar */}
+                <motion.div 
+                  className="flex items-center justify-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="relative w-64 h-64 rounded-2xl overflow-hidden shadow-xl border-4 border-white dark:border-gray-800">
+                    {/* Enhanced 3D avatar with realistic look */}
                     <ThreeDAvatar avatarUrl="/ai-avatar-face.png" />
                   </div>
-                </div>
+                </motion.div>
               </div>
               <div className="order-1 md:order-2">
                 <div className="bg-primary/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4">
                   <User className="h-6 w-6 text-primary" />
                 </div>
-                <h2 className="text-2xl font-bold mb-4">3D Avatar Customization</h2>
+                <h2 className="text-2xl font-bold mb-4">Create Your Own 3D Avatar</h2>
                 <p className="text-muted-foreground mb-4">
-                  Make Bloomie truly yours by creating and customizing your own realistic 3D avatar. 
-                  Choose expressions, features, and styles to personalize your digital companion.
+                  Design your own realistic 3D avatar using our advanced customization technology. 
+                  Choose facial features, expressions, and styles to personalize your digital companion.
                 </p>
                 <ul className="space-y-2">
                   <li className="flex items-center">
                     <span className="mr-2">✓</span>
-                    Create realistic 3D avatars
+                    Realistic 3D human avatars
                   </li>
                   <li className="flex items-center">
                     <span className="mr-2">✓</span>
-                    Customize facial features and expressions
+                    Detailed facial customization
                   </li>
                   <li className="flex items-center">
                     <span className="mr-2">✓</span>
                     Use your avatar across all Bloomie features
+                  </li>
+                  <li className="flex items-center">
+                    <span className="mr-2">✓</span>
+                    Express emotions through your digital persona
                   </li>
                 </ul>
               </div>

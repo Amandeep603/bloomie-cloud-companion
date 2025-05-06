@@ -14,7 +14,7 @@ export type AvaturnAvatarMetadata = {
   modelUrl: string;
 };
 
-// Mock function to initialize the Avaturn editor
+// Enhanced mock function to initialize the Avaturn editor
 export const initAvaturnEditor = (containerId: string, options: any = {}) => {
   console.log(`Initializing Avaturn editor in container: ${containerId} with options:`, options);
   
@@ -45,6 +45,17 @@ export const initAvaturnEditor = (containerId: string, options: any = {}) => {
         thumbnail: "/ai-avatar-face.png",
         modelUrl: "https://example.com/avatar-model.glb"
       };
+    },
+    setEditorMode: (mode: string) => {
+      console.log(`Setting editor mode to: ${mode}`);
+    },
+    rotateAvatar: (angle: number) => {
+      console.log(`Rotating avatar by ${angle} degrees`);
+      return true;
+    },
+    zoomAvatar: (level: number) => {
+      console.log(`Setting zoom level to ${level}`);
+      return true;
     }
   };
 };
