@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -173,13 +174,26 @@ const FeaturesPage = () => {
               </Card>
             </div>
             
-            {/* Avatar Customization Feature */}
+            {/* Avatar Customization Feature - UPDATED with realistic AI avatar */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div className="order-2 md:order-1">
                 <div className="flex items-center justify-center">
-                  <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-xl">
-                    <div className="w-28 h-28 bg-bloomie-pink rounded-full flex items-center justify-center">
-                      <div className="text-6xl">😎</div>
+                  <div className="relative w-48 h-48 rounded-full overflow-hidden shadow-xl border-4 border-white">
+                    {/* Realistic AI avatar image */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-bloomie-purple/20 to-bloomie-pink/20 rounded-full"></div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-full h-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/40 dark:to-purple-900/40 flex items-center justify-center">
+                        <img 
+                          src="/ai-avatar-face.png" 
+                          alt="AI Avatar" 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            // Fallback for missing image
+                            const target = e.target as HTMLImageElement;
+                            target.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojODg2NkNDO3N0b3Atb3BhY2l0eToxIiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNGQjdiRkY7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9Ijk1IiBmaWxsPSJ1cmwoI2dyYWQpIiAvPgogIDxjaXJjbGUgY3g9IjcwIiBjeT0iODAiIHI9IjEwIiBmaWxsPSIjMjIyIiAvPgogIDxjaXJjbGUgY3g9IjEzMCIgY3k9IjgwIiByPSIxMCIgZmlsbD0iIzIyMiIgLz4KICA8cGF0aCBkPSJNNzAgMTMwIHE2MCA2MCA2MCAwIiBzdHJva2U9IiMyMjIiIHN0cm9rZS13aWR0aD0iNiIgZmlsbD0ibm9uZSIgLz4KPC9zdmc+";
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -191,20 +205,20 @@ const FeaturesPage = () => {
                 <h2 className="text-2xl font-bold mb-4">Avatar Customization</h2>
                 <p className="text-muted-foreground mb-4">
                   Make Bloomie truly yours by customizing how your AI friend looks and feels. 
-                  Choose colors, expressions, and more to personalize your experience.
+                  Choose from realistic AI avatars, expressions, and more to personalize your experience.
                 </p>
                 <ul className="space-y-2">
                   <li className="flex items-center">
                     <span className="mr-2">✓</span>
-                    Multiple color options
+                    Multiple avatar styles
                   </li>
                   <li className="flex items-center">
                     <span className="mr-2">✓</span>
-                    Different expressions and styles
+                    Realistic AI expressions
                   </li>
                   <li className="flex items-center">
                     <span className="mr-2">✓</span>
-                    Create your perfect companion
+                    Create your perfect digital companion
                   </li>
                 </ul>
               </div>

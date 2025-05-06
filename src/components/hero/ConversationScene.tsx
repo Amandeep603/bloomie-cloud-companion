@@ -59,7 +59,7 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
     <div className="relative w-full max-w-4xl mx-auto mt-10 mb-16">
       <div className="flex justify-center items-end px-8 md:px-12 lg:px-20 pt-8">
         <div className="w-[38%] md:w-[38%] flex flex-col items-center gap-8">
-          <div className="h-44 md:h-52 w-44 md:w-52">
+          <div className="h-48 md:h-56 w-48 md:w-56">
             <AnimatedAvatar 
               gender="girl" 
               speaking={showMessage && currentMessage?.speaker === "girl"}
@@ -84,7 +84,7 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
         </div>
         
         <div className="w-[38%] md:w-[38%] flex flex-col items-center gap-8">
-          <div className="h-44 md:h-52 w-44 md:w-52">
+          <div className="h-48 md:h-56 w-48 md:w-56">
             <AnimatedAvatar 
               gender="boy" 
               speaking={showMessage && currentMessage?.speaker === "boy"}

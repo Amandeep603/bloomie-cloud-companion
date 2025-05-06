@@ -2,13 +2,13 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, Smile, Trash2, History, X } from "lucide-react";
+import { Send, Smile, Trash2, History, MessageCircle, Check } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { addMessage, getChatHistory, generateBotResponse, ChatMessage } from "@/services/chatService";
 import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
@@ -353,27 +353,58 @@ const ChatInterface = () => {
 
   const messageGroups = groupMessagesByDate();
 
+  // Function to determine if a message should display timestamp
+  // In WhatsApp style, only show time for last message in consecutive messages from same sender
+  const shouldShowTime = (message: ChatMessage, index: number, messages: ChatMessage[]) => {
+    const nextMessage = messages[index + 1];
+    return !nextMessage || nextMessage.sender !== message.sender;
+  };
+
+  // Function to determine if a message should display the avatar
+  const shouldShowAvatar = (message: ChatMessage, index: number, messages: ChatMessage[]) => {
+    const prevMessage = messages[index - 1];
+    return !prevMessage || prevMessage.sender !== message.sender;
+  };
+
+  // Function to group consecutive messages from the same sender
+  const getMessageGroupClass = (message: ChatMessage, index: number, messages: ChatMessage[]) => {
+    const prevMessage = messages[index - 1];
+    const nextMessage = messages[index + 1];
+    
+    // First message in a group
+    if (!prevMessage || prevMessage.sender !== message.sender) {
+      return message.sender === "ai" ? "rounded-tr-2xl rounded-br-2xl rounded-bl-lg" : "rounded-tl-2xl rounded-bl-2xl rounded-br-lg";
+    }
+    
+    // Last message in a group
+    if (!nextMessage || nextMessage.sender !== message.sender) {
+      return message.sender === "ai" ? "rounded-tr-2xl rounded-br-lg rounded-bl-2xl" : "rounded-tl-2xl rounded-bl-lg rounded-br-2xl";
+    }
+    
+    // Middle message in a group
+    return message.sender === "ai" ? "rounded-tr-2xl rounded-bl-2xl" : "rounded-tl-2xl rounded-br-2xl";
+  };
+
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between p-4 border-b bg-white dark:bg-gray-800 shadow-sm">
+      {/* WhatsApp-style header */}
+      <div className="flex items-center justify-between p-3 bg-emerald-600 text-white shadow-sm">
         <div className="flex items-center space-x-3">
-          <Avatar className="h-10 w-10 bg-gradient-to-br from-indigo-400 to-purple-500">
-            <div className="text-white rounded-full h-full w-full flex items-center justify-center text-sm font-semibold">
-              B
-            </div>
+          <Avatar className="h-10 w-10 border-2 border-white">
+            <AvatarImage src="/ai-avatar-face.png" alt="Bloomie" />
+            <AvatarFallback className="bg-emerald-700 text-white">B</AvatarFallback>
           </Avatar>
           <div>
             <h3 className="font-semibold font-nunito">Bloomie</h3>
-            <p className="text-xs text-muted-foreground font-nunito">Your AI Friend</p>
+            <p className="text-xs text-white/80 font-nunito">Online</p>
           </div>
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <Dialog open={showHistoryDialog} onOpenChange={setShowHistoryDialog}>
             <DialogTrigger asChild>
-              <Button variant="outline" size="sm" className="flex gap-1.5 items-center">
-                <History className="h-4 w-4" />
-                <span className="hidden sm:inline">Chat History</span>
+              <Button variant="ghost" size="icon" className="text-white hover:bg-emerald-700 rounded-full">
+                <History className="h-5 w-5" />
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[500px] max-h-[80vh] overflow-auto">
@@ -398,21 +429,20 @@ const ChatInterface = () => {
                       >
                         <div className="flex items-start max-w-[80%]">
                           {message.sender === "ai" && (
-                            <Avatar className="h-8 w-8 mr-2 mt-1 bg-primary">
-                              <div className="text-primary-foreground rounded-full h-full w-full flex items-center justify-center text-xs font-semibold">
-                                B
-                              </div>
+                            <Avatar className="h-8 w-8 mr-2 mt-1">
+                              <AvatarImage src="/ai-avatar-face.png" alt="Bloomie" />
+                              <AvatarFallback className="bg-emerald-600 text-white text-xs">B</AvatarFallback>
                             </Avatar>
                           )}
                           <div className={`px-3 py-2 rounded-lg ${
                             message.sender === "user" 
-                              ? "bg-primary text-primary-foreground rounded-br-none" 
-                              : "bg-muted rounded-bl-none"
+                              ? "bg-emerald-500 text-white rounded-br-none" 
+                              : "bg-white dark:bg-gray-800 rounded-bl-none"
                           }`}>
                             <p className="break-words whitespace-pre-wrap font-nunito">{message.text}</p>
                             <span className={`text-[10px] ${
                               message.sender === "user" 
-                                ? "text-primary-foreground/70" 
+                                ? "text-white/70" 
                                 : "text-muted-foreground"
                             } float-right ml-2 mt-1`}>
                               {formatTime(message.timestamp)}
@@ -441,13 +471,12 @@ const ChatInterface = () => {
           </Dialog>
           
           <Button 
-            variant="outline" 
-            size="sm" 
-            className="flex gap-1.5 items-center"
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-emerald-700 rounded-full"
             onClick={() => setShowConfirmClearDialog(true)}
           >
-            <Trash2 className="h-4 w-4" />
-            <span className="hidden sm:inline">Clear Chat</span>
+            <Trash2 className="h-5 w-5" />
           </Button>
         </div>
       </div>
@@ -490,55 +519,63 @@ const ChatInterface = () => {
         </div>
       </div>
       
-      <ScrollArea className="flex-grow p-4 h-[calc(100vh-220px)] bg-gradient-to-b from-indigo-50/40 to-blue-50/40 dark:from-gray-900/50 dark:to-gray-950/50">
-        <div className="space-y-6 pb-[60px] max-w-3xl mx-auto" ref={scrollAreaRef}>
+      {/* WhatsApp-style chat area with background */}
+      <ScrollArea 
+        className="flex-grow p-3 h-[calc(100vh-220px)] bg-repeat bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+CiAgPGRlZnM+CiAgICA8cGF0dGVybiBpZD0icGF0dGVybiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiB2aWV3Qm94PSIwIDAgMjAgMjAiPgogICAgICA8cGF0aCBmaWxsPSJyZ2JhKDAgMCAwIDAuMDIpIiBkPSJNMCAwaDEwdjEwSDB6Ii8+CiAgICA8L3BhdHRlcm4+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlNmVmZDgiLz4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIi8+Cjwvc3ZnPg==')]"
+      >
+        <div className="space-y-4 pb-[80px] max-w-3xl mx-auto" ref={scrollAreaRef}>
           {messageGroups.map((group, groupIndex) => (
-            <div key={`group-${groupIndex}`} className="mb-8 last:mb-2">
-              <div className="flex justify-center mb-6">
-                <Badge variant="outline" className="bg-white/70 dark:bg-gray-800/70 shadow-sm px-3 py-1">
+            <div key={`group-${groupIndex}`} className="mb-6">
+              <div className="flex justify-center mb-4">
+                <Badge variant="outline" className="bg-white/80 dark:bg-gray-800/80 shadow-sm px-3 py-1">
                   {group.date}
                 </Badge>
               </div>
               
-              <div className="space-y-6">
-                {group.messages.map((message) => (
+              <div className="space-y-1">
+                {group.messages.map((message, msgIndex) => (
                   <motion.div
                     key={message.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
+                    className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"} ${
+                      !shouldShowAvatar(message, msgIndex, group.messages) ? "pl-10" : ""
+                    }`}
                   >
-                    <div className="flex items-start max-w-[80%] md:max-w-[70%]">
-                      {message.sender === "ai" && (
-                        <div className="flex-shrink-0 mr-2 mt-1">
-                          <Avatar className="h-8 w-8 bg-gradient-to-br from-indigo-400 to-purple-500">
-                            <div className="text-white rounded-full h-full w-full flex items-center justify-center text-xs font-semibold">
-                              B
-                            </div>
-                          </Avatar>
-                        </div>
+                    <div className="flex items-start max-w-[75%]">
+                      {message.sender === "ai" && shouldShowAvatar(message, msgIndex, group.messages) && (
+                        <Avatar className="h-8 w-8 mr-1 mt-1 flex-shrink-0">
+                          <AvatarImage src="/ai-avatar-face.png" alt="Bloomie" />
+                          <AvatarFallback className="bg-emerald-600 text-white text-xs">B</AvatarFallback>
+                        </Avatar>
                       )}
-                      <motion.div 
-                        className={`px-4 py-3 rounded-2xl shadow-sm ${
+                      
+                      <div 
+                        className={`px-3 py-2 ${getMessageGroupClass(message, msgIndex, group.messages)} shadow-sm ${
                           message.sender === "user" 
-                            ? "bg-indigo-500 text-white rounded-tr-none" 
-                            : "bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-tl-none"
+                            ? "bg-emerald-500 text-white ml-1" 
+                            : "bg-white dark:bg-gray-800"
                         }`}
-                        whileHover={{ scale: 1.01 }}
                       >
                         <p className="break-words whitespace-pre-wrap text-sm leading-relaxed font-nunito">{message.text}</p>
-                        <div className="text-right mt-1">
-                          <span className={`text-[10px] ${
-                            message.sender === "user" 
-                              ? "text-white/70" 
-                              : "text-muted-foreground"
-                          }`}>
-                            {formatTime(message.timestamp)}
-                          </span>
-                        </div>
-                      </motion.div>
+                        
+                        {shouldShowTime(message, msgIndex, group.messages) && (
+                          <div className="flex justify-end items-center gap-1 mt-1">
+                            <span className={`text-[10px] ${
+                              message.sender === "user" 
+                                ? "text-white/70" 
+                                : "text-muted-foreground"
+                            }`}>
+                              {formatTime(message.timestamp)}
+                            </span>
+                            {message.sender === "user" && (
+                              <Check className="h-3 w-3 text-white/70" />
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </motion.div>
                 ))}
@@ -550,23 +587,13 @@ const ChatInterface = () => {
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex justify-start mt-4"
+              className="flex justify-start mt-4 pl-10"
             >
-              <div className="flex items-start">
-                <Avatar className="h-8 w-8 mr-2 mt-1 bg-gradient-to-br from-indigo-400 to-purple-500">
-                  <div className="text-white rounded-full h-full w-full flex items-center justify-center text-xs font-semibold">
-                    B
-                  </div>
-                </Avatar>
-                <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 px-4 py-2.5 rounded-2xl rounded-tl-none shadow-sm">
-                  <div className="flex space-x-1.5 items-center">
-                    <span className="text-sm font-nunito">Bloomie is typing</span>
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></div>
-                      <div className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" style={{ animationDelay: "0.2s" }}></div>
-                      <div className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" style={{ animationDelay: "0.4s" }}></div>
-                    </div>
-                  </div>
+              <div className="bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-full">
+                <div className="flex space-x-1.5">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce"></div>
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: "0.4s" }}></div>
                 </div>
               </div>
             </motion.div>
@@ -576,55 +603,51 @@ const ChatInterface = () => {
         </div>
       </ScrollArea>
       
-      <div className="p-4 border-t sticky bottom-0 bg-white dark:bg-gray-800 shadow-lg">
-        <div className="flex flex-col space-y-2 max-w-3xl mx-auto">
-          <div className="relative flex-grow flex">
+      {/* WhatsApp-style input area */}
+      <div className="p-2 border-t sticky bottom-0 bg-[#f0f2f5] dark:bg-gray-800">
+        <div className="flex space-x-2 max-w-3xl mx-auto">
+          <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                size="icon"
+                variant="ghost"
+                className="h-10 w-10 rounded-full text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700"
+              >
+                <Smile className="h-5 w-5" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-full p-0" align="end">
+              <div ref={emojiPickerRef}>
+                <EmojiPicker
+                  onEmojiClick={handleEmojiClick}
+                  theme={document.documentElement.classList.contains("dark") ? Theme.DARK : Theme.LIGHT}
+                  width="100%"
+                />
+              </div>
+            </PopoverContent>
+          </Popover>
+
+          <div className="relative flex-grow">
             <Input
               ref={inputRef}
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Type a message..."
-              className="pr-12 rounded-full border-gray-200 dark:border-gray-700 shadow-sm bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800"
+              placeholder="Type a message"
+              className="rounded-full border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-emerald-200 dark:focus:ring-emerald-800"
               disabled={isLoading}
             />
-            <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
-              <PopoverTrigger asChild>
-                <Button
-                  type="button"
-                  size="icon"
-                  variant="ghost"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8"
-                >
-                  <Smile className="h-5 w-5 text-muted-foreground hover:text-indigo-500 transition-colors" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-full p-0" align="end">
-                <div ref={emojiPickerRef}>
-                  <EmojiPicker
-                    onEmojiClick={handleEmojiClick}
-                    theme={document.documentElement.classList.contains("dark") ? Theme.DARK : Theme.LIGHT}
-                    width="100%"
-                  />
-                </div>
-              </PopoverContent>
-            </Popover>
           </div>
           
-          <div className="flex justify-between items-center">
-            <div className="text-xs text-muted-foreground font-nunito">
-              Send a message or express how you're feeling
-            </div>
-            <Button
-              onClick={handleSendMessage}
-              size="sm"
-              className="rounded-full shadow-sm gap-1.5"
-              disabled={!inputText.trim() || isLoading}
-            >
-              <Send className="h-4 w-4" />
-              Send
-            </Button>
-          </div>
+          <Button
+            onClick={handleSendMessage}
+            size="icon"
+            className="h-10 w-10 rounded-full bg-emerald-600 hover:bg-emerald-700"
+            disabled={!inputText.trim() || isLoading}
+          >
+            <Send className="h-5 w-5" />
+          </Button>
         </div>
       </div>
     </div>
