@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { MessageCircle, Calendar, Video, User, Mic, X } from "lucide-react";
+import ThreeDAvatar from "@/components/features/ThreeDAvatar";
 
 const FeaturesPage = () => {
   return (
@@ -174,27 +175,13 @@ const FeaturesPage = () => {
               </Card>
             </div>
             
-            {/* Avatar Customization Feature - UPDATED with realistic AI avatar */}
+            {/* Avatar Customization Feature - UPDATED with 3D avatar */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div className="order-2 md:order-1">
                 <div className="flex items-center justify-center">
-                  <div className="relative w-48 h-48 rounded-full overflow-hidden shadow-xl border-4 border-white">
-                    {/* Realistic AI avatar image */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-bloomie-purple/20 to-bloomie-pink/20 rounded-full"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-full h-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/40 dark:to-purple-900/40 flex items-center justify-center">
-                        <img 
-                          src="/ai-avatar-face.png" 
-                          alt="AI Avatar" 
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            // Fallback for missing image
-                            const target = e.target as HTMLImageElement;
-                            target.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojODg2NkNDO3N0b3Atb3BhY2l0eToxIiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNGQjdiRkY7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9Ijk1IiBmaWxsPSJ1cmwoI2dyYWQpIiAvPgogIDxjaXJjbGUgY3g9IjcwIiBjeT0iODAiIHI9IjEwIiBmaWxsPSIjMjIyIiAvPgogIDxjaXJjbGUgY3g9IjEzMCIgY3k9IjgwIiByPSIxMCIgZmlsbD0iIzIyMiIgLz4KICA8cGF0aCBkPSJNNzAgMTMwIHE2MCA2MCA2MCAwIiBzdHJva2U9IiMyMjIiIHN0cm9rZS13aWR0aD0iNiIgZmlsbD0ibm9uZSIgLz4KPC9zdmc+";
-                          }}
-                        />
-                      </div>
-                    </div>
+                  <div className="relative w-56 h-56 rounded-full overflow-hidden shadow-xl border-4 border-white">
+                    {/* Replace static avatar with 3D avatar */}
+                    <ThreeDAvatar avatarUrl="/ai-avatar-face.png" />
                   </div>
                 </div>
               </div>
@@ -202,23 +189,23 @@ const FeaturesPage = () => {
                 <div className="bg-primary/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4">
                   <User className="h-6 w-6 text-primary" />
                 </div>
-                <h2 className="text-2xl font-bold mb-4">Avatar Customization</h2>
+                <h2 className="text-2xl font-bold mb-4">3D Avatar Customization</h2>
                 <p className="text-muted-foreground mb-4">
-                  Make Bloomie truly yours by customizing how your AI friend looks and feels. 
-                  Choose from realistic AI avatars, expressions, and more to personalize your experience.
+                  Make Bloomie truly yours by creating and customizing your own realistic 3D avatar. 
+                  Choose expressions, features, and styles to personalize your digital companion.
                 </p>
                 <ul className="space-y-2">
                   <li className="flex items-center">
                     <span className="mr-2">✓</span>
-                    Multiple avatar styles
+                    Create realistic 3D avatars
                   </li>
                   <li className="flex items-center">
                     <span className="mr-2">✓</span>
-                    Realistic AI expressions
+                    Customize facial features and expressions
                   </li>
                   <li className="flex items-center">
                     <span className="mr-2">✓</span>
-                    Create your perfect digital companion
+                    Use your avatar across all Bloomie features
                   </li>
                 </ul>
               </div>
