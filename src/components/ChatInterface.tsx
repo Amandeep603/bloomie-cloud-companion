@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -387,12 +386,12 @@ const ChatInterface = () => {
 
   return (
     <div className="h-full flex flex-col">
-      {/* WhatsApp-style header */}
-      <div className="flex items-center justify-between p-3 bg-emerald-600 text-white shadow-sm">
+      {/* Modern Chat Header */}
+      <div className="flex items-center justify-between p-3 bg-gradient-to-r from-violet-500/90 to-indigo-500/90 text-white shadow-sm">
         <div className="flex items-center space-x-3">
           <Avatar className="h-10 w-10 border-2 border-white">
             <AvatarImage src="/ai-avatar-face.png" alt="Bloomie" />
-            <AvatarFallback className="bg-emerald-700 text-white">B</AvatarFallback>
+            <AvatarFallback className="bg-primary text-white">B</AvatarFallback>
           </Avatar>
           <div>
             <h3 className="font-semibold font-nunito">Bloomie</h3>
@@ -403,7 +402,7 @@ const ChatInterface = () => {
         <div className="flex gap-3">
           <Dialog open={showHistoryDialog} onOpenChange={setShowHistoryDialog}>
             <DialogTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-white hover:bg-emerald-700 rounded-full">
+              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full">
                 <History className="h-5 w-5" />
               </Button>
             </DialogTrigger>
@@ -431,12 +430,12 @@ const ChatInterface = () => {
                           {message.sender === "ai" && (
                             <Avatar className="h-8 w-8 mr-2 mt-1">
                               <AvatarImage src="/ai-avatar-face.png" alt="Bloomie" />
-                              <AvatarFallback className="bg-emerald-600 text-white text-xs">B</AvatarFallback>
+                              <AvatarFallback className="bg-primary text-white text-xs">B</AvatarFallback>
                             </Avatar>
                           )}
                           <div className={`px-3 py-2 rounded-lg ${
                             message.sender === "user" 
-                              ? "bg-emerald-500 text-white rounded-br-none" 
+                              ? "bg-primary/90 text-white rounded-br-none" 
                               : "bg-white dark:bg-gray-800 rounded-bl-none"
                           }`}>
                             <p className="break-words whitespace-pre-wrap font-nunito">{message.text}</p>
@@ -473,7 +472,7 @@ const ChatInterface = () => {
           <Button 
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-emerald-700 rounded-full"
+            className="text-white hover:bg-white/10 rounded-full"
             onClick={() => setShowConfirmClearDialog(true)}
           >
             <Trash2 className="h-5 w-5" />
@@ -519,9 +518,9 @@ const ChatInterface = () => {
         </div>
       </div>
       
-      {/* WhatsApp-style chat area with background */}
+      {/* Modern chat area with soft background */}
       <ScrollArea 
-        className="flex-grow p-3 h-[calc(100vh-220px)] bg-repeat bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+CiAgPGRlZnM+CiAgICA8cGF0dGVybiBpZD0icGF0dGVybiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiB2aWV3Qm94PSIwIDAgMjAgMjAiPgogICAgICA8cGF0aCBmaWxsPSJyZ2JhKDAgMCAwIDAuMDIpIiBkPSJNMCAwaDEwdjEwSDB6Ii8+CiAgICA8L3BhdHRlcm4+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlNmVmZDgiLz4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIi8+Cjwvc3ZnPg==')]"
+        className="flex-grow p-3 h-[calc(100vh-220px)] bg-gradient-to-b from-violet-50/30 to-indigo-50/30 dark:from-slate-900/30 dark:to-slate-800/30"
       >
         <div className="space-y-4 pb-[80px] max-w-3xl mx-auto" ref={scrollAreaRef}>
           {messageGroups.map((group, groupIndex) => (
@@ -548,14 +547,14 @@ const ChatInterface = () => {
                       {message.sender === "ai" && shouldShowAvatar(message, msgIndex, group.messages) && (
                         <Avatar className="h-8 w-8 mr-1 mt-1 flex-shrink-0">
                           <AvatarImage src="/ai-avatar-face.png" alt="Bloomie" />
-                          <AvatarFallback className="bg-emerald-600 text-white text-xs">B</AvatarFallback>
+                          <AvatarFallback className="bg-primary text-white text-xs">B</AvatarFallback>
                         </Avatar>
                       )}
                       
                       <div 
                         className={`px-3 py-2 ${getMessageGroupClass(message, msgIndex, group.messages)} shadow-sm ${
                           message.sender === "user" 
-                            ? "bg-emerald-500 text-white ml-1" 
+                            ? "bg-primary/90 text-white ml-1" 
                             : "bg-white dark:bg-gray-800"
                         }`}
                       >
@@ -591,9 +590,9 @@ const ChatInterface = () => {
             >
               <div className="bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-full">
                 <div className="flex space-x-1.5">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce"></div>
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: "0.4s" }}></div>
+                  <div className="w-2 h-2 rounded-full bg-primary animate-bounce"></div>
+                  <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                  <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0.4s" }}></div>
                 </div>
               </div>
             </motion.div>
@@ -603,8 +602,8 @@ const ChatInterface = () => {
         </div>
       </ScrollArea>
       
-      {/* WhatsApp-style input area */}
-      <div className="p-2 border-t sticky bottom-0 bg-[#f0f2f5] dark:bg-gray-800">
+      {/* Modern input area */}
+      <div className="p-2 border-t sticky bottom-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md">
         <div className="flex space-x-2 max-w-3xl mx-auto">
           <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
             <PopoverTrigger asChild>
@@ -612,7 +611,7 @@ const ChatInterface = () => {
                 type="button"
                 size="icon"
                 variant="ghost"
-                className="h-10 w-10 rounded-full text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700"
+                className="h-10 w-10 rounded-full text-muted-foreground hover:bg-muted/50"
               >
                 <Smile className="h-5 w-5" />
               </Button>
@@ -635,7 +634,7 @@ const ChatInterface = () => {
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Type a message"
-              className="rounded-full border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-emerald-200 dark:focus:ring-emerald-800"
+              className="rounded-full border-gray-200 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 focus:ring-2 focus:ring-primary/50 shadow-sm"
               disabled={isLoading}
             />
           </div>
@@ -643,7 +642,7 @@ const ChatInterface = () => {
           <Button
             onClick={handleSendMessage}
             size="icon"
-            className="h-10 w-10 rounded-full bg-emerald-600 hover:bg-emerald-700"
+            className="h-10 w-10 rounded-full bg-primary hover:bg-primary/90"
             disabled={!inputText.trim() || isLoading}
           >
             <Send className="h-5 w-5" />

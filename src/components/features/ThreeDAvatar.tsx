@@ -53,7 +53,7 @@ const ThreeDAvatar = ({ avatarUrl, className = "" }: ThreeDProps) => {
           scale: `${zoom}%`
         }}
       >
-        <div className="w-full h-full bg-gradient-to-br from-violet-100/80 to-indigo-100/80 dark:from-indigo-900/40 dark:to-violet-900/40 flex items-center justify-center">
+        <div className="w-full h-full bg-gradient-to-br from-purple-100/80 to-indigo-200/80 dark:from-indigo-900/40 dark:to-violet-900/40 flex items-center justify-center">
           <img 
             src={avatarUrl || "/ai-avatar-face.png"} 
             alt="3D AI Avatar" 
