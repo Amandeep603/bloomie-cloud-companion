@@ -51,7 +51,7 @@ const FeaturesPage = () => {
                     </div>
                     <div className="font-semibold text-white">Bloomie</div>
                     <div className="ml-auto flex items-center">
-                      <img src="/logo.png" alt="Bloomie Logo" className="h-5 opacity-70" />
+                      <img src="/lovable-uploads/3c16cc42-78e6-4498-a8f3-f1212b65df2c.png" alt="Bloomie Logo" className="h-5 opacity-90" />
                     </div>
                   </div>
                   <div className="bg-gradient-to-b from-violet-50/30 to-indigo-50/30 dark:from-slate-900/30 dark:to-slate-800/30 p-4">
@@ -156,7 +156,7 @@ const FeaturesPage = () => {
               </div>
             </div>
             
-            {/* Video Call Feature - Increased height for better visibility */}
+            {/* Video Call Feature - Adjusted container and image proportions */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
                 <div className="bg-primary/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4">
@@ -188,21 +188,21 @@ const FeaturesPage = () => {
                     <div className="text-white text-sm font-medium">Bloomie Video Call</div>
                     <div className="text-xs text-gray-400">12:42</div>
                   </div>
-                  {/* Increased height of the video container */}
-                  <div className="grid grid-cols-2 gap-2 p-2 bg-gray-800" style={{ minHeight: "240px" }}>
-                    <div className="aspect-video bg-gray-700 rounded-md overflow-hidden relative">
+                  {/* Increased height and improved image scaling */}
+                  <div className="grid grid-cols-2 gap-2 p-2 bg-gray-800" style={{ minHeight: "280px" }}>
+                    <div className="aspect-video bg-gray-700 rounded-md overflow-hidden relative flex items-center justify-center">
                       <img 
                         src="/lovable-uploads/a897f883-d1a0-4c7e-ad58-fa38f2730685.png" 
                         alt="User Video" 
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain" 
                       />
                       <div className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">You</div>
                     </div>
-                    <div className="aspect-video bg-gray-700 rounded-md overflow-hidden relative">
+                    <div className="aspect-video bg-gray-700 rounded-md overflow-hidden relative flex items-center justify-center">
                       <img 
                         src="/lovable-uploads/3c16cc42-78e6-4498-a8f3-f1212b65df2c.png" 
                         alt="Bloomie Video" 
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain" 
                       />
                       <div className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">Bloomie</div>
                     </div>

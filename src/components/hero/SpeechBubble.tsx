@@ -14,18 +14,16 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
   // Use children if provided, otherwise use message
   const content = children || message;
   
-  // Enhanced animation variants for thought bubble style
+  // Enhanced animation variants for comic-style thought bubbles
   const bubbleVariants = {
     hidden: { 
       opacity: 0, 
-      y: 10, 
-      x: speaker === "girl" ? -10 : 10,
+      y: -10, 
       scale: 0.8 
     },
     visible: { 
       opacity: 1, 
       y: 0, 
-      x: 0,
       scale: 1,
       transition: { 
         type: "spring", 
@@ -36,7 +34,7 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
     },
     exit: { 
       opacity: 0, 
-      y: 10,
+      y: -10,
       scale: 0.8,
       transition: { duration: 0.3 } 
     }
@@ -44,25 +42,30 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
 
   return (
     <motion.div
-      className={`absolute ${isMobile 
-        ? 'top-[40%] left-1/2 transform -translate-x-1/2 max-w-[280px]' 
-        : `top-[-50px] sm:top-[-60px] ${
-          speaker === "girl" 
-            ? "left-[80px] sm:left-[180px] lg:left-[220px]" 
-            : "right-[80px] sm:right-[180px] lg:right-[220px]"
-        } max-w-[220px] sm:max-w-[280px]`}`}
+      className={`${isMobile 
+        ? 'absolute top-[40%] left-1/2 transform -translate-x-1/2 max-w-[280px]' 
+        : 'relative max-w-[220px] sm:max-w-[280px]'}`}
       variants={bubbleVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
     >
+      {/* Comic-style thought bubble with improved contrast */}
       <div className={`
         ${speaker === "girl" 
-          ? "bg-gradient-to-br from-purple-100 to-purple-200 border-purple-300 text-purple-900" 
-          : "bg-gradient-to-br from-blue-100 to-blue-200 border-blue-300 text-blue-900"
+          ? "bg-white border-purple-300 text-purple-900" 
+          : "bg-white border-blue-300 text-blue-900"
         } 
-        p-5 rounded-2xl shadow-lg border backdrop-blur-sm relative
+        p-5 rounded-[30px] shadow-lg border-2 relative
       `}>
+        {/* Cloud-like shape with scalloped edges using pseudo-elements */}
+        <div className={`absolute -top-3 -left-3 w-6 h-6 rounded-full 
+          ${speaker === "girl" ? "bg-white border-2 border-purple-300" : "bg-white border-2 border-blue-300"}`}></div>
+        <div className={`absolute -top-5 left-5 w-5 h-5 rounded-full 
+          ${speaker === "girl" ? "bg-white border-2 border-purple-300" : "bg-white border-2 border-blue-300"}`}></div>
+        <div className={`absolute -top-2 right-6 w-4 h-4 rounded-full 
+          ${speaker === "girl" ? "bg-white border-2 border-purple-300" : "bg-white border-2 border-blue-300"}`}></div>
+        
         {/* Message content with improved typing animation */}
         <motion.p 
           className="text-sm sm:text-base font-nunito"
@@ -75,47 +78,16 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
           {content}
         </motion.p>
         
-        {/* Enhanced typing animation dots */}
-        <motion.div 
-          className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 flex gap-1"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 1, 0] }}
-          transition={{ duration: 1.5, repeat: 2, repeatType: "reverse" }}
-        >
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              className={`w-2 h-2 rounded-full ${
-                speaker === "girl" 
-                  ? "bg-purple-500" 
-                  : "bg-blue-500"
-              }`}
-              animate={{ 
-                y: [0, -5, 0],
-                opacity: [0.5, 1, 0.5]
-              }}
-              transition={{ 
-                duration: 0.6, 
-                repeat: Infinity, 
-                delay: i * 0.1 
-              }}
-            />
-          ))}
-        </motion.div>
-        
-        {/* Improved comic-style speech bubble tail */}
-        <div 
-          className={`absolute ${
-            speaker === "girl" ? "-bottom-6" : "-bottom-6"
-          } w-12 h-12 ${
-            speaker === "girl" 
-              ? "bg-gradient-to-br from-purple-100 to-purple-200 border-t border-l border-purple-300" 
-              : "bg-gradient-to-br from-blue-100 to-blue-200 border-t border-r border-blue-300"
-          } ${
-            isMobile ? "left-1/2 -translate-x-1/2" : 
-            speaker === "girl" ? "left-8" : "right-8"
-          } transform ${speaker === "girl" ? "rotate-45" : "rotate-45"} z-[-1]`}
-        ></div>
+        {/* Speech bubble tail pointing to speaker */}
+        <div className={`absolute ${speaker === "girl" ? "-bottom-10 left-10" : "-bottom-10 right-10"} 
+          w-12 h-12 overflow-hidden`}>
+          <div className={`
+            w-12 h-12 rotate-45 relative top-[-6px] 
+            ${speaker === "girl" 
+              ? "bg-white border-r-2 border-b-2 border-purple-300" 
+              : "bg-white border-r-2 border-b-2 border-blue-300"}
+          `}></div>
+        </div>
       </div>
     </motion.div>
   );

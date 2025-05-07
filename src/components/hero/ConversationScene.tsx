@@ -57,10 +57,11 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
 
   return (
     <div className="relative w-full max-w-4xl mx-auto mt-10 mb-16">
-      <div className="flex justify-center items-end px-8 md:px-12 lg:px-20 pt-8">
+      <div className="flex justify-center items-end px-8 md:px-12 lg:px-20 pt-20">
+        {/* Added z-index control and increased top padding to make space for bubbles */}
         <div className="w-[38%] md:w-[38%] flex flex-col items-center gap-8 relative">
           {/* Boy's speech bubble positioned above avatar with increased z-index */}
-          <div className="absolute top-0 z-30">
+          <div className="absolute -top-32 z-30">
             <AnimatePresence mode="wait">
               {showMessage && currentMessage?.speaker === "boy" && (
                 <SpeechBubble 
@@ -87,7 +88,7 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
         
         <div className="w-[38%] md:w-[38%] flex flex-col items-center gap-8 relative">
           {/* Girl's speech bubble positioned above avatar with increased z-index */}
-          <div className="absolute top-0 z-30">
+          <div className="absolute -top-32 z-30">
             <AnimatePresence mode="wait">
               {showMessage && currentMessage?.speaker === "girl" && (
                 <SpeechBubble 
