@@ -7,13 +7,13 @@ import HeroContent from "./hero/HeroContent";
 import FloatingMessages from "./hero/FloatingMessages";
 
 const Hero = () => {
-  // Avatar conversation dialogue with improved timing
+  // Enhanced avatar conversation dialogue
   const conversation = [
-    { speaker: "boy" as const, message: "Have you tried talking to Bloomie about feeling stressed lately?" },
-    { speaker: "girl" as const, message: "Yes! Bloomie was so understanding. She suggested some breathing exercises that really helped!" },
-    { speaker: "boy" as const, message: "That's awesome! I love how she remembers things from our past conversations." },
-    { speaker: "girl" as const, message: "Same! She even asked about that job interview I mentioned last week. It feels like chatting with a real friend." },
-    { speaker: "boy" as const, message: "And her emoji reactions are so cute! 😊 Makes me feel like she's actually listening and cares." }
+    { speaker: "girl" as const, message: "Hey! Have you tried Bloomie? It's like having a real friend to talk to!" },
+    { speaker: "boy" as const, message: "Yes! I love how Bloomie listens and chats just like a real person 😊" },
+    { speaker: "girl" as const, message: "And the avatars make it feel so alive!" },
+    { speaker: "boy" as const, message: "I use it every day! Bloomie remembers things from our past conversations." },
+    { speaker: "girl" as const, message: "Exactly! She asked about my job interview from last week. So thoughtful! 💕" }
   ];
 
   return (

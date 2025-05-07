@@ -57,7 +57,7 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
 
   return (
     <div className="relative w-full max-w-4xl mx-auto mt-10 mb-16">
-      <div className="flex justify-center items-end px-8 md:px-12 lg:px-20 pt-20">
+      <div className="flex justify-center items-end px-8 md:px-12 lg:px-20 pt-32">
         {/* Added more padding to make space for bubbles positioned above avatars */}
         <div className="w-[38%] md:w-[38%] flex flex-col items-center gap-8 relative">
           {/* Boy's speech bubble properly positioned above avatar */}

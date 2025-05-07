@@ -43,9 +43,7 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
   // Position the speech bubble directly above the avatar's head
   return (
     <motion.div
-      className={`${isMobile 
-        ? 'absolute top-[-120px] left-1/2 transform -translate-x-1/2 max-w-[280px]' 
-        : 'absolute top-[-120px] left-1/2 transform -translate-x-1/2 max-w-[280px]'}`}
+      className={`absolute top-[-120px] left-1/2 transform -translate-x-1/2 max-w-[280px]`}
       variants={bubbleVariants}
       initial="hidden"
       animate="visible"
