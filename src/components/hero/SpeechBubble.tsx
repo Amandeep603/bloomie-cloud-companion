@@ -14,11 +14,11 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
   // Use children if provided, otherwise use message
   const content = children || message;
   
-  // Enhanced animation variants
+  // Enhanced animation variants for thought bubble style
   const bubbleVariants = {
     hidden: { 
       opacity: 0, 
-      y: speaker === "girl" ? -20 : 20, 
+      y: 10, 
       x: speaker === "girl" ? -10 : 10,
       scale: 0.8 
     },
@@ -36,7 +36,7 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
     },
     exit: { 
       opacity: 0, 
-      y: speaker === "girl" ? 20 : -20,
+      y: 10,
       scale: 0.8,
       transition: { duration: 0.3 } 
     }
@@ -46,7 +46,7 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
     <motion.div
       className={`absolute ${isMobile 
         ? 'top-[40%] left-1/2 transform -translate-x-1/2 max-w-[280px]' 
-        : `top-36 sm:top-40 ${
+        : `top-[-50px] sm:top-[-60px] ${
           speaker === "girl" 
             ? "left-[80px] sm:left-[180px] lg:left-[220px]" 
             : "right-[80px] sm:right-[180px] lg:right-[220px]"
@@ -103,16 +103,18 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
           ))}
         </motion.div>
         
-        {/* Improved cloud-style tail */}
+        {/* Improved comic-style speech bubble tail */}
         <div 
-          className={`absolute -bottom-3 w-6 h-6 transform rotate-45 ${
+          className={`absolute ${
+            speaker === "girl" ? "-bottom-6" : "-bottom-6"
+          } w-12 h-12 ${
             speaker === "girl" 
-              ? "bg-gradient-to-br from-purple-100 to-purple-200 border-b border-r border-purple-300" 
-              : "bg-gradient-to-br from-blue-100 to-blue-200 border-b border-r border-blue-300"
+              ? "bg-gradient-to-br from-purple-100 to-purple-200 border-t border-l border-purple-300" 
+              : "bg-gradient-to-br from-blue-100 to-blue-200 border-t border-r border-blue-300"
           } ${
             isMobile ? "left-1/2 -translate-x-1/2" : 
             speaker === "girl" ? "left-8" : "right-8"
-          }`}
+          } transform ${speaker === "girl" ? "rotate-45" : "rotate-45"} z-[-1]`}
         ></div>
       </div>
     </motion.div>

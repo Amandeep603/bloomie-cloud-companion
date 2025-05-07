@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -48,7 +47,7 @@ const FeaturesPage = () => {
                 <CardContent className="p-0">
                   <div className="bg-gradient-to-r from-violet-500/90 to-indigo-500/90 p-3 border-b flex items-center space-x-3">
                     <div className="w-8 h-8 rounded-full bg-white/20 overflow-hidden flex items-center justify-center">
-                      <img src="/ai-avatar-face.png" alt="Bloomie" className="w-full h-full object-cover" />
+                      <img src="/lovable-uploads/3c16cc42-78e6-4498-a8f3-f1212b65df2c.png" alt="Bloomie" className="w-full h-full object-cover" />
                     </div>
                     <div className="font-semibold text-white">Bloomie</div>
                     <div className="ml-auto flex items-center">
@@ -58,7 +57,7 @@ const FeaturesPage = () => {
                   <div className="bg-gradient-to-b from-violet-50/30 to-indigo-50/30 dark:from-slate-900/30 dark:to-slate-800/30 p-4">
                     <div className="flex mb-3">
                       <div className="w-8 h-8 rounded-full bg-primary/20 flex-shrink-0 mr-2 overflow-hidden flex items-center justify-center">
-                        <img src="/ai-avatar-face.png" alt="Bloomie" className="w-full h-full object-cover" />
+                        <img src="/lovable-uploads/3c16cc42-78e6-4498-a8f3-f1212b65df2c.png" alt="Bloomie" className="w-full h-full object-cover" />
                       </div>
                       <div className="bg-white dark:bg-gray-800 p-3 rounded-lg rounded-tl-none shadow-sm max-w-[85%]">
                         <p className="text-sm">Hey there! How are you feeling today? 😊</p>
@@ -75,7 +74,7 @@ const FeaturesPage = () => {
                     
                     <div className="flex mb-3">
                       <div className="w-8 h-8 rounded-full bg-primary/20 flex-shrink-0 mr-2 overflow-hidden flex items-center justify-center">
-                        <img src="/ai-avatar-face.png" alt="Bloomie" className="w-full h-full object-cover" />
+                        <img src="/lovable-uploads/3c16cc42-78e6-4498-a8f3-f1212b65df2c.png" alt="Bloomie" className="w-full h-full object-cover" />
                       </div>
                       <div className="bg-white dark:bg-gray-800 p-3 rounded-lg rounded-tl-none shadow-sm max-w-[85%]">
                         <p className="text-sm">Aww, I'm here for you 💛 Let's talk it out. What's on your mind today?</p>
@@ -157,7 +156,7 @@ const FeaturesPage = () => {
               </div>
             </div>
             
-            {/* Video Call Feature - Updated with actual avatar images */}
+            {/* Video Call Feature - Increased height for better visibility */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
                 <div className="bg-primary/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4">
@@ -189,7 +188,8 @@ const FeaturesPage = () => {
                     <div className="text-white text-sm font-medium">Bloomie Video Call</div>
                     <div className="text-xs text-gray-400">12:42</div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 p-2 bg-gray-800">
+                  {/* Increased height of the video container */}
+                  <div className="grid grid-cols-2 gap-2 p-2 bg-gray-800" style={{ minHeight: "240px" }}>
                     <div className="aspect-video bg-gray-700 rounded-md overflow-hidden relative">
                       <img 
                         src="/lovable-uploads/a897f883-d1a0-4c7e-ad58-fa38f2730685.png" 
@@ -222,7 +222,7 @@ const FeaturesPage = () => {
               </Card>
             </div>
             
-            {/* Avatar Customization Feature - UPDATED with new static 3D avatar */}
+            {/* Avatar Customization Feature - Static 3D avatar */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div className="order-2 md:order-1">
                 <motion.div 
