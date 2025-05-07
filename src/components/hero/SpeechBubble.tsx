@@ -40,31 +40,32 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
     }
   };
 
+  // Position the speech bubble directly above the avatar's head
   return (
     <motion.div
       className={`${isMobile 
-        ? 'absolute top-[40%] left-1/2 transform -translate-x-1/2 max-w-[280px]' 
-        : 'relative max-w-[220px] sm:max-w-[280px]'}`}
+        ? 'absolute top-[-120px] left-1/2 transform -translate-x-1/2 max-w-[280px]' 
+        : 'absolute top-[-120px] left-1/2 transform -translate-x-1/2 max-w-[280px]'}`}
       variants={bubbleVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
     >
-      {/* Comic-style thought bubble with improved contrast */}
+      {/* Comic-style cloud bubble with improved contrast and lighter background */}
       <div className={`
         ${speaker === "girl" 
-          ? "bg-white border-purple-300 text-purple-900" 
-          : "bg-white border-blue-300 text-blue-900"
+          ? "bg-[#f8f0ff] border-purple-300 text-gray-900" 
+          : "bg-[#f0f8ff] border-blue-300 text-gray-900"
         } 
         p-5 rounded-[30px] shadow-lg border-2 relative
       `}>
         {/* Cloud-like shape with scalloped edges using pseudo-elements */}
         <div className={`absolute -top-3 -left-3 w-6 h-6 rounded-full 
-          ${speaker === "girl" ? "bg-white border-2 border-purple-300" : "bg-white border-2 border-blue-300"}`}></div>
+          ${speaker === "girl" ? "bg-[#f8f0ff] border-2 border-purple-300" : "bg-[#f0f8ff] border-2 border-blue-300"}`}></div>
         <div className={`absolute -top-5 left-5 w-5 h-5 rounded-full 
-          ${speaker === "girl" ? "bg-white border-2 border-purple-300" : "bg-white border-2 border-blue-300"}`}></div>
+          ${speaker === "girl" ? "bg-[#f8f0ff] border-2 border-purple-300" : "bg-[#f0f8ff] border-2 border-blue-300"}`}></div>
         <div className={`absolute -top-2 right-6 w-4 h-4 rounded-full 
-          ${speaker === "girl" ? "bg-white border-2 border-purple-300" : "bg-white border-2 border-blue-300"}`}></div>
+          ${speaker === "girl" ? "bg-[#f8f0ff] border-2 border-purple-300" : "bg-[#f0f8ff] border-2 border-blue-300"}`}></div>
         
         {/* Message content with improved typing animation */}
         <motion.p 
@@ -78,14 +79,14 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
           {content}
         </motion.p>
         
-        {/* Speech bubble tail pointing to speaker */}
-        <div className={`absolute ${speaker === "girl" ? "-bottom-10 left-10" : "-bottom-10 right-10"} 
+        {/* Speech bubble tail pointing to speaker - positioned at bottom center */}
+        <div className={`absolute -bottom-8 left-1/2 -translate-x-1/2
           w-12 h-12 overflow-hidden`}>
           <div className={`
             w-12 h-12 rotate-45 relative top-[-6px] 
             ${speaker === "girl" 
-              ? "bg-white border-r-2 border-b-2 border-purple-300" 
-              : "bg-white border-r-2 border-b-2 border-blue-300"}
+              ? "bg-[#f8f0ff] border-r-2 border-b-2 border-purple-300" 
+              : "bg-[#f0f8ff] border-r-2 border-b-2 border-blue-300"}
           `}></div>
         </div>
       </div>

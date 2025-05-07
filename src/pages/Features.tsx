@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -156,7 +157,7 @@ const FeaturesPage = () => {
               </div>
             </div>
             
-            {/* Video Call Feature - Adjusted container and image proportions */}
+            {/* Video Call Feature - Improved avatar scaling and background */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
                 <div className="bg-primary/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4">
@@ -188,21 +189,21 @@ const FeaturesPage = () => {
                     <div className="text-white text-sm font-medium">Bloomie Video Call</div>
                     <div className="text-xs text-gray-400">12:42</div>
                   </div>
-                  {/* Increased height and improved image scaling */}
-                  <div className="grid grid-cols-2 gap-2 p-2 bg-gray-800" style={{ minHeight: "280px" }}>
-                    <div className="aspect-video bg-gray-700 rounded-md overflow-hidden relative flex items-center justify-center">
+                  {/* Increased height and improved image scaling/positioning */}
+                  <div className="grid grid-cols-2 gap-2 p-2 bg-gray-800" style={{ height: "320px" }}>
+                    <div className="aspect-video bg-[#f0f8ff]/20 rounded-md overflow-hidden relative flex items-center justify-center">
                       <img 
                         src="/lovable-uploads/a897f883-d1a0-4c7e-ad58-fa38f2730685.png" 
                         alt="User Video" 
-                        className="w-full h-full object-contain" 
+                        className="w-auto h-[95%] object-contain"
                       />
                       <div className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">You</div>
                     </div>
-                    <div className="aspect-video bg-gray-700 rounded-md overflow-hidden relative flex items-center justify-center">
+                    <div className="aspect-video bg-[#f8f0ff]/20 rounded-md overflow-hidden relative flex items-center justify-center">
                       <img 
                         src="/lovable-uploads/3c16cc42-78e6-4498-a8f3-f1212b65df2c.png" 
                         alt="Bloomie Video" 
-                        className="w-full h-full object-contain" 
+                        className="w-auto h-[95%] object-contain"
                       />
                       <div className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">Bloomie</div>
                     </div>
