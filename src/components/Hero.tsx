@@ -21,13 +21,13 @@ const Hero = () => {
       {/* Background elements */}
       <BackgroundElements />
       
-      {/* Add more horizontal spacing between avatars and increase vertical spacing to text */}
-      <div className="w-full">
+      {/* Add more spacing between avatars and place speech bubbles in front */}
+      <div className="w-full z-10">
         <ConversationScene conversation={conversation} />
       </div>
       
       {/* Hero content (text and buttons) with more spacing */}
-      <div className="mt-6">
+      <div className="mt-6 z-10">
         <HeroContent />
       </div>
       

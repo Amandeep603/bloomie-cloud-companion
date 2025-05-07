@@ -58,24 +58,26 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
   return (
     <div className="relative w-full max-w-4xl mx-auto mt-10 mb-16">
       <div className="flex justify-center items-end px-8 md:px-12 lg:px-20 pt-8">
-        <div className="w-[38%] md:w-[38%] flex flex-col items-center gap-8">
-          <div className="h-48 md:h-56 w-48 md:w-56 rounded-full overflow-hidden">
+        <div className="w-[38%] md:w-[38%] flex flex-col items-center gap-8 relative">
+          <div className="h-48 md:h-56 w-48 md:w-56 rounded-full overflow-hidden z-10">
             <AnimatedAvatar 
               gender="boy" 
               speaking={showMessage && currentMessage?.speaker === "boy"}
             />
           </div>
           
-          {/* Boy's speech bubble */}
-          <AnimatePresence mode="wait">
-            {showMessage && currentMessage?.speaker === "boy" && (
-              <SpeechBubble 
-                message={currentMessage.message} 
-                speaker="boy" 
-                key={`boy-${currentMessageIndex}`}
-              />
-            )}
-          </AnimatePresence>
+          {/* Boy's speech bubble with increased z-index */}
+          <div className="absolute top-52 md:top-60 z-20">
+            <AnimatePresence mode="wait">
+              {showMessage && currentMessage?.speaker === "boy" && (
+                <SpeechBubble 
+                  message={currentMessage.message} 
+                  speaker="boy" 
+                  key={`boy-${currentMessageIndex}`}
+                />
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Connection line between avatars with increased width */}
@@ -83,24 +85,26 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
           <ConnectionLine />
         </div>
         
-        <div className="w-[38%] md:w-[38%] flex flex-col items-center gap-8">
-          <div className="h-48 md:h-56 w-48 md:w-56 rounded-full overflow-hidden">
+        <div className="w-[38%] md:w-[38%] flex flex-col items-center gap-8 relative">
+          <div className="h-48 md:h-56 w-48 md:w-56 rounded-full overflow-hidden z-10">
             <AnimatedAvatar 
               gender="girl" 
               speaking={showMessage && currentMessage?.speaker === "girl"}
             />
           </div>
           
-          {/* Girl's speech bubble */}
-          <AnimatePresence mode="wait">
-            {showMessage && currentMessage?.speaker === "girl" && (
-              <SpeechBubble 
-                message={currentMessage.message} 
-                speaker="girl" 
-                key={`girl-${currentMessageIndex}`}
-              />
-            )}
-          </AnimatePresence>
+          {/* Girl's speech bubble with increased z-index */}
+          <div className="absolute top-52 md:top-60 z-20">
+            <AnimatePresence mode="wait">
+              {showMessage && currentMessage?.speaker === "girl" && (
+                <SpeechBubble 
+                  message={currentMessage.message} 
+                  speaker="girl" 
+                  key={`girl-${currentMessageIndex}`}
+                />
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </div>

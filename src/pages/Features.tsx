@@ -51,6 +51,9 @@ const FeaturesPage = () => {
                       <img src="/ai-avatar-face.png" alt="Bloomie" className="w-full h-full object-cover" />
                     </div>
                     <div className="font-semibold text-white">Bloomie</div>
+                    <div className="ml-auto flex items-center">
+                      <img src="/logo.png" alt="Bloomie Logo" className="h-5 opacity-70" />
+                    </div>
                   </div>
                   <div className="bg-gradient-to-b from-violet-50/30 to-indigo-50/30 dark:from-slate-900/30 dark:to-slate-800/30 p-4">
                     <div className="flex mb-3">
@@ -154,7 +157,7 @@ const FeaturesPage = () => {
               </div>
             </div>
             
-            {/* Video Call Feature */}
+            {/* Video Call Feature - Updated with actual avatar images */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
                 <div className="bg-primary/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4">
@@ -180,11 +183,28 @@ const FeaturesPage = () => {
                   </li>
                 </ul>
               </div>
-              <Card className="overflow-hidden">
-                <CardContent className="p-0 relative h-64">
-                  <div className="absolute inset-0 bg-muted flex items-center justify-center">
-                    <div className="w-24 h-24 rounded-full bg-primary flex items-center justify-center animate-pulse-light">
-                      <div className="text-4xl">😊</div>
+              <Card className="overflow-hidden shadow-md">
+                <CardContent className="p-0 relative">
+                  <div className="bg-gray-900 p-2 border-b border-gray-800 flex items-center justify-between">
+                    <div className="text-white text-sm font-medium">Bloomie Video Call</div>
+                    <div className="text-xs text-gray-400">12:42</div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 p-2 bg-gray-800">
+                    <div className="aspect-video bg-gray-700 rounded-md overflow-hidden relative">
+                      <img 
+                        src="/lovable-uploads/a897f883-d1a0-4c7e-ad58-fa38f2730685.png" 
+                        alt="User Video" 
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">You</div>
+                    </div>
+                    <div className="aspect-video bg-gray-700 rounded-md overflow-hidden relative">
+                      <img 
+                        src="/lovable-uploads/3c16cc42-78e6-4498-a8f3-f1212b65df2c.png" 
+                        alt="Bloomie Video" 
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">Bloomie</div>
                     </div>
                   </div>
                   <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center space-x-2">
@@ -202,7 +222,7 @@ const FeaturesPage = () => {
               </Card>
             </div>
             
-            {/* Avatar Customization Feature - UPDATED with enhanced 3D avatar */}
+            {/* Avatar Customization Feature - UPDATED with new static 3D avatar */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div className="order-2 md:order-1">
                 <motion.div 
@@ -212,9 +232,13 @@ const FeaturesPage = () => {
                   transition={{ duration: 0.8 }}
                   viewport={{ once: true }}
                 >
-                  <div className="relative w-64 h-64 rounded-2xl overflow-hidden shadow-xl border-4 border-white dark:border-gray-800">
-                    {/* Enhanced 3D avatar with uploaded images */}
-                    <ThreeDAvatar avatarUrl="/lovable-uploads/3f128cd2-2af7-4a4d-94de-a9a510d03e3b.png" />
+                  <div className="relative w-64 h-64 rounded-2xl overflow-hidden shadow-xl border-4 border-white dark:border-gray-800 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 flex items-center justify-center">
+                    {/* Static avatar with no background */}
+                    <img
+                      src="/lovable-uploads/3c16cc42-78e6-4498-a8f3-f1212b65df2c.png"
+                      alt="3D Avatar"
+                      className="w-4/5 h-4/5 object-contain"
+                    />
                   </div>
                 </motion.div>
                 <div className="text-center mt-4 text-lg font-medium">
