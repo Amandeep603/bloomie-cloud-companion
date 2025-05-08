@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -184,53 +185,52 @@ const FeaturesPage = () => {
               </div>
               <Card className="overflow-hidden shadow-md">
                 <CardContent className="p-0 relative">
-                  <div className="bg-gray-900 p-2 border-b border-gray-800 flex items-center justify-between">
+                  {/* Improved video call header */}
+                  <div className="bg-gray-900 p-2.5 border-b border-gray-800 flex items-center justify-between">
                     <div className="text-white text-sm font-medium">Bloomie Video Call</div>
                     <div className="text-xs text-gray-400">12:42</div>
                   </div>
-                  {/* Enhanced video call container with proper avatar display */}
-                  <div className="grid grid-cols-2 gap-2 p-2 bg-gray-800" style={{ height: "360px" }}>
-                    {/* User video frame */}
-                    <div className="aspect-video bg-gradient-to-b from-blue-50/10 to-blue-100/10 rounded-lg overflow-hidden relative flex items-center justify-center">
-                      <div className="absolute inset-0 bg-[#f0f8ff]/10 backdrop-blur-[2px]"></div>
-                      <img 
-                        src="/lovable-uploads/a897f883-d1a0-4c7e-ad58-fa38f2730685.png" 
-                        alt="User Video" 
-                        className="w-auto h-4/5 object-contain transform -translate-y-2"
-                        style={{ maxWidth: "90%" }}
-                      />
-                      <div className="absolute bottom-2 left-2 bg-black/60 px-2 py-1 rounded text-xs text-white flex items-center space-x-1">
-                        <span>You</span>
-                      </div>
-                      <div className="absolute top-2 right-2 flex space-x-1">
-                        <div className="bg-black/40 w-6 h-6 rounded-full flex items-center justify-center">
-                          <Mic className="h-3 w-3 text-white" />
+                  
+                  {/* Enhanced video call container with more realistic appearance */}
+                  <div className="bg-gray-800 h-[400px] relative">
+                    {/* Main video (Bloomie) */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-full h-full overflow-hidden flex items-center justify-center">
+                        <div className="absolute inset-0 bg-gradient-to-b from-purple-50/10 to-purple-100/10 backdrop-blur-[2px]"></div>
+                        <img 
+                          src="/lovable-uploads/3c16cc42-78e6-4498-a8f3-f1212b65df2c.png" 
+                          alt="Bloomie Video" 
+                          className="h-[85%] w-auto object-contain transform translate-y-[5%]"
+                        />
+                        <div className="absolute bottom-3 left-3 bg-black/60 px-2 py-1 rounded text-xs text-white flex items-center space-x-1">
+                          <span>Bloomie</span>
+                        </div>
+                        <div className="absolute top-3 right-3 flex space-x-1">
+                          <div className="bg-black/40 w-6 h-6 rounded-full flex items-center justify-center">
+                            <Mic className="h-3 w-3 text-white" />
+                          </div>
                         </div>
                       </div>
                     </div>
                     
-                    {/* Bloomie video frame */}
-                    <div className="aspect-video bg-gradient-to-b from-purple-50/10 to-purple-100/10 rounded-lg overflow-hidden relative flex items-center justify-center">
-                      <div className="absolute inset-0 bg-[#f8f0ff]/10 backdrop-blur-[2px]"></div>
-                      <img 
-                        src="/lovable-uploads/3c16cc42-78e6-4498-a8f3-f1212b65df2c.png" 
-                        alt="Bloomie Video" 
-                        className="w-auto h-4/5 object-contain transform -translate-y-2"
-                        style={{ maxWidth: "90%" }}
-                      />
-                      <div className="absolute bottom-2 left-2 bg-black/60 px-2 py-1 rounded text-xs text-white flex items-center space-x-1">
-                        <span>Bloomie</span>
-                      </div>
-                      <div className="absolute top-2 right-2 flex space-x-1">
-                        <div className="bg-black/40 w-6 h-6 rounded-full flex items-center justify-center">
-                          <Mic className="h-3 w-3 text-white" />
+                    {/* Small PIP video (User) */}
+                    <div className="absolute bottom-4 right-4 w-32 h-44 rounded-lg overflow-hidden border-2 border-white/20 shadow-lg">
+                      <div className="w-full h-full bg-gradient-to-b from-blue-50/10 to-blue-100/10 flex items-center justify-center relative">
+                        <div className="absolute inset-0 bg-[#f0f8ff]/10 backdrop-blur-[2px]"></div>
+                        <img 
+                          src="/lovable-uploads/a897f883-d1a0-4c7e-ad58-fa38f2730685.png" 
+                          alt="User Video" 
+                          className="h-[85%] w-auto object-contain transform translate-y-[5%]"
+                        />
+                        <div className="absolute bottom-1 left-1 bg-black/60 px-1.5 py-0.5 rounded text-[10px] text-white">
+                          You
                         </div>
                       </div>
                     </div>
                   </div>
                   
                   {/* Enhanced call controls */}
-                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center space-x-4 z-10">
                     <div className="w-10 h-10 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center shadow-md">
                       <Mic className="h-5 w-5" />
                     </div>
