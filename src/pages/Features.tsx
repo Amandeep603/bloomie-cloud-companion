@@ -198,9 +198,9 @@ const FeaturesPage = () => {
                       <div className="w-full h-full overflow-hidden flex items-center justify-center">
                         <div className="absolute inset-0 bg-gradient-to-b from-purple-50/10 to-purple-100/10 backdrop-blur-[2px]"></div>
                         <img 
-                          src="/lovable-uploads/3c16cc42-78e6-4498-a8f3-f1212b65df2c.png" 
+                          src="/lovable-uploads/75fb7156-3c2c-4f58-b8fc-904c2d528aca.png" 
                           alt="Bloomie Video" 
-                          className="h-[85%] w-auto object-contain transform translate-y-[5%]"
+                          className="h-[90%] w-auto object-contain transform translate-y-[1%]"
                         />
                         <div className="absolute bottom-3 left-3 bg-black/60 px-2 py-1 rounded text-xs text-white flex items-center space-x-1">
                           <span>Bloomie</span>
@@ -218,9 +218,9 @@ const FeaturesPage = () => {
                       <div className="w-full h-full bg-gradient-to-b from-blue-50/10 to-blue-100/10 flex items-center justify-center relative">
                         <div className="absolute inset-0 bg-[#f0f8ff]/10 backdrop-blur-[2px]"></div>
                         <img 
-                          src="/lovable-uploads/a897f883-d1a0-4c7e-ad58-fa38f2730685.png" 
+                          src="/lovable-uploads/3f128cd2-2af7-4a4d-94de-a9a510d03e3b.png" 
                           alt="User Video" 
-                          className="h-[85%] w-auto object-contain transform translate-y-[5%]"
+                          className="h-[100%] w-auto object-contain transform translate-y-[1%]"
                         />
                         <div className="absolute bottom-1 left-1 bg-black/60 px-1.5 py-0.5 rounded text-[10px] text-white">
                           You
