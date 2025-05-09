@@ -42,7 +42,9 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
 
   return (
     <motion.div
-      className={`absolute ${speaker === "girl" ? "left-[60%]" : "right-[60%]"} top-[-80px] max-w-[250px]`}
+      className={`absolute ${speaker === "girl" 
+        ? "left-[10px] top-[10px] md:left-[15px] md:top-[10px]" 
+        : "right-[10px] top-[10px] md:right-[15px] md:top-[10px]"}`}
       variants={bubbleVariants}
       initial="hidden"
       animate="visible"
@@ -54,7 +56,7 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
           ? "bg-[#f8f0ff] border-purple-200 text-gray-900" 
           : "bg-[#f0f8ff] border-blue-200 text-gray-900"
         } 
-        p-4 rounded-[16px] shadow-sm border relative
+        p-3 rounded-[14px] shadow-sm border relative max-w-[220px] md:max-w-[250px]
       `}>
         {/* Message content */}
         <motion.p 
@@ -70,11 +72,15 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
         
         {/* Speech bubble tail pointing to speaker */}
         <div className={`
-          absolute ${speaker === "girl" ? "left-6" : "right-6"} bottom-[-8px]
-          h-4 w-4 transform rotate-45
+          absolute ${speaker === "girl" 
+            ? "left-[10px] -bottom-[6px] rotate-45" 
+            : "right-[10px] -bottom-[6px] rotate-45"
+          }
+          h-3 w-3 transform
           ${speaker === "girl" 
             ? "bg-[#f8f0ff] border-r border-b border-purple-200" 
-            : "bg-[#f0f8ff] border-r border-b border-blue-200"}
+            : "bg-[#f0f8ff] border-r border-b border-blue-200"
+          }
         `}></div>
       </div>
     </motion.div>
