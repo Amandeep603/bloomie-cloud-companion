@@ -57,13 +57,13 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
 
   const currentMessage = conversation[currentMessageIndex % conversation.length];
 
-  // Adjust layout for better avatar placement and conversation flow
+  // Improved layout with more spacing to prevent bubble-avatar overlap
   return (
     <div className="relative w-full max-w-4xl mx-auto mt-10 mb-16">
-      {/* Main container with avatars facing each other */}
-      <div className="flex justify-center items-center gap-16 md:gap-28 lg:gap-36 px-4 md:px-8">
-        {/* Girl Avatar (Left Side) */}
-        <div className="relative w-[140px] h-[140px] md:w-[180px] md:h-[180px]">
+      {/* Main container with avatars facing each other - increased gap */}
+      <div className="flex justify-center items-center gap-40 md:gap-60 lg:gap-72 px-4 md:px-8">
+        {/* Girl Avatar (Left Side) with increased space */}
+        <div className="relative w-[140px] h-[140px] md:w-[180px] md:h-[180px] z-10">
           <AnimatedAvatar 
             gender="girl" 
             speaking={showMessage && currentMessage?.speaker === "girl"}
@@ -80,8 +80,8 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
           </AnimatePresence>
         </div>
         
-        {/* Boy Avatar (Right Side) */}
-        <div className="relative w-[140px] h-[140px] md:w-[180px] md:h-[180px]">
+        {/* Boy Avatar (Right Side) with increased space */}
+        <div className="relative w-[140px] h-[140px] md:w-[180px] md:h-[180px] z-10">
           <AnimatedAvatar 
             gender="boy" 
             speaking={showMessage && currentMessage?.speaker === "boy"}

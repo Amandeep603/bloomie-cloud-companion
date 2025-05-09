@@ -40,14 +40,15 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
     }
   };
 
-  // Position the speech bubbles next to the avatars' mouths, not covering their faces
+  // Improved positioning to avoid overlapping with avatars' faces
+  // Position bubbles to the side of the avatars rather than directly over them
   const positionClasses = speaker === "girl" 
-    ? "left-[-120px] top-[50px] md:left-[-140px] md:top-[60px]" 
-    : "right-[-120px] top-[50px] md:right-[-140px] md:top-[60px]";
+    ? "left-[-180px] top-[20px] md:left-[-200px] md:top-[30px]" 
+    : "right-[-180px] top-[20px] md:right-[-200px] md:top-[30px]";
 
   return (
     <motion.div
-      className={`absolute ${positionClasses}`}
+      className={`absolute ${positionClasses} z-20`}
       variants={bubbleVariants}
       initial="hidden"
       animate="visible"
