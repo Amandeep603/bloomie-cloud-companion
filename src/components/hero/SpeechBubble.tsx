@@ -40,11 +40,14 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
     }
   };
 
+  // Position the speech bubbles next to the avatars' mouths, not covering their faces
+  const positionClasses = speaker === "girl" 
+    ? "left-[-120px] top-[50px] md:left-[-140px] md:top-[60px]" 
+    : "right-[-120px] top-[50px] md:right-[-140px] md:top-[60px]";
+
   return (
     <motion.div
-      className={`absolute ${speaker === "girl" 
-        ? "left-[10px] top-[10px] md:left-[15px] md:top-[10px]" 
-        : "right-[10px] top-[10px] md:right-[15px] md:top-[10px]"}`}
+      className={`absolute ${positionClasses}`}
       variants={bubbleVariants}
       initial="hidden"
       animate="visible"
@@ -73,8 +76,8 @@ const SpeechBubble = ({ message, speaker, isMobile, position, children }: Speech
         {/* Speech bubble tail pointing to speaker */}
         <div className={`
           absolute ${speaker === "girl" 
-            ? "left-[10px] -bottom-[6px] rotate-45" 
-            : "right-[10px] -bottom-[6px] rotate-45"
+            ? "right-[-6px] top-[15px] rotate-[135deg]" 
+            : "left-[-6px] top-[15px] rotate-[315deg]"
           }
           h-3 w-3 transform
           ${speaker === "girl" 

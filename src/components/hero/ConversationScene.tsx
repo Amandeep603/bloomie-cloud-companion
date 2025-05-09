@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import SpeechBubble from "./SpeechBubble";
 import ConnectionLine from "./ConnectionLine";
 import AnimatedAvatar from "./AnimatedAvatar";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Define the conversation props type
 type Speaker = "girl" | "boy";
@@ -19,6 +20,7 @@ interface ConversationSceneProps {
 const ConversationScene = ({ conversation }: ConversationSceneProps) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [showMessage, setShowMessage] = useState(false);
+  const isMobile = useIsMobile();
 
   // Control the message display timing
   useEffect(() => {
@@ -55,52 +57,45 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
 
   const currentMessage = conversation[currentMessageIndex % conversation.length];
 
+  // Adjust layout for better avatar placement and conversation flow
   return (
     <div className="relative w-full max-w-4xl mx-auto mt-10 mb-16">
-      <div className="flex justify-center items-end px-8 md:px-12 lg:px-20 pt-12">
-        {/* Boy's avatar and speech bubble */}
-        <div className="w-[44%] md:w-[44%] flex flex-col items-center relative">
-          <div className="h-48 md:h-56 w-48 md:w-56 rounded-full overflow-hidden z-10 relative">
-            <AnimatedAvatar 
-              gender="boy" 
-              speaking={showMessage && currentMessage?.speaker === "boy"}
-            />
-            {/* Boy's speech bubble */}
-            <AnimatePresence mode="wait">
-              {showMessage && currentMessage?.speaker === "boy" && (
-                <SpeechBubble 
-                  message={currentMessage.message} 
-                  speaker="boy" 
-                  key={`boy-${currentMessageIndex}`}
-                />
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-
-        {/* Connection line between avatars */}
-        <div className="w-[12%] md:w-[12%] px-4 flex justify-center">
-          <ConnectionLine />
+      {/* Main container with avatars facing each other */}
+      <div className="flex justify-center items-center gap-16 md:gap-28 lg:gap-36 px-4 md:px-8">
+        {/* Girl Avatar (Left Side) */}
+        <div className="relative w-[140px] h-[140px] md:w-[180px] md:h-[180px]">
+          <AnimatedAvatar 
+            gender="girl" 
+            speaking={showMessage && currentMessage?.speaker === "girl"}
+          />
+          {/* Girl's speech bubble */}
+          <AnimatePresence mode="wait">
+            {showMessage && currentMessage?.speaker === "girl" && (
+              <SpeechBubble 
+                message={currentMessage.message} 
+                speaker="girl" 
+                key={`girl-${currentMessageIndex}`}
+              />
+            )}
+          </AnimatePresence>
         </div>
         
-        {/* Girl's avatar and speech bubble */}
-        <div className="w-[44%] md:w-[44%] flex flex-col items-center relative">
-          <div className="h-48 md:h-56 w-48 md:w-56 rounded-full overflow-hidden z-10 relative">
-            <AnimatedAvatar 
-              gender="girl" 
-              speaking={showMessage && currentMessage?.speaker === "girl"}
-            />
-            {/* Girl's speech bubble */}
-            <AnimatePresence mode="wait">
-              {showMessage && currentMessage?.speaker === "girl" && (
-                <SpeechBubble 
-                  message={currentMessage.message} 
-                  speaker="girl" 
-                  key={`girl-${currentMessageIndex}`}
-                />
-              )}
-            </AnimatePresence>
-          </div>
+        {/* Boy Avatar (Right Side) */}
+        <div className="relative w-[140px] h-[140px] md:w-[180px] md:h-[180px]">
+          <AnimatedAvatar 
+            gender="boy" 
+            speaking={showMessage && currentMessage?.speaker === "boy"}
+          />
+          {/* Boy's speech bubble */}
+          <AnimatePresence mode="wait">
+            {showMessage && currentMessage?.speaker === "boy" && (
+              <SpeechBubble 
+                message={currentMessage.message} 
+                speaker="boy" 
+                key={`boy-${currentMessageIndex}`}
+              />
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
