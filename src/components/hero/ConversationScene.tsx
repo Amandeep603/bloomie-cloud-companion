@@ -80,6 +80,11 @@ const ConversationScene = ({ conversation }: ConversationSceneProps) => {
           </AnimatePresence>
         </div>
         
+        {/* Digital connection between avatars */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <ConnectionLine />
+        </div>
+        
         {/* Boy Avatar (Right Side) with increased space */}
         <div className="relative w-[140px] h-[140px] md:w-[180px] md:h-[180px] z-10">
           <AnimatedAvatar 
