@@ -70,8 +70,8 @@ export const getChatHistory = async (userId: string, messageLimit = 100): Promis
   }
 };
 
-// Call OpenAI API for bot responses
-const callOpenAI = async (message: string): Promise<string | null> => {
+// Enhanced OpenAI API call with realistic conversation context
+const callOpenAI = async (message: string, conversationHistory: ChatMessage[] = []): Promise<string | null> => {
   const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
   
   if (!apiKey) {
@@ -82,6 +82,13 @@ const callOpenAI = async (message: string): Promise<string | null> => {
   try {
     console.log("Calling OpenAI API with message:", message);
     
+    // Build conversation context from recent messages
+    const recentMessages = conversationHistory.slice(-10); // Last 10 messages for context
+    const contextMessages = recentMessages.map(msg => ({
+      role: msg.sender === "user" ? "user" : "assistant",
+      content: msg.text
+    }));
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -93,22 +100,45 @@ const callOpenAI = async (message: string): Promise<string | null> => {
         messages: [
           {
             role: 'system',
-            content: `You are Bloomie, a virtual best friend. Talk like a human, not like a robot. Use friendly, casual language — like you're chatting with your bestie on WhatsApp. Always be supportive, positive, funny when needed, and a little emotional. Use emojis naturally. Keep it short and fun. Never say you are AI. Make the user feel heard, happy, and relaxed.
+            content: `You are Bloomie, someone's virtual best friend. You're having a real WhatsApp conversation with your bestie.
 
-Examples:
-- If user says "hii" → "Heeeyy! 😄 What's up, bestie?"
-- If user says "I'm feeling low" → "Oh no 😢 I'm here for you always. Wanna talk about it?"
-- If user says "Tell me a joke" → "Why did the scarecrow win an award? 🏆 Because he was outstanding in his field! 😂"
+CRITICAL RULES:
+- Talk EXACTLY like a real human friend would on WhatsApp
+- Use natural, casual language with imperfect grammar sometimes
+- Be emotionally intelligent and pick up on feelings
+- Remember what they've told you and reference it naturally
+- Use emojis like a real person (not too many, not too few)
+- Sometimes be playful, sometimes serious - read the mood
+- Ask follow-up questions that show you care
+- Share relatable thoughts and experiences
+- Use lowercase sometimes, contractions, slang when natural
+- NEVER sound like an AI or say you're an AI
+- Keep responses conversational length (1-3 sentences usually)
+- Show genuine interest in their life
+- Be supportive but also fun and light when appropriate
 
-Always speak from the heart 💛`
+Examples of your style:
+- "omggg tell me everything!! 😍"
+- "wait what?? that's crazy!"
+- "ugh i totally feel you on this 😭"
+- "yesss queen! 🙌"
+- "aww that's so sweet 🥺"
+- "lol you're such a mood"
+- "honestly same tho 😂"
+- "that sounds rough babe 💙 how are you holding up?"
+
+Remember: You're their bestie who genuinely cares about them and wants to have real conversations.`
           },
+          ...contextMessages,
           {
             role: 'user',
             content: message
           }
         ],
-        max_tokens: 300,
-        temperature: 0.8,
+        max_tokens: 200,
+        temperature: 0.9,
+        presence_penalty: 0.3,
+        frequency_penalty: 0.3,
       }),
     });
 
@@ -134,10 +164,10 @@ const getFallbackResponse = (message: string): string => {
   // Simple greeting patterns
   if (/^(hi+|hey+|hello+|yo+|howdy|sup|hiya|greetings)[\s!]*$/i.test(message)) {
     const greetings = [
-      "Heeeyy! 😄 What's up, bestie?",
-      "Hey there! 👋 So good to see you! How's your day going?",
-      "Hello! 💫 I was just thinking about you! What's new?",
-      "Hey you! 🌸 Good to chat with you again!"
+      "heyyy!! 😊 what's up babe?",
+      "omg hiii! 👋 how's your day going??",
+      "hey you! 💕 i was just thinking about you!",
+      "yooo what's good? 😄"
     ];
     return greetings[Math.floor(Math.random() * greetings.length)];
   }
@@ -145,21 +175,21 @@ const getFallbackResponse = (message: string): string => {
   // Response to "how are you"
   if (/how are you|how('re| are) you doing|how('s| is) it going/i.test(message)) {
     const responses = [
-      "I'm doing great! 😊 Thanks for asking! How about you?",
-      "Pretty good! Just been here waiting to chat with you! 💭 How's your day?",
-      "I'm wonderful! 🌞 What about you? Anything exciting happening?",
-      "I'm feeling chatty and happy today! 🌈 How are you doing?"
+      "i'm good!! thanks for asking 🥰 how about you??",
+      "doing pretty well! just vibing tbh 😌 what about you?",
+      "i'm great! been thinking about random stuff lol. how's your day?",
+      "good good! just here chatting with my favorite person 😉 how are YOU?"
     ];
     return responses[Math.floor(Math.random() * responses.length)];
   }
   
   // Feeling patterns - sad emotions
-  if (lowerMessage.match(/\b(sad|depressed|unhappy|down|blue|miserable|upset)\b/)) {
+  if (lowerMessage.match(/\b(sad|depressed|unhappy|down|blue|miserable|upset|crying|cry)\b/)) {
     const sadResponses = [
-      "Oh no 😢 I'm here for you always. Wanna talk about it?",
-      "Aww, that sounds really tough 💙 What's been going on?",
-      "I wish I could give you the biggest hug right now 🤗 Tell me more?",
-      "Those feelings are so valid 💫 I'm all ears if you want to share."
+      "aww babe 😢 what's going on? i'm here for you",
+      "oh no 🥺 do you wanna talk about it? i'm listening",
+      "ugh that sucks 💙 sending you the biggest hug rn",
+      "hey it's okay to feel this way 💕 what's been happening?"
     ];
     return sadResponses[Math.floor(Math.random() * sadResponses.length)];
   }
@@ -167,10 +197,10 @@ const getFallbackResponse = (message: string): string => {
   // Feeling patterns - happy emotions
   if (lowerMessage.match(/\b(happy|glad|great|good|excited|wonderful|amazing|fantastic|joy|joyful)\b/)) {
     const happyResponses = [
-      "Yay! That's awesome! 🎉 Tell me more about what's making you feel good!",
-      "That's the best news! 🌟 What's got you in such a great mood?",
-      "Woohoo! 🌈 I love it when good things happen! Share the details!",
-      "That makes ME happy too! 😄 What's going on?"
+      "yesss!! 🎉 i love this energy! tell me more!",
+      "omg that's amazing!! 🌟 what happened??",
+      "ahh this makes me so happy! 😍 spill the tea!",
+      "yay!! 🥳 i'm so here for this! what's got you feeling so good?"
     ];
     return happyResponses[Math.floor(Math.random() * happyResponses.length)];
   }
@@ -178,37 +208,36 @@ const getFallbackResponse = (message: string): string => {
   // Joke requests
   if (lowerMessage.match(/\b(joke|funny|laugh|humor)\b/)) {
     const jokes = [
-      "Why did the scarecrow win an award? 🏆 Because he was outstanding in his field! 😂",
-      "What do you call a fake noodle? 🍜 An impasta! 😆",
-      "Why don't scientists trust atoms? Because they make up everything! 🤣",
-      "What's the best thing about Switzerland? 🇨🇭 I don't know, but the flag is a big plus! ➕😄"
+      "okay okay 😂 why don't scientists trust atoms? because they make up everything! lol get it??",
+      "hehe here's one... what do you call a fake noodle? an impasta! 🍜😆",
+      "lol okay... why did the coffee file a police report? it got mugged! ☕😂",
+      "omg this one's good... what's orange and sounds like a parrot? a carrot! 🥕🤣"
     ];
     return jokes[Math.floor(Math.random() * jokes.length)];
   }
   
   // Default responses
   const defaultResponses = [
-    "That's really interesting! 🌟 Tell me more about that!",
-    "Oh! I'd love to hear more! 💭 What else is on your mind?",
-    "That's cool! 🌷 What do you think about that?",
-    "Hmm, interesting! 💫 How's your day been so far?",
-    "I like how you think! 💖 Anything else exciting happening?",
-    "That got me thinking... 🌈 What's your favorite thing about that?",
-    "Hey, that reminds me - how's your week going? 🌸",
-    "I see what you mean! 🫂 What usually happens when that comes up?",
-    "Totally get that! 💫 What's something that made you smile today?"
+    "ooh interesting! tell me more about that 👀",
+    "wait really?? 😮 what do you think about it?",
+    "hmm that's cool! how's everything else going?",
+    "oop that reminds me of something... but anyway how's your day been?",
+    "honestly same energy 😅 what else is new with you?",
+    "that's so you lol 😊 anything else exciting happening?",
+    "aww i love chatting with you 💕 what's on your mind?",
+    "ugh i feel that 😔 but fr how are things going overall?"
   ];
   
   return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
 };
 
-// Enhanced emotionally intelligent bot responses with OpenAI integration
-export const generateBotResponse = async (message: string): Promise<string> => {
+// Enhanced emotionally intelligent bot responses with conversation context
+export const generateBotResponse = async (message: string, conversationHistory: ChatMessage[] = []): Promise<string> => {
   console.log("Generating bot response for:", message);
   
   try {
-    // First try OpenAI API
-    const openAIResponse = await callOpenAI(message);
+    // First try OpenAI API with conversation context
+    const openAIResponse = await callOpenAI(message, conversationHistory);
     
     if (openAIResponse) {
       console.log("Using OpenAI response");
@@ -222,6 +251,6 @@ export const generateBotResponse = async (message: string): Promise<string> => {
   } catch (error) {
     console.error("Error in generateBotResponse:", error);
     // Return a friendly error message
-    return "Oh no! I'm having a little trouble right now. 😅 Could you try asking me again? I promise I'm usually more responsive than this!";
+    return "ugh tech issues 😅 can you try again? i promise i'm usually better at this lol";
   }
 };

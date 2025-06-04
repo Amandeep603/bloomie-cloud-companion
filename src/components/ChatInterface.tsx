@@ -94,7 +94,7 @@ const ChatInterface = () => {
             id: "welcome",
             userId: currentUser.uid,
             sender: "ai",
-            text: "Heeeyy! 😄 I'm Bloomie, your virtual bestie! What's up? How's your day going?",
+            text: "heyyy! 😊 i'm bloomie, your virtual bestie! what's up babe? how's your day going?",
             timestamp: new Date(),
           };
           
@@ -119,7 +119,7 @@ const ChatInterface = () => {
           id: "welcome-fallback",
           userId: currentUser.uid,
           sender: "ai",
-          text: "Heeeyy! 😄 I'm Bloomie, your virtual bestie! What's up? How's your day going?",
+          text: "heyyy! 😊 i'm bloomie, your virtual bestie! what's up babe? how's your day going?",
           timestamp: new Date(),
         };
         setMessages([welcomeMessage]);
@@ -172,9 +172,9 @@ const ChatInterface = () => {
         console.log("Could not save user message to Firestore:", error);
       });
       
-      // Generate bot response
+      // Generate bot response with conversation context
       console.log("Generating bot response...");
-      const responseText = await generateBotResponse(userMessage.text);
+      const responseText = await generateBotResponse(userMessage.text, messages);
       console.log("Got bot response:", responseText);
       
       // Create AI message
@@ -205,7 +205,7 @@ const ChatInterface = () => {
         id: (Date.now() + 2).toString(),
         userId: currentUser.uid,
         sender: "ai",
-        text: "Oops! I had a little hiccup there 😅 Could you try saying that again?",
+        text: "ugh tech issues 😅 can you try again? i promise i'm usually better at this lol",
         timestamp: new Date(),
       };
       
@@ -218,7 +218,7 @@ const ChatInterface = () => {
   const handleQuickReaction = async (reaction: QuickReaction) => {
     if (!currentUser) return;
     
-    const reactionText = `${reaction.emoji} I'm feeling ${reaction.label.toLowerCase()} today.`;
+    const reactionText = `${reaction.emoji} i'm feeling ${reaction.label.toLowerCase()} today`;
     
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -239,8 +239,8 @@ const ChatInterface = () => {
         text: userMessage.text
       }).catch(console.log);
       
-      // Generate bot response
-      const responseText = await generateBotResponse(userMessage.text);
+      // Generate bot response with context
+      const responseText = await generateBotResponse(userMessage.text, messages);
       
       // Create AI message
       const aiMessage: ChatMessage = {
@@ -267,7 +267,7 @@ const ChatInterface = () => {
         id: (Date.now() + 2).toString(),
         userId: currentUser.uid,
         sender: "ai",
-        text: "Aww, I had a little technical moment there! 😅 Try telling me again?",
+        text: "ugh something went wrong 😅 try telling me again?",
         timestamp: new Date(),
       };
       
@@ -295,7 +295,7 @@ const ChatInterface = () => {
         id: "welcome-new",
         userId: currentUser.uid,
         sender: "ai",
-        text: "Chat cleared! How can I help you today? 😊",
+        text: "chat cleared! how can i help you today babe? 😊",
         timestamp: new Date(),
       };
       
